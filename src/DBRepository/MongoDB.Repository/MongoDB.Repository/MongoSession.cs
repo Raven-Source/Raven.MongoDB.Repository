@@ -54,7 +54,7 @@ namespace MongoDB.Repository
         /// <param name="writeConcern">WriteConcern选项</param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
         /// <param name="isSlaveOK"></param>
-        public MongoSession(string dbName, string configNode = DEFAULT_CONFIG_NODE, WriteConcern writeConcern = null, MongoSequence sequence = null, bool isSlaveOK = false)
+        public MongoSession(string dbName, string configNode = DEFAULT_CONFIG_NODE, WriteConcern writeConcern = null, MongoSequence sequence = null, bool isSlaveOK = false, ReadPreference readPreference = null)
         {
             var connString = ConfigurationManager.ConnectionStrings[configNode].ConnectionString;
             this._writeConcern = writeConcern ?? WriteConcern.Unacknowledged;
@@ -68,7 +68,7 @@ namespace MongoDB.Repository
             {
                 var databaseSettings = new MongoDatabaseSettings();
                 databaseSettings.WriteConcern = this._writeConcern;
-                databaseSettings.ReadPreference = ReadPreference.SecondaryPreferred;
+                databaseSettings.ReadPreference = readPreference ?? ReadPreference.SecondaryPreferred;
                 this.mongoDatabase = this._mongoServer.GetDatabase(dbName, databaseSettings);
             }
             else

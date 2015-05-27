@@ -42,9 +42,9 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="dbName">数据库名称</param>
         /// <param name="configNode">数据库连接节点</param>
-        public MongoRepository(string dbName = DEFAULT_DB_NAME, string configNode = DEFAULT_CONFIG_NODE)
+        public MongoRepository(string dbName = DEFAULT_DB_NAME, string configNode = DEFAULT_CONFIG_NODE, ReadPreference readPreference = null)
         {
-            _mongoSession = new MongoSession(dbName, configNode);
+            _mongoSession = new MongoSession(dbName, configNode, readPreference: readPreference);
         }
 
         /// <summary>
