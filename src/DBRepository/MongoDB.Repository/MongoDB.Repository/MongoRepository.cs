@@ -245,10 +245,12 @@ namespace MongoDB.Repository
         /// 修改
         /// </summary>
         /// <param name="entityToUpdate"></param>
+        [Obsolete("MongoDB数据库，在分布式系统中，使用全量更新有很大的风险，因此方法已屏蔽", true)]
         public TEntity Update(TEntity entityToUpdate)
         {
-            _mongoSession.Update<TEntity>(entityToUpdate);
-            return entityToUpdate;
+            throw new NotImplementedException();
+            //_mongoSession.Update<TEntity>(entityToUpdate);
+            //return entityToUpdate;
         }
 
         /// <summary>
