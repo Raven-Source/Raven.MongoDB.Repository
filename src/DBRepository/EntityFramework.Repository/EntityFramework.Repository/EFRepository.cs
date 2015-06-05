@@ -303,7 +303,7 @@ namespace EntityFramework.Repository
         /// <param name="pageSize">每页数据数</param>
         /// <param name="includeProperties">包含virtual字段</param>
         /// <returns></returns>
-        public IQueryable<TEntity> GetList(Expression<Func<TEntity, bool>> filterPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby = null, int pageIndex = 1, int pageSize = 10,
+        public IQueryable<TEntity> GetList(Expression<Func<TEntity, bool>> filterPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int pageIndex = 1, int pageSize = 10,
              string includeProperties = "")
         {
             IQueryable<TEntity> query = dbSet;
@@ -332,7 +332,7 @@ namespace EntityFramework.Repository
         /// <param name="pageSize">每页数据数</param>
         /// <param name="includeProperties">包含virtual字段</param>
         /// <returns></returns>
-        public IQueryable<TResult> GetList<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby = null, int pageIndex = 1, int pageSize = 10,
+        public IQueryable<TResult> GetList<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int pageIndex = 1, int pageSize = 10,
              string includeProperties = "")
         {
             IQueryable<TEntity> query = this.GetList(filterPredicate, orderby, pageIndex, pageSize, includeProperties);

@@ -59,7 +59,7 @@ namespace MongoDB.Repository
             var connString = ConfigurationManager.ConnectionStrings[configNode].ConnectionString;
             this._writeConcern = writeConcern ?? WriteConcern.Unacknowledged;
             this._sequence = sequence ?? new MongoSequence();
-            MongoServerSettings serverSettings = new MongoServerSettings();
+            var serverSettings = MongoServerSettings.FromUrl(new MongoUrl(connString));
             this._mongoServer = new MongoServer(serverSettings);
 
             //this._mongoServer.Settings.WriteConcern = WriteConcern.Unacknowledged;

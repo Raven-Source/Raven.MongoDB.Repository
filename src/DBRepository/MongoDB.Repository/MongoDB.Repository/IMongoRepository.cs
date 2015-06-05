@@ -107,7 +107,7 @@ namespace MongoDB.Repository
         /// <param name="pageSize">每页数据数</param>
         /// <param name="includeProperties">包含virtual字段</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetList(Expression<Func<TEntity, bool>> filterPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby = null, int pageIndex = 1, int pageSize = 10);
+        IQueryable<TEntity> GetList(Expression<Func<TEntity, bool>> filterPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int pageIndex = 1, int pageSize = 10);
 
         /// <summary>
         /// 获取数据（分页）
@@ -119,7 +119,7 @@ namespace MongoDB.Repository
         /// <param name="pageSize">每页数据数</param>
         /// <param name="includeProperties">包含virtual字段</param>
         /// <returns></returns>
-        IQueryable<TResult> GetList<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby = null, int pageIndex = 1, int pageSize = 10);
+        IQueryable<TResult> GetList<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int pageIndex = 1, int pageSize = 10);
         
         /// <summary>
         /// 找到并更新

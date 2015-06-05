@@ -425,7 +425,7 @@ namespace MongoDB.Repository
         /// <param name="pageIndex">页码</param>
         /// <param name="pageSize">每页数据数</param>
         /// <returns></returns>
-        public IQueryable<TEntity> GetList(Expression<Func<TEntity, bool>> filterPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby = null, int pageIndex = 1, int pageSize = 10)
+        public IQueryable<TEntity> GetList(Expression<Func<TEntity, bool>> filterPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int pageIndex = 1, int pageSize = 10)
         {
             IQueryable<TEntity> query = this.GetList(filterPredicate, orderby);
             return query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
@@ -440,7 +440,7 @@ namespace MongoDB.Repository
         /// <param name="pageIndex">页码</param>
         /// <param name="pageSize">每页数据数</param>
         /// <returns></returns>
-        public IQueryable<TResult> GetList<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby = null, int pageIndex = 1, int pageSize = 10)
+        public IQueryable<TResult> GetList<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int pageIndex = 1, int pageSize = 10)
         {
             IQueryable<TResult> query = this.GetList(filterPredicate, fieldPredicate, orderby);
             return query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
