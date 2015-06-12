@@ -19,7 +19,9 @@ namespace MongoDB.Repository
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
     /// <remarks>add by liangyi on 2015/05/26</remarks>
-    public class MongoRepository<TEntity, TKey> : IMongoRepository<TEntity, TKey> where TEntity : class,IEntity<TKey>, new()
+    public class MongoRepository<TEntity, TKey> : IMongoRepository<TEntity, TKey>
+        where TEntity : class,IEntity<TKey>, new()
+        where TKey : struct
     {
         MongoSession _mongoSession;
 
@@ -148,38 +150,15 @@ namespace MongoDB.Repository
                 if (entity is IAutoIncr)
                 {
                     _id = _mongoSession.CreateIncID<TEntity>();
-                    (entity as IAutoIncr).ID = _id;
-                }
-                #region 兼容老版本entity
-                else
-                {
-                    Type t = entity.GetType();
-                    System.Reflection.FieldInfo f = t.GetField("ID");
-                    if (f != null && (f.FieldType == typeof(long) || f.FieldType == typeof(object)) && f.GetCustomAttributes(tBsonIdType, true) != null)
+                    if ((entity as IEntity<TKey>).ID is int)
                     {
-                        _id = _mongoSession.CreateIncID<TEntity>();
-                        f.SetValue(entity, _id);
+                        (entity as IEntity<int>).ID = (int)_id;
                     }
                     else
                     {
-                        System.Reflection.PropertyInfo p = t.GetProperty("ID");
-                        if (p != null && (p.PropertyType == typeof(long) || p.PropertyType == typeof(object)) && p.GetCustomAttributes(tBsonIdType, true) != null)
-                        {
-                            _id = _mongoSession.CreateIncID<TEntity>();
-                            p.SetValue(entity, _id, null);
-                        }
-                        else
-                        {
-                            System.Reflection.MemberInfo m = t.GetMember("ID").FirstOrDefault();
-                            if (m != null && (m.MemberType.GetType() == typeof(long) || m.MemberType.GetType() == typeof(object)) && m.GetCustomAttributes(tBsonIdType, true) != null)
-                            {
-                                _id = _mongoSession.CreateIncID<TEntity>();
-                                p.SetValue(entity, _id, null);
-                            }
-                        }
+                        (entity as IEntity<long>).ID = _id;
                     }
                 }
-                #endregion
             }
 
             _mongoSession.Insert<TEntity>(entity);
@@ -202,38 +181,15 @@ namespace MongoDB.Repository
                     if (entity is IAutoIncr)
                     {
                         _id = _mongoSession.CreateIncID<TEntity>();
-                        (entity as IAutoIncr).ID = _id;
-                    }
-                    #region 兼容老版本entity
-                    else
-                    {
-                        Type t = entity.GetType();
-                        System.Reflection.FieldInfo f = t.GetField("ID");
-                        if (f != null && (f.FieldType == typeof(long) || f.FieldType == typeof(object)) && f.GetCustomAttributes(tBsonIdType, true) != null)
+                        if ((entity as IEntity<TKey>).ID is int)
                         {
-                            _id = _mongoSession.CreateIncID<TEntity>();
-                            f.SetValue(entity, _id);
+                            (entity as IEntity<int>).ID = (int)_id;
                         }
                         else
                         {
-                            System.Reflection.PropertyInfo p = t.GetProperty("ID");
-                            if (p != null && (p.PropertyType == typeof(long) || p.PropertyType == typeof(object)) && p.GetCustomAttributes(tBsonIdType, true) != null)
-                            {
-                                _id = _mongoSession.CreateIncID<TEntity>();
-                                p.SetValue(entity, _id, null);
-                            }
-                            else
-                            {
-                                System.Reflection.MemberInfo m = t.GetMember("ID").FirstOrDefault();
-                                if (m != null && (m.MemberType.GetType() == typeof(long) || m.MemberType.GetType() == typeof(object)) && m.GetCustomAttributes(tBsonIdType, true) != null)
-                                {
-                                    _id = _mongoSession.CreateIncID<TEntity>();
-                                    p.SetValue(entity, _id, null);
-                                }
-                            }
+                            (entity as IEntity<long>).ID = _id;
                         }
                     }
-                    #endregion
                 }
             }
 

@@ -17,7 +17,7 @@ namespace MongoDB.Repository.Test
         }
     }
 
-    public class User : IAutoIncr
+    public class User : IAutoIncr<long>
     {
         [BsonId]
         public long ID
