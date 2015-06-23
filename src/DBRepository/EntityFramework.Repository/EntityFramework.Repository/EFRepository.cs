@@ -17,7 +17,8 @@ namespace EntityFramework.Repository
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
     /// <remarks>add by liangyi on 2012/10/26</remarks>
-    public class EFRepository<TEntity, TKey> : IEFRepository<TEntity, TKey> where TEntity : class,IEntity<TKey>, new()
+    public class EFRepository<TEntity, TKey> : IEFRepository<TEntity, TKey> 
+        where TEntity : class,IEntity<TKey>, new()
     {
         protected DbContext context;
         protected DbSet<TEntity> dbSet;
@@ -68,7 +69,8 @@ namespace EntityFramework.Repository
         /// <returns></returns>
         public TEntity Get(TKey id)
         {
-            return dbSet.Find(id);
+            return dbSet.AsNoTracking().FirstOrDefault(x => object.Equals(id, x.ID));
+            //return dbSet.Find(id);
         }
 
         /// <summary>

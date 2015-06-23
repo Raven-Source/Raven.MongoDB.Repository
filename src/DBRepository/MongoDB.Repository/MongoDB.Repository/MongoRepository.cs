@@ -21,7 +21,6 @@ namespace MongoDB.Repository
     /// <remarks>add by liangyi on 2015/05/26</remarks>
     public class MongoRepository<TEntity, TKey> : IMongoRepository<TEntity, TKey>
         where TEntity : class,IEntity<TKey>, new()
-        where TKey : struct
     {
         MongoSession _mongoSession;
 
