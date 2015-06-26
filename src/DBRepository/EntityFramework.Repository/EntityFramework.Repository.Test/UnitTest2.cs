@@ -22,16 +22,16 @@ namespace EntityFramework.Repository.Test
         public void ContextIsOK()
         {
             var context = new CarContext();
-            var all = context.Cars.ToList();
-            all.ForEach(r => context.Cars.Remove(r));
+            var all = context.Car.ToList();
+            all.ForEach(r => context.Car.Remove(r));
             context.SaveChanges();
-            context.Cars.Add(new Car()
+            context.Car.Add(new Car()
             {
                 CarName = "Ford",
                 CarPrice = 100000
             });
             context.SaveChanges();
-            var cars = context.Cars.ToList();
+            var cars = context.Car.ToList();
             Assert.AreEqual(cars.Count, 1);
             Assert.AreEqual(cars.FirstOrDefault().CarName, "Ford");
             Assert.AreEqual(cars.FirstOrDefault().CarPrice, 100000);
@@ -43,17 +43,17 @@ namespace EntityFramework.Repository.Test
         {
             var context = new CarContext();
             var testContext = new EFRepository<Car,int>(context);
-            var all = context.Cars.ToList();
+            var all = context.Car.ToList();
             all.ForEach(r => testContext.Delete(r));
             testContext.Save();
-            Assert.AreEqual(context.Cars.ToList().Count, 0);
-            context.Cars.Add(new Car()
+            Assert.AreEqual(context.Car.ToList().Count, 0);
+            context.Car.Add(new Car()
             {
                 CarName = "Ford",
                 CarPrice = 100000
             });
             testContext.Save();
-            var cars = context.Cars.ToList();
+            var cars = context.Car.ToList();
             Assert.AreEqual(testContext.Count(), 1);
             Assert.AreEqual(testContext.Get(r => r.CarPrice == 100000).CarName, "Ford");
         }
@@ -64,17 +64,17 @@ namespace EntityFramework.Repository.Test
        
             var context = new CarContext();
             var testContext = new EFRepository<Car,int>(context);
-            var all = context.Cars.ToList();
+            var all = context.Car.ToList();
             all.ForEach(r => testContext.Delete(r));
             testContext.Save();
-            Assert.AreEqual(context.Cars.ToList().Count, 0);
+            Assert.AreEqual(context.Car.ToList().Count, 0);
             testContext.Insert(new Car()
             {
                 CarName = "Ford",
                 CarPrice = 100000
             });
             testContext.Save();
-            var cars = context.Cars.ToList();
+            var cars = context.Car.ToList();
             Assert.AreEqual(testContext.Count(), 1);
             Assert.AreEqual(testContext.Get(r => r.CarPrice == 100000).CarName, "Ford");
         }
@@ -85,7 +85,7 @@ namespace EntityFramework.Repository.Test
         {
             var context = new CarContext();
             var testContext = new EFRepository<Car,int>(context);
-            var all = context.Cars.ToList();
+            var all = context.Car.ToList();
             all.ForEach(r => testContext.Delete(r));
             testContext.Save();
             var car = new Car()
@@ -101,7 +101,7 @@ namespace EntityFramework.Repository.Test
             testContext.Update(car);
             testContext.Save();
 
-            var cars = context.Cars.ToList();
+            var cars = context.Car.ToList();
             Assert.AreEqual(cars.Count, 1);
             Assert.AreEqual(cars.FirstOrDefault().CarName, "Ford1");
             Assert.AreEqual(cars.FirstOrDefault().CarPrice, 100000 - 1);
@@ -113,7 +113,7 @@ namespace EntityFramework.Repository.Test
         {
             var context = new CarContext();
             var testContext = new EFRepository<Car,int>(context);
-            var all = context.Cars.ToList();
+            var all = context.Car.ToList();
             all.ForEach(r => testContext.Delete(r));
             testContext.Save();
             var car = new Car()
@@ -142,7 +142,7 @@ namespace EntityFramework.Repository.Test
         {
             var context = new CarContext();
             var testContext = new EFRepository<Car,int>(context);
-            var all = context.Cars.ToList();
+            var all = context.Car.ToList();
             all.ForEach(r => testContext.Delete(r));
             testContext.Save();
             var car = new Car()
@@ -154,7 +154,7 @@ namespace EntityFramework.Repository.Test
             testContext.Save();
             testContext.Delete(car.ID);
             testContext.Save();
-            var cars = context.Cars.ToList();
+            var cars = context.Car.ToList();
             Assert.AreEqual(cars.Count, 0);
         }
 
@@ -163,7 +163,7 @@ namespace EntityFramework.Repository.Test
         {
             var context = new CarContext();
             var testContext = new EFRepository<Car,int>(context);
-            var all = context.Cars.ToList();
+            var all = context.Car.ToList();
             all.ForEach(r => testContext.Delete(r));
             testContext.Save();
             var car = new Car()
@@ -175,7 +175,7 @@ namespace EntityFramework.Repository.Test
             testContext.Save();
             testContext.Delete(r => r.ID == car.ID);
             testContext.Save();
-            var cars = context.Cars.ToList();
+            var cars = context.Car.ToList();
             Assert.AreEqual(cars.Count, 0);
         }
 
@@ -185,7 +185,7 @@ namespace EntityFramework.Repository.Test
         {
             var context = new CarContext();
             var testContext = new EFRepository<Car,int>(context);
-            context.Cars.ToList().ForEach(r => testContext.Delete(r));
+            context.Car.ToList().ForEach(r => testContext.Delete(r));
             testContext.Save();
             var car = new Car()
             {
@@ -206,7 +206,7 @@ namespace EntityFramework.Repository.Test
         {
             var context = new CarContext();
             var testContext = new EFRepository<Car,int>(context);
-            context.Cars.ToList().ForEach(r => testContext.Delete(r));
+            context.Car.ToList().ForEach(r => testContext.Delete(r));
             testContext.Save();
             var car = new Car()
             {
@@ -234,7 +234,7 @@ namespace EntityFramework.Repository.Test
         {
             var context = new CarContext();
             var testContext = new EFRepository<Car,int>(context);
-            context.Cars.ToList().ForEach(r => testContext.Delete(r));
+            context.Car.ToList().ForEach(r => testContext.Delete(r));
             testContext.Save();
             var car = new Car()
             {
@@ -261,7 +261,7 @@ namespace EntityFramework.Repository.Test
         {
             var context = new CarContext();
             var testContext = new EFRepository<Car, int>(context);
-            context.Cars.ToList().ForEach(r => testContext.Delete(r));
+            context.Car.ToList().ForEach(r => testContext.Delete(r));
             testContext.Save();
             var car = new Car()
             {

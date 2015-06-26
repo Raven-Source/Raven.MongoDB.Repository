@@ -78,6 +78,7 @@
     <Compile Include="CarConfig.cs" />
     <Compile Include="CarContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTest1.cs" />
     <Compile Include="UnitTest2.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>

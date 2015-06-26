@@ -11,9 +11,7 @@ namespace MongoDB.Repository.Test
         [TestMethod]
         public void TestMethod1()
         {
-            UserRep userRep = new UserRep();
-            userRep.Insert(new User { Name = "a" });
-
+            ;
         }
     }
 
