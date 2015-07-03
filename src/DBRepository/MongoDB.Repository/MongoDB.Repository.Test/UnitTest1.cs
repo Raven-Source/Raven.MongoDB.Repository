@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Repository.IEntity;
 using MongoDB.Bson.Serialization.Attributes;
@@ -11,7 +12,9 @@ namespace MongoDB.Repository.Test
         [TestMethod]
         public void TestMethod1()
         {
-            ;
+            UserRep up = new UserRep();
+            var list = up.GetList(x => x.Name == "xxx").ToList();
+            Assert.AreNotEqual(list.Count, 0);
         }
     }
 
@@ -34,7 +37,7 @@ namespace MongoDB.Repository.Test
     public class UserRep : MongoRepository<User, long>
     {
         public UserRep()
-            : base("MallcooTest", "MongoDB_test") 
+            : base("Test", "MongoDB_test") 
         {
 
         }
