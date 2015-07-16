@@ -11,6 +11,8 @@ namespace EntityFramework.Repository.Test
     {
         public CarConfig()
         {
+            this.ToTable("car", "mycardb");
+
             this.HasKey(r => r.ID);
             this.Property(r => r.ID).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
             this.Property(r => r.CarName).HasMaxLength(255);

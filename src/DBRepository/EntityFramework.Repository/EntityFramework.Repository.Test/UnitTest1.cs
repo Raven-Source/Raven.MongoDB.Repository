@@ -4,6 +4,8 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using EntityFramework.Extensions;
+
 namespace EntityFramework.Repository.Test
 {
     /// <summary>
@@ -75,8 +77,21 @@ namespace EntityFramework.Repository.Test
             { 
 
             }
+        }
 
+        [TestMethod]
+        public void TestUpdate()
+        {
+            using (CarContext context = new CarContext())
+            {
+                var testContext = new EFRepository<Car, int>(context);
 
+                var car = context.Car.AsNoTracking().AsQueryable().ToList();
+                //context.Car.Where(x => x.ID == 1).Update(x => new Car { CarPrice = 12 });
+
+                //testContext.Update(x => x.ID == 1, x => new Car { CarPrice = 12 });
+                context.SaveChanges();
+            }
         }
 
     }
