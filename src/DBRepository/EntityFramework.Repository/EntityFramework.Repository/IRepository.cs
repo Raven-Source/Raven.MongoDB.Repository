@@ -56,7 +56,7 @@ namespace DB.Repository
         /// <summary>
         /// 是否存在
         /// </summary>
-        /// <param name="query">查询条件</param>
+        /// <param name="filterPredicate">查询条件</param>
         /// <returns></returns>
         bool IsExists(Expression<Func<TEntity, bool>> filterPredicate);
     }
