@@ -8,6 +8,7 @@ using System.Text;
 
 using EntityFramework.Extensions;
 using Repository.IEntity;
+using System.Threading.Tasks;
 
 namespace EntityFramework.Repository
 {
@@ -17,7 +18,7 @@ namespace EntityFramework.Repository
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
     /// <remarks>add by liangyi on 2012/10/26</remarks>
-    public class EFRepository<TEntity, TKey> : IEFRepository<TEntity, TKey>
+    public class EFRepository<TEntity, TKey> : IEFRepository<TEntity, TKey>, IEFRepositoryAsync<TEntity, TKey>
         where TEntity : class,IEntity<TKey>, new()
     {
         protected DbContext context;
@@ -27,7 +28,7 @@ namespace EntityFramework.Repository
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="cmsContext"></param>
+        /// <param name="context"></param>
         public EFRepository(DbContext context)
         {
             this.context = context;
@@ -52,6 +53,14 @@ namespace EntityFramework.Repository
         }
 
         /// <summary>
+        /// 保存
+        /// </summary>
+        public Task<int> SaveAsync()
+        {
+            return context.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// 根据sql获取数据
         /// </summary>
         /// <param name="query">sql语句</param>
@@ -63,6 +72,17 @@ namespace EntityFramework.Repository
         }
 
         /// <summary>
+        /// 根据sql获取数据
+        /// </summary>
+        /// <param name="query">sql语句</param>
+        /// <param name="parameters">sql参数</param>
+        /// <returns></returns>
+        public Task<List<TEntity>> GetWithDbSetSqlAsync(string query, params object[] parameters)
+        {
+            return dbSet.SqlQuery(query, parameters).AsNoTracking().ToListAsync();
+        }
+
+        /// <summary>
         /// 根据id获取实体
         /// </summary>
         /// <param name="id"></param>
@@ -70,6 +90,16 @@ namespace EntityFramework.Repository
         public TEntity Get(TKey id)
         {
             return dbSet.Find(id);
+        }
+
+        /// <summary>
+        /// 根据id获取实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task<TEntity> GetAsync(TKey id)
+        {
+            return dbSet.FindAsync(id);
         }
 
         ///// <summary>
@@ -95,6 +125,16 @@ namespace EntityFramework.Repository
         }
 
         /// <summary>
+        /// 根据其他条件获取实体
+        /// </summary>
+        /// <param name="filterPredicate">查询条件</param>
+        /// <returns></returns>
+        public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filterPredicate)
+        {
+            return dbSet.Where(filterPredicate).AsNoTracking().FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// 获取可取相应的字段
         /// </summary>
         /// <param name="filterPredicate">条件</param>
@@ -111,9 +151,31 @@ namespace EntityFramework.Repository
         /// <param name="filterPredicate">条件</param>
         /// <param name="fieldPredicate">字段</param>
         /// <returns></returns>
+        public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TEntity>> fieldPredicate)
+        {
+            return dbSet.Where(filterPredicate).AsNoTracking().Select(fieldPredicate).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// 获取可取相应的字段
+        /// </summary>
+        /// <param name="filterPredicate">条件</param>
+        /// <param name="fieldPredicate">字段</param>
+        /// <returns></returns>
         public TResult Get<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate)
         {
             return dbSet.Where(filterPredicate).AsNoTracking().Select(fieldPredicate).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 获取可取相应的字段
+        /// </summary>
+        /// <param name="filterPredicate">条件</param>
+        /// <param name="fieldPredicate">字段</param>
+        /// <returns></returns>
+        public Task<TResult> GetAsync<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate)
+        {
+            return dbSet.Where(filterPredicate).AsNoTracking().Select(fieldPredicate).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -180,6 +242,16 @@ namespace EntityFramework.Repository
         }
 
         /// <summary>
+        /// 实体更新
+        /// </summary>
+        /// <param name="filterPredicate">更新条件</param>
+        /// <param name="updatePredicate">更新字段值</param>
+        public virtual Task<int> UpdateAsync(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TEntity>> updatePredicate)
+        {
+            return dbSet.Where(filterPredicate).UpdateAsync(updatePredicate);
+        }
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="id"></param>
@@ -215,6 +287,15 @@ namespace EntityFramework.Repository
         }
 
         /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="filterPredicate"></param>
+        public virtual Task<int> DeleteAsync(Expression<Func<TEntity, bool>> filterPredicate)
+        {
+            return dbSet.Where(filterPredicate).DeleteAsync();
+        }
+
+        /// <summary>
         /// 返回数量
         /// </summary>
         /// <param name="filterPredicate">查询条件</param>
@@ -232,22 +313,41 @@ namespace EntityFramework.Repository
         }
 
         /// <summary>
+        /// 返回数量
+        /// </summary>
+        /// <param name="filterPredicate">查询条件</param>
+        /// <returns></returns>
+        public Task<int> CountAsync(Expression<Func<TEntity, bool>> filterPredicate = null)
+        {
+            if (filterPredicate == null)
+            {
+                return dbSet.CountAsync();
+            }
+            else
+            {
+                return dbSet.CountAsync(filterPredicate);
+            }
+        }
+
+        /// <summary>
         /// 是否存在
         /// </summary>
         /// <param name="filterPredicate">查询条件</param>
         /// <returns></returns>
         public bool IsExists(Expression<Func<TEntity, bool>> filterPredicate)
         {
-            if (dbSet.Count(filterPredicate) > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return dbSet.Count(filterPredicate) > 0;
         }
 
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        /// <param name="filterPredicate">查询条件</param>
+        /// <returns></returns>
+        public Task<bool> IsExistsAsync(Expression<Func<TEntity, bool>> filterPredicate)
+        {
+            return dbSet.CountAsync(filterPredicate).ContinueWith(x => x.Result > 0);
+        }
 
         /// <summary>
         /// 获取数据
@@ -281,6 +381,19 @@ namespace EntityFramework.Repository
         }
 
         /// <summary>
+        /// 获取数据
+        /// </summary>
+        /// <param name="filterPredicate">筛选条件</param>
+        /// <param name="orderby">排序条件</param>
+        /// <param name="includeProperties"></param>
+        /// <returns></returns>
+        public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filterPredicate,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby = null, string includeProperties = "")
+        {
+            return this.GetList(filterPredicate, orderby, includeProperties).ToListAsync();
+        }
+
+        /// <summary>
         /// 获取数据(只获取部分字段)
         /// </summary>
         /// <param name="filterPredicate">筛选条件</param>
@@ -295,6 +408,20 @@ namespace EntityFramework.Repository
             return query.Select(fieldPredicate).AsQueryable();
         }
 
+        /// <summary>
+        /// 获取数据(只获取部分字段)
+        /// </summary>
+        /// <param name="filterPredicate">筛选条件</param>
+        /// <param name="fieldPredicate">取需求字段匿名类</param>
+        /// <param name="orderby">排序条件</param>
+        /// <param name="includeProperties">包含virtual字段</param>
+        /// <returns></returns>
+        public Task<List<TResult>> GetListAsync<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby = null, string includeProperties = "")
+        {
+            IQueryable<TEntity> query = this.GetList(filterPredicate, orderby, includeProperties);
+            return query.Select(fieldPredicate).AsQueryable().ToListAsync();
+        }
 
         /// <summary>
         /// 获取数据（分页）
@@ -328,6 +455,21 @@ namespace EntityFramework.Repository
         /// 获取数据（分页）
         /// </summary>
         /// <param name="filterPredicate">筛选条件</param>
+        /// <param name="orderby">排序条件</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">每页数据数</param>
+        /// <param name="includeProperties">包含virtual字段</param>
+        /// <returns></returns>
+        public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filterPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int pageIndex = 1, int pageSize = 10,
+             string includeProperties = "")
+        {
+            return this.GetList(filterPredicate, orderby, pageIndex, pageSize, includeProperties).ToListAsync();
+        }
+
+        /// <summary>
+        /// 获取数据（分页）
+        /// </summary>
+        /// <param name="filterPredicate">筛选条件</param>
         /// <param name="fieldPredicate">取需求字段匿名类</param>
         /// <param name="orderby">排序条件</param>
         /// <param name="pageIndex">页码</param>
@@ -339,6 +481,23 @@ namespace EntityFramework.Repository
         {
             IQueryable<TEntity> query = this.GetList(filterPredicate, orderby, pageIndex, pageSize, includeProperties);
             return query.Select(fieldPredicate).AsQueryable();
+        }
+
+        /// <summary>
+        /// 获取数据（分页）
+        /// </summary>
+        /// <param name="filterPredicate">筛选条件</param>
+        /// <param name="fieldPredicate">取需求字段匿名类</param>
+        /// <param name="orderby">排序条件</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">每页数据数</param>
+        /// <param name="includeProperties">包含virtual字段</param>
+        /// <returns></returns>
+        public Task<List<TResult>> GetListAsync<TResult>(Expression<Func<TEntity, bool>> filterPredicate, Expression<Func<TEntity, TResult>> fieldPredicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int pageIndex = 1, int pageSize = 10,
+             string includeProperties = "")
+        {
+            IQueryable<TEntity> query = this.GetList(filterPredicate, orderby, pageIndex, pageSize, includeProperties);
+            return query.Select(fieldPredicate).AsQueryable().ToListAsync();
         }
     }
 }

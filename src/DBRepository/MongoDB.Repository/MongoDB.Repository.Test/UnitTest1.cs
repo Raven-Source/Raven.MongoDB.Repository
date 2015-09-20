@@ -18,6 +18,8 @@ namespace MongoDB.Repository.Test
             userRep.Insert(new User() { Name = "CCC" });
 
             var list = userRep.GetList(x => x.Name == "ggg").ToList();
+            UserRep up = new UserRep();
+            var list = up.GetList(x => x.Name == "xxx").ToList();
             Assert.AreNotEqual(list.Count, 0);
         }
     }
@@ -41,7 +43,7 @@ namespace MongoDB.Repository.Test
     public class UserRep : MongoRepository<User, long>
     {
         public UserRep()
-            : base("MallcooTest", "MongoDB_test")
+            : base("Test", "MongoDB_test") 
         {
 
         }

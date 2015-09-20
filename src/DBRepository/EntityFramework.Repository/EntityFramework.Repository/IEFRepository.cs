@@ -34,16 +34,7 @@ namespace EntityFramework.Repository
         /// <param name="parameters"></param>
         /// <returns></returns>
         IQueryable<TEntity> GetWithDbSetSql(string query, params object[] parameters);
-
-
-        ///// <summary>
-        ///// 根据id获取实体
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <param name="fieldPredicate">字段</param>
-        ///// <returns></returns>
-        //TEntity Get(TKey id, Expression<Func<TEntity, TEntity>> fieldPredicate);
-
+        
         /// <summary>
         /// 根据id和其他条件获取实体
         /// </summary>
