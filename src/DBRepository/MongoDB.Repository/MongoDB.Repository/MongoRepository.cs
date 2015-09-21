@@ -23,16 +23,7 @@ namespace MongoDB.Repository
         where TEntity : class,IEntity<TKey>, new()
     {
         MongoSession _mongoSession;
-
-        /// <summary>
-        /// webconfig中MongoDB数据库连接名称,默认为MongoDB，可更改
-        /// </summary>
-        protected const string DEFAULT_CONFIG_NODE = "MongoDB";
-        /// <summary>
-        /// 默认MongoDB数据库名称，可更改
-        /// </summary>
-        protected const string DEFAULT_DB_NAME = "Mallcoo";
-
+        
         /// <summary>
         /// 自增ID的属性
         /// </summary>
@@ -41,11 +32,11 @@ namespace MongoDB.Repository
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="connString">数据库链接字符串</param>
         /// <param name="dbName">数据库名称</param>
-        /// <param name="configNode">数据库连接节点</param>
-        public MongoRepository(string dbName = DEFAULT_DB_NAME, string configNode = DEFAULT_CONFIG_NODE, ReadPreference readPreference = null)
+        public MongoRepository(string connString, string dbName, ReadPreference readPreference = null)
         {
-            _mongoSession = new MongoSession(dbName, configNode, readPreference: readPreference);
+            _mongoSession = new MongoSession(connString, dbName, readPreference: readPreference);
         }
 
         /// <summary>
