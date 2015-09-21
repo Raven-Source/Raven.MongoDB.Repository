@@ -10,14 +10,13 @@ using System.Threading.Tasks;
 
 namespace MongoDB.Repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class MongoSession
     {
         #region 私有方法
 
-        /// <summary>
-        /// MongoDB连接字符串默认配置节
-        /// </summary>
-        private const string DEFAULT_CONFIG_NODE = "MongoDB";
         /// <summary>
         /// Mongo自增长ID数据序列
         /// </summary>
@@ -49,16 +48,16 @@ namespace MongoDB.Repository
         /// 构造函数
         /// <remarks>默认连接串配置节 Web.config > connectionStrings > MongoDB</remarks>
         /// </summary>
+        /// <param name="connString">数据库链接字符串</param>
         /// <param name="dbName">数据库名称</param>
-        /// <param name="configNode">MongoDB连接字符串配置节</param>
         /// <param name="writeConcern">WriteConcern选项</param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
         /// <param name="isSlaveOK"></param>
-        public MongoSession(string dbName, string configNode = DEFAULT_CONFIG_NODE, WriteConcern writeConcern = null, MongoSequence sequence = null, bool isSlaveOK = false, ReadPreference readPreference = null)
+        public MongoSession(string connString, string dbName, WriteConcern writeConcern = null, MongoSequence sequence = null, bool isSlaveOK = false, ReadPreference readPreference = null)
         {
-            var connString = ConfigurationManager.ConnectionStrings[configNode].ConnectionString;
             this._writeConcern = writeConcern ?? WriteConcern.Unacknowledged;
             this._sequence = sequence ?? new MongoSequence();
+
             var serverSettings = MongoServerSettings.FromUrl(new MongoUrl(connString));
             this._mongoServer = new MongoServer(serverSettings);
 

@@ -62,8 +62,10 @@
     </Compile>
     <Compile Include="IMongoRepository.cs" />
     <Compile Include="MongoRepository.cs" />
+    <Compile Include="MongoRepositoryAsync.cs" />
     <Compile Include="MongoSequence.cs" />
     <Compile Include="MongoSession.cs" />
+    <Compile Include="MongoSessionAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

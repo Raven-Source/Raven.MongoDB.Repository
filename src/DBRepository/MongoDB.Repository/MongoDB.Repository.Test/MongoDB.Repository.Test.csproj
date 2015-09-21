@@ -62,8 +62,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="MongoRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MongoRepositoryAsyncTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Repository.IEntity\Repository.IEntity.csproj">
