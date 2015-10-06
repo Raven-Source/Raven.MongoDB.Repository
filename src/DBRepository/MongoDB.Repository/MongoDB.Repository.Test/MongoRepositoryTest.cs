@@ -19,26 +19,11 @@ namespace MongoDB.Repository.Test
 
             var list = userRep.GetList(x => x.Name == "ggg").ToList();
             UserRep up = new UserRep();
-            var list = up.GetList(x => x.Name == "xxx").ToList();
+            list = up.GetList(x => x.Name == "xxx").ToList();
             Assert.AreNotEqual(list.Count, 0);
         }
     }
 
-    public class User : IAutoIncr<long>
-    {
-        [BsonId]
-        public long ID
-        {
-            get;
-            set;
-        }
-
-        public string Name
-        {
-            get;
-            set;
-        }
-    }
 
     public class UserRep : MongoRepository<User, long>
     {

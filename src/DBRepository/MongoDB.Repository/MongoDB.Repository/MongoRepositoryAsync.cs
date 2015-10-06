@@ -19,18 +19,29 @@ namespace MongoDB.Repository
         MongoSessionAsync _mongoSession;
 
         /// <summary>
-        /// 自增ID的属性
+        /// MongoDatabase
         /// </summary>
-        private static Type tBsonIdType = typeof(MongoDB.Bson.Serialization.Attributes.BsonIdAttribute);
+        public IMongoDatabase Database
+        {
+            get
+            {
+                return _mongoSession.Database;
+            }
+        }
+
+        ///// <summary>
+        ///// 自增ID的属性
+        ///// </summary>
+        //private static Type tBsonIdType = typeof(MongoDB.Bson.Serialization.Attributes.BsonIdAttribute);
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="connString">数据库连接节点</param>
         /// <param name="dbName">数据库名称</param>
-        public MongoRepositoryAsync(string connString, string dbName, ReadPreference readPreference = null)
+        public MongoRepositoryAsync(string connString, string dbName, ReadPreference readPreference = null, MongoSequence sequence = null)
         {
-            _mongoSession = new MongoSessionAsync(connString, dbName, readPreference: readPreference);
+            _mongoSession = new MongoSessionAsync(connString, dbName, readPreference: readPreference, sequence: sequence);
         }
 
         /// <summary>
@@ -40,12 +51,54 @@ namespace MongoDB.Repository
         /// <returns></returns>
         public async Task<TEntity> GetAsync(TKey id)
         {
-            var option = new FindOptions<TEntity,TEntity>(){ Limit = 1};
             var filter = _mongoSession.CreateFilterDefinition<TEntity>().Eq(x => x.ID, id);
-            var result = await _mongoSession.GetCollection<TEntity>().FindAsync(filter, option);            
 
-            return result.Current.FirstOrDefault();
+            var cursor = await _mongoSession.Query<TEntity>(filter, limit: 1);
+            var reslut = await cursor.ToListAsync();
+
+            return reslut.FirstOrDefault();
         }
 
+        /// <summary>
+        /// 添加数据
+        /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="item">待添加数据</param>
+        /// <returns></returns>
+        public async Task Insert(TEntity entity)
+        {
+            long _id = 0;
+            if (entity is IAutoIncr)
+            {
+                _id = await _mongoSession.CreateIncID<TEntity>();
+
+                IEntity<TKey> tEntity = entity as IEntity<TKey>;
+                if (tEntity.ID is int)
+                {
+                    (entity as IEntity<int>).ID = (int)_id;
+                }
+                else if (tEntity.ID is long)
+                {
+                    (entity as IEntity<long>).ID = (long)_id;
+                }
+                else if (tEntity.ID is short)
+                {
+                    (entity as IEntity<short>).ID = (short)_id;
+                }
+            }
+
+            await _mongoSession.Insert(entity);
+        }
+
+        /// <summary>
+        /// 批量添加数据
+        /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="items">待添加数据集合</param>
+        /// <returns></returns>
+        public async Task InsertBatch(IEnumerable<TEntity> items)
+        {
+            await _mongoSession.InsertBatch<TEntity>(items);
+        }
     }
 }

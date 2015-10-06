@@ -63,6 +63,7 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IRepositoryAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SortType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Repository.IEntity\Repository.IEntity.csproj">

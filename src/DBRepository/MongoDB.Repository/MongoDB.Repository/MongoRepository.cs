@@ -25,18 +25,13 @@ namespace MongoDB.Repository
         MongoSession _mongoSession;
         
         /// <summary>
-        /// 自增ID的属性
-        /// </summary>
-        private static Type tBsonIdType = typeof(MongoDB.Bson.Serialization.Attributes.BsonIdAttribute);
-
-        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="connString">数据库链接字符串</param>
         /// <param name="dbName">数据库名称</param>
-        public MongoRepository(string connString, string dbName, ReadPreference readPreference = null)
+        public MongoRepository(string connString, string dbName, ReadPreference readPreference = null, MongoSequence sequence = null)
         {
-            _mongoSession = new MongoSession(connString, dbName, readPreference: readPreference);
+            _mongoSession = new MongoSession(connString, dbName, readPreference: readPreference, sequence: sequence);
         }
 
         /// <summary>

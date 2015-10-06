@@ -90,7 +90,7 @@ namespace MongoDB.Repository
         public long CreateIncID<T>() where T : class, new()
         {
             long id = 1;
-            var collection = mongoDatabase.GetCollection(this._sequence.Sequence);
+            var collection = mongoDatabase.GetCollection(this._sequence.SequenceName);
             var typeName = typeof(T).Name;
 
             if (collection.Exists() &&

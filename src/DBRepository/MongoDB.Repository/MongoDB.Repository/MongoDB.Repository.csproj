@@ -60,6 +60,9 @@
     <Compile Include="..\..\EntityFramework.Repository\EntityFramework.Repository\IRepository.cs">
       <Link>IRepository.cs</Link>
     </Compile>
+    <Compile Include="..\..\EntityFramework.Repository\EntityFramework.Repository\SortType.cs">
+      <Link>SortType.cs</Link>
+    </Compile>
     <Compile Include="IMongoRepository.cs" />
     <Compile Include="MongoRepository.cs" />
     <Compile Include="MongoRepositoryAsync.cs" />

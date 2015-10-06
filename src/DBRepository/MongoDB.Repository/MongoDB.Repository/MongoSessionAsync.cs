@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using DB.Repository;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -96,7 +97,7 @@ namespace MongoDB.Repository
         /// <returns></returns>
         public IndexKeysDefinitionBuilder<T> CreateIndexKeysDefinition<T>()
         {
-            return new IndexKeysDefinitionBuilder<T>();
+            return Builders<T>.IndexKeys;
         }
 
         /// <summary>
@@ -110,6 +111,16 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public ProjectionDefinitionBuilder<T> CreateProjectionDefinition<T>()
+        {
+            return Builders<T>.Projection;
+        }
+
+        /// <summary>
         /// 创建自增长ID
         /// <remarks>默认自增ID存放 [Sequence] 集合</remarks>
         /// </summary>
@@ -118,11 +129,11 @@ namespace MongoDB.Repository
         public async Task<long> CreateIncID<T>() where T : class, new()
         {
             long id = 1;
-            var collection = Database.GetCollection<BsonDocument>(this._sequence.Sequence);
+            var collection = Database.GetCollection<BsonDocument>(this._sequence.SequenceName);
             var typeName = typeof(T).Name;
 
             var query = CreateFilterDefinition<BsonDocument>().Eq(this._sequence.CollectionName, typeName);
-            var update = CreateUpdateDefinition<BsonDocument>().Inc(this._sequence.IncrementID, 1);
+            var update = CreateUpdateDefinition<BsonDocument>().Inc(this._sequence.IncrementID, 1L);
             var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>();
             options.IsUpsert = true;
             options.ReturnDocument = ReturnDocument.After;
@@ -151,48 +162,78 @@ namespace MongoDB.Repository
         /// <returns></returns>
         public async Task<DateTime> GetSysDateTime()
         {
-            var result = await Database.RunCommandAsync<BsonValue>("new Date(");
+            var result = await Database.RunCommandAsync<BsonValue>("new Date()");
             return result.ToUniversalTime();
         }
 
         /// <summary>
-        /// 获取多条数据
-        /// <remarks>所有或分页数据（用于非标准分页）</remarks>
+        /// 查询记录
         /// </summary>
-        /// <typeparam name="T">数据类型</typeparam>
-        /// <param name="start">总条数</param>
-        /// <param name="query">查询表达式</param>
-        /// <param name="sortBy">排序表达式</param>
-        /// <param name="pageIndex">当前页索引</param>
-        /// <param name="pageSize">每页数据数</param>
-        /// <param name="fields">指定字段表达式</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="field"></param>
+        /// <param name="sort"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
         /// <returns></returns>
-        public MongoCursor<T> Query<T>(Expression<Func<T, bool>> filter, IMongoSortBy sortBy = null, int pageIndex = 0, int pageSize = 0, IMongoFields fields = null) where T : class, new()
+        public Task<IAsyncCursor<T>> Query<T>(Expression<Func<T, bool>> filter
+            , Expression<Func<T, object>> field = null
+            , Expression<Func<T, object>> sort = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0)
+            where T : class, new()
         {
-            var option = new FindOptions<T>();
+            var filterDef = Builders<T>.Filter.Where(filter);
+            return Query<T>(filterDef, field, sort, sortType, limit, skip);
+        }
 
-             GetCollection<T>().Find(filter);
-            var cursor = this.GetCollection<T>().Find(query);
-
-            if (fields != null)
-                cursor = cursor.SetFields(fields);
-
-            if (sortBy != null)
-                cursor = cursor.SetSortOrder(sortBy);
-            if (pageSize != 0)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="field"></param>
+        /// <param name="sort"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        public async Task<IAsyncCursor<T>> Query<T>(FilterDefinition<T> filter
+            , Expression<Func<T, object>> field = null
+            , Expression<Func<T, object>> sort = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0)
+            where T : class, new()
+        {
+            var option = new FindOptions<T, T>();
+            if (limit > 0)
             {
-                //如果是第一页，则取start条， 从第二页开始，数据从N+start条开始取
-                if (pageIndex != 0)
+                option.Limit = limit;
+            }
+            if (skip > 0)
+            {
+                option.Skip = skip;
+            }
+
+            if (field != null)
+            {
+                option.Projection = CreateProjectionDefinition<T>().Include(field);
+            }
+
+            if (sort != null)
+            {
+                if (sortType == SortType.Ascending)
                 {
-                    int iCount = (pageIndex - 1) * pageSize + start;
-                    cursor.SetSkip(iCount).SetLimit(pageSize);
+                    option.Sort = CreateSortDefinition<T>().Ascending(sort);
                 }
                 else
                 {
-                    cursor.SetSkip(0).SetLimit(start);
+                    option.Sort = CreateSortDefinition<T>().Descending(sort);
                 }
             }
-            return cursor;
+
+            var result = await this.GetCollection<T>().FindAsync(filter, option);
+
+            return result;
         }
 
         /// <summary>
@@ -206,6 +247,16 @@ namespace MongoDB.Repository
             await this.GetCollection<T>().InsertOneAsync(item);
         }
 
+        /// <summary>
+        /// 批量添加数据
+        /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="items">待添加数据集合</param>
+        /// <returns></returns>
+        public async Task InsertBatch<T>(IEnumerable<T> items) where T : class, new()
+        {
+            await this.GetCollection<T>().InsertManyAsync(items);
+        }
 
     }
 }
