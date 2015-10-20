@@ -1,5 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using MongoDB.Driver;
 
 namespace MongoDB.Repository.Test
 {
@@ -7,33 +11,67 @@ namespace MongoDB.Repository.Test
     public class MongoRepositoryAsyncTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public async Task Insert()
         {
             UserRepAsync userRep = new UserRepAsync();
 
-            //User user = new User();
-            //user.Name = "aa";
-            //userRep.Insert(user).Wait();
+            User user = new User();
+            user.Name = "aa";
+            await userRep.Insert(user);
 
-            //user = new User();
-            //user.Name = "bb";
-            //userRep.Insert(user).Wait();
-            
-            var user = userRep.GetAsync(1).Result;
-            var name = nameof(User.Name);
+            user = new User();
+            user.Name = "bb";
+            await userRep.Insert(user);
+
+            user = new User();
+            user.Name = "cc";
+            await userRep.Insert(user);
+        }
+
+
+        [TestMethod]
+        public async Task Get()
+        {
+            UserRepAsync userRep = new UserRepAsync();
+            User user = null;
+            user = await userRep.Get(1);
+            Assert.AreEqual(user.ID, 1);
+
+            user = await userRep.Get(x => x.Name == "aa");
+            Assert.AreNotEqual(user, null);
+            try
+            {
+                user = await userRep.Get(x => x.Name == "aa", x => new { x.Name });
+            }
+            catch (Exception ex)
+            {
+
+            }
+            Assert.AreNotEqual(user, null);
+            user = await userRep.Get(x => x.Name == "aa", x => new { x.CreateTime });
+            Assert.AreNotEqual(user, null);
+
+            user = await userRep.Get(x => x.Name == "aa" && x.CreateTime > DateTime.Parse("2015/10/20"));
+            Assert.AreNotEqual(user, null);
+
+            user = await userRep.Get(Builders<User>.Filter.Eq("Name", "aa"));
+            Assert.AreNotEqual(user, null);
+            user = await userRep.Get(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
+            Assert.AreNotEqual(user, null);
 
         }
-    }
 
 
-    public class UserRepAsync : MongoRepositoryAsync<User, long>
-    {
-        private static string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MongoDB_test"].ConnectionString;
-
-        public UserRepAsync()
-            : base(connString, "MongoDB_test")
+        [TestMethod]
+        public async Task GetList()
         {
+            UserRepAsync userRep = new UserRepAsync();
+            List<User> userList = null;
+            userList = await userRep.GetList(null);
 
+            userList = await userRep.GetList(x => x.ID > 3 && x.Name == "aa");
+
+            userList = await userRep.GetList(x => x.Name == "aa", x => new { x.CreateTime });
         }
     }
 }

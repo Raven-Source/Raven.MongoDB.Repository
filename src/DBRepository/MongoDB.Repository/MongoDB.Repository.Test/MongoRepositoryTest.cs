@@ -24,14 +24,4 @@ namespace MongoDB.Repository.Test
         }
     }
 
-
-    public class UserRep : MongoRepository<User, long>
-    {
-        public UserRep()
-            : base("Test", "MongoDB_test") 
-        {
-
-        }
-    }
-
 }

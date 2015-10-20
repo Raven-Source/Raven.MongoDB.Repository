@@ -23,12 +23,14 @@ namespace MongoDB.Repository
         where TEntity : class,IEntity<TKey>, new()
     {
         MongoSession _mongoSession;
-        
+
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="connString">数据库链接字符串</param>
         /// <param name="dbName">数据库名称</param>
+        /// <param name="sequence">Mongo自增长ID数据序列对象</param>
+        /// <param name="readPreference"></param>
         public MongoRepository(string connString, string dbName, ReadPreference readPreference = null, MongoSequence sequence = null)
         {
             _mongoSession = new MongoSession(connString, dbName, readPreference: readPreference, sequence: sequence);

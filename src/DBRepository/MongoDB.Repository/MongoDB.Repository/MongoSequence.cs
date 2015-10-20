@@ -39,7 +39,7 @@ namespace MongoDB.Repository
         /// </summary>
         public MongoSequence()
         {
-            SequenceName = "_Sequence";
+            SequenceName = "Sequence";
             CollectionName = "CollectionName";
             IncrementID = "IncrementID";
         }
