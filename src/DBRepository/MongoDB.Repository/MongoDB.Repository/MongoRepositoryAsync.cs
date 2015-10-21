@@ -150,6 +150,8 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="filterExp"></param>
         /// <param name="includeFieldExp"></param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
         /// <returns></returns>
         public async Task<TEntity> Get(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending)
@@ -203,18 +205,8 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.And();
             }
 
-            if (sort != null)
-            {
-                if (sortType == SortType.Ascending)
-                {
-                    sort = Builders<TEntity>.Sort.Ascending(sortExp);
-                }
-                else
-                {
-                    sort = Builders<TEntity>.Sort.Descending(sortExp);
-                }
-            }
-            
+            sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
+
             if (includeFieldExp != null)
             {
                 projection = _mongoSession.IncludeFields(includeFieldExp);
@@ -345,32 +337,23 @@ namespace MongoDB.Repository
             option.IsUpsert = isUpsert;
             return await _mongoSession.GetCollection<TEntity>().UpdateManyAsync(filter, update, option);
         }
-        
+
         /// <summary>
         /// 找到并更新
         /// </summary>
         /// <param name="filterExp"></param>
         /// <param name="update"></param>
         /// <param name="isUpsert"></param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndUpdate(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending)
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
-            SortDefinition<TEntity> sort = null;
-            if (sort != null)
-            {
-                if (sortType == SortType.Ascending)
-                {
-                    sort = Builders<TEntity>.Sort.Ascending(sortExp);
-                }
-                else
-                {
-                    sort = Builders<TEntity>.Sort.Descending(sortExp);
-                }
-            }
-            option.Sort = sort;
+            
+            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
             return await _mongoSession.GetCollection<TEntity>().FindOneAndUpdateAsync(filterExp, update, option);
         }
@@ -381,6 +364,7 @@ namespace MongoDB.Repository
         /// <param name="filter"></param>
         /// <param name="update"></param>
         /// <param name="isUpsert"></param>
+        /// <param name="sort"></param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndUpdate(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
             , SortDefinition<TEntity> sort = null)
@@ -406,20 +390,7 @@ namespace MongoDB.Repository
         {
             FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
             option.IsUpsert = isUpsert;
-
-            SortDefinition<TEntity> sort = null;
-            if (sort != null)
-            {
-                if (sortType == SortType.Ascending)
-                {
-                    sort = Builders<TEntity>.Sort.Ascending(sortExp);
-                }
-                else
-                {
-                    sort = Builders<TEntity>.Sort.Descending(sortExp);
-                }
-            }
-            option.Sort = sort;
+            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
             return await _mongoSession.GetCollection<TEntity>().FindOneAndReplaceAsync(filterExp, entity, option);
         }
@@ -465,20 +436,7 @@ namespace MongoDB.Repository
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending)
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
-            SortDefinition<TEntity> sort = null;
-            if (sort != null)
-            {
-                if (sortType == SortType.Ascending)
-                {
-                    sort = Builders<TEntity>.Sort.Ascending(sortExp);
-                }
-                else
-                {
-                    sort = Builders<TEntity>.Sort.Descending(sortExp);
-                }
-            }
-            option.Sort = sort;
-
+            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
             return await _mongoSession.GetCollection<TEntity>().FindOneAndDeleteAsync(filterExp, option);
         }
 

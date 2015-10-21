@@ -125,142 +125,30 @@ namespace MongoDB.Repository
 
         #endregion
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="filterExp"></param>
-        ///// <param name="fieldExp"></param>
-        ///// <param name="sortExp"></param>
-        ///// <param name="sortType"></param>
-        ///// <param name="limit"></param>
-        ///// <param name="skip"></param>
-        ///// <returns></returns>
-        //public async Task<IAsyncCursor<T>> FindAsync<T>(Expression<Func<T, bool>> filterExp = null
-        //    , Expression<Func<T, object>> fieldExp = null
-        //    , Expression<Func<T, object>> sortExp = null, SortType sortType = SortType.Ascending
-        //    , int limit = 0, int skip = 0)
-        //    where T : class, new()
-        //{
-        //    FilterDefinition<T> filter = null;
-        //    ProjectionDefinition<T, T> projection = null;
-        //    SortDefinition<T> sort = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <returns></returns>
+        public SortDefinition<T> CreateSortDefinition<T>(Expression<Func<T, object>> sortExp, SortType sortType = SortType.Ascending)
+        {
+            SortDefinition<T> sort = null;
+            if (sort != null)
+            {
+                if (sortType == SortType.Ascending)
+                {
+                    sort = Builders<T>.Sort.Ascending(sortExp);
+                }
+                else
+                {
+                    sort = Builders<T>.Sort.Descending(sortExp);
+                }
+            }
+            return sort;
+        }
 
-        //    if (filterExp != null)
-        //    {
-        //        filter = Builders<T>.Filter.Where(filterExp);
-        //    }
-
-        //    if (sortExp != null)
-        //    {
-        //        if (sortType == SortType.Ascending)
-        //        {
-        //            sort = Builders<T>.Sort.Ascending(sortExp);
-        //        }
-        //        else
-        //        {
-        //            sort = Builders<T>.Sort.Descending(sortExp);
-        //        }
-        //    }
-
-        //    if (fieldExp != null)
-        //    {
-        //        projection = Builders<T>.Projection.Include(fieldExp);
-        //    }
-        //    var option = CreateFindOptions(projection, sort, sortType, limit, skip);
-        //    var result = await this.GetCollection<T>().FindAsync(filter, option);
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// 查询记录
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="filterExp"></param>
-        ///// <param name="field"></param>
-        ///// <param name="sort"></param>
-        ///// <param name="sortType"></param>
-        ///// <param name="limit"></param>
-        ///// <param name="skip"></param>
-        ///// <returns></returns>
-        //public async Task<IAsyncCursor<T>> FindAsync<T>(Expression<Func<T, bool>> filterExp
-        //    , FieldDefinition<T> field = null
-        //    , SortDefinition<T> sort = null, SortType sortType = SortType.Ascending
-        //    , int limit = 0, int skip = 0)
-        //    where T : class, new()
-        //{
-        //    FilterDefinition<T> filter = null;
-        //    ProjectionDefinition<T, T> projection = null;
-        //    if (filterExp != null)
-        //    {
-        //        filter = Builders<T>.Filter.Where(filterExp);
-        //    }
-        //    if (field != null)
-        //    {
-        //        projection = Builders<T>.Projection.Include(field);
-        //    }
-        //    var option = CreateFindOptions(projection, sort, sortType, limit, skip);
-        //    var result = await this.GetCollection<T>().FindAsync(filter, option);
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// 查询记录
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="filter"></param>
-        ///// <param name="fieldExp"></param>
-        ///// <param name="sort"></param>
-        ///// <param name="sortType"></param>
-        ///// <param name="limit"></param>
-        ///// <param name="skip"></param>
-        ///// <returns></returns>
-        //public async Task<IAsyncCursor<T>> FindAsync<T>(FilterDefinition<T> filter
-        //    , Expression<Func<T, object>> fieldExp = null
-        //    , SortDefinition<T> sort = null, SortType sortType = SortType.Ascending
-        //    , int limit = 0, int skip = 0)
-        //    where T : class, new()
-        //{
-        //    ProjectionDefinition<T, T> projection = null;
-        //    if (fieldExp != null)
-        //    {
-        //        projection = Builders<T>.Projection.Include(fieldExp);
-        //    }
-        //    var option = CreateFindOptions(projection, sort, sortType, limit, skip);
-        //    var result = await this.GetCollection<T>().FindAsync(filter, option);
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// 查询记录
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="filter"></param>
-        ///// <param name="field"></param>
-        ///// <param name="sort"></param>
-        ///// <param name="sortType"></param>
-        ///// <param name="limit"></param>
-        ///// <param name="skip"></param>
-        ///// <returns></returns>
-        //public async Task<IAsyncCursor<T>> FindAsync<T>(FilterDefinition<T> filter
-        //    , FieldDefinition<T> field = null
-        //    , SortDefinition<T> sort = null, SortType sortType = SortType.Ascending
-        //    , int limit = 0, int skip = 0)
-        //    where T : class, new()
-        //{
-        //    ProjectionDefinition<T, T> projection = null;
-        //    if (field != null)
-        //    {
-        //        projection = Builders<T>.Projection.Include(field);
-        //    }
-        //    var option = CreateFindOptions(projection, sort, sortType, limit, skip);
-        //    var result = await this.GetCollection<T>().FindAsync(filter, option);
-
-        //    return result;
-        //}
 
         /// <summary>
         /// 
@@ -327,18 +215,7 @@ namespace MongoDB.Repository
                 option.Projection = projection;
             }
 
-            SortDefinition<T> sort = null;
-            if (sortExp != null)
-            {
-                if (sortType == SortType.Ascending)
-                {
-                    sort = Builders<T>.Sort.Ascending(sortExp);
-                }
-                else
-                {
-                    sort = Builders<T>.Sort.Descending(sortExp);
-                }
-            }
+            SortDefinition<T> sort = CreateSortDefinition(sortExp, sortType);
             if (sort != null)
             {
                 option.Sort = sort;

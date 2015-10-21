@@ -54,7 +54,7 @@ namespace MongoDB.Repository.Test
             user = await userRep.Get(x => x.Name == "aa" && x.CreateTime > DateTime.Parse("2015/10/20"));
             Assert.AreNotEqual(user, null);
 
-            user = await userRep.Get(Builders<User>.Filter.Eq("Name", "aa"));
+            user = await userRep.Get(Builders<User>.Filter.Eq("Name", "aa"), Builders<User>.Sort.Descending("_id"));
             Assert.AreNotEqual(user, null);
             user = await userRep.Get(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
             Assert.AreNotEqual(user, null);
@@ -71,7 +71,9 @@ namespace MongoDB.Repository.Test
 
             userList = await userRep.GetList(x => x.ID > 3 && x.Name == "aa");
 
-            userList = await userRep.GetList(x => x.Name == "aa", x => new { x.CreateTime });
+            userList = await userRep.GetList(filterExp: x => x.Name == "aa", includeFieldExp: x => new { x.CreateTime });
+            userList = await userRep.GetList(filter:Builders<User>.Filter.Eq("Name", "aa"), sort: Builders<User>.Sort.Descending("_id"));
+            userList = await userRep.GetList(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
         }
     }
 }
