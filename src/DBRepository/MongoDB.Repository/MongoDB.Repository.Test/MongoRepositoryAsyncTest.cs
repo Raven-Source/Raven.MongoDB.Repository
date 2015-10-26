@@ -28,6 +28,46 @@ namespace MongoDB.Repository.Test
             await userRep.Insert(user);
         }
 
+        [TestMethod]
+        public async Task InsertBatch()
+        {
+            UserRepAsync userRep = new UserRepAsync();
+
+            List<User> userList = new List<User>();
+            for (var i = 0; i < 5; i++)
+            {
+                User user = new User();
+                user.Name = new Random(1).ToString();
+                userList.Add(user);
+            }
+
+            await userRep.InsertBatch(userList);
+
+        }
+
+        [TestMethod]
+        public async Task UpdateOne()
+        {
+            UserRepAsync userRep = new UserRepAsync();
+            await userRep.UpdateOne(x => x.ID == 4, UserRepAsync.Update.Set(nameof(User.CreateTime), DateTime.Now));
+
+            await userRep.UpdateOne(x => x.Name == "bb", UserRepAsync.Update.Set(nameof(User.CreateTime), DateTime.Now));
+
+            long id = await userRep.CreateIncID();
+            var update = UserRepAsync.Update.Set(nameof(User.Name),"xyz");
+            update = update.SetOnInsert(x => x.ID, id).SetOnInsert(x => x.CreateTime, DateTime.Now);
+            await userRep.UpdateOne(x => x.Name == "abc", update, true);            
+        }
+
+        [TestMethod]
+        public async Task UpdateMany()
+        {
+            UserRepAsync userRep = new UserRepAsync();
+
+            var update = UserRepAsync.Update.Set(nameof(User.CreateTime), DateTime.Now);
+            
+            await userRep.UpdateMany(x => x.Name == "cc", update, true);
+        }
 
         [TestMethod]
         public async Task Get()
@@ -75,5 +115,7 @@ namespace MongoDB.Repository.Test
             userList = await userRep.GetList(filter:Builders<User>.Filter.Eq("Name", "aa"), sort: Builders<User>.Sort.Descending("_id"));
             userList = await userRep.GetList(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
         }
+
+
     }
 }

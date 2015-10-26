@@ -43,6 +43,50 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
+        /// get Filter
+        /// </summary>
+        public static FilterDefinitionBuilder<TEntity> Filter
+        {
+            get
+            {
+                return Builders<TEntity>.Filter;
+            }
+        }
+
+        /// <summary>
+        /// get Sort
+        /// </summary>
+        public static SortDefinitionBuilder<TEntity> Sort
+        {
+            get
+            {
+                return Builders<TEntity>.Sort;
+            }
+        }
+
+        /// <summary>
+        /// get Update
+        /// </summary>
+        public static UpdateDefinitionBuilder<TEntity> Update
+        {
+            get
+            {
+                return Builders<TEntity>.Update;
+            }
+        }
+
+        /// <summary>
+        /// get Projection
+        /// </summary>
+        public static ProjectionDefinitionBuilder<TEntity> Projection
+        {
+            get
+            {
+                return Builders<TEntity>.Projection;
+            }
+        }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="connString">数据库连接节点</param>
@@ -60,7 +104,7 @@ namespace MongoDB.Repository
         /// </summary>
         /// <typeparam name="T">数据类型</typeparam>
         /// <param name="indexKeyExp">索引字段</param>
-        public async Task<string> CreateIndexAsync(Func<IndexKeysDefinitionBuilder<TEntity>, IndexKeysDefinition<TEntity>> indexKeyExp)
+        public async Task<string> CreateIndex(Func<IndexKeysDefinitionBuilder<TEntity>, IndexKeysDefinition<TEntity>> indexKeyExp)
         {
             var indexKey = indexKeyExp(Builders<TEntity>.IndexKeys);
             var result = await _mongoSession.GetCollection<TEntity>().Indexes.CreateOneAsync(indexKey);
@@ -80,8 +124,18 @@ namespace MongoDB.Repository
         /// <summary>
         /// 创建自增ID
         /// </summary>
+        public async Task<long> CreateIncID()
+        {
+            long _id = 0;
+            _id = await _mongoSession.CreateIncIDAsync<TEntity>();
+            return _id;
+        }
+
+        /// <summary>
+        /// 创建自增ID
+        /// </summary>
         /// <param name="entity"></param>
-        private async Task CreateIncID(TEntity entity)
+        public async Task CreateIncID(TEntity entity)
         {
             long _id = 0;
             _id = await _mongoSession.CreateIncIDAsync<TEntity>();

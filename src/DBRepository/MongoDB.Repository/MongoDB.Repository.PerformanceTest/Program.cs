@@ -26,12 +26,36 @@ namespace MongoDB.Repository.PerformanceTest
             UserRepAsync userRep = new UserRepAsync();
             User user = null;
 
-            long linq, b;
+            long lambda, builders, buildersFun;
             int speed = 10000;
 
             user = await userRep.Get(x => x.Name == "aa");
-            user = await userRep.Get(Builders<User>.Filter.Eq<string>(nameof(User.Name), "aa"));
+            
+            user = await userRep.Get(UserRepAsync.Filter.Eq<string>(nameof(User.Name), "aa"));
+            //user = await userRep.Get(x => x.Eq<string>(nameof(User.Name), "aa"));
             Stopwatch sw = new Stopwatch();
+
+            sw.Reset();
+            sw.Start();
+            for (var i = 0; i < speed; i++)
+            {
+                user = await userRep.Get(x => x.Name == "aa");
+            }
+            sw.Stop();
+            lambda = sw.ElapsedMilliseconds;
+
+
+
+            sw.Reset();
+            sw.Start();
+            for (var i = 0; i < speed; i++)
+            {
+                //user = await userRep.Get(x => x.Eq<string>(nameof(User.Name), "aa"));
+                //user = await userRep.Get(x => x.Eq<string>(nameof(User.Name), "aa"));
+            }
+            sw.Stop();
+            buildersFun = sw.ElapsedMilliseconds;
+
 
 
             sw.Reset();
@@ -41,18 +65,9 @@ namespace MongoDB.Repository.PerformanceTest
                 user = await userRep.Get(Builders<User>.Filter.Eq<string>(nameof(User.Name), "aa"));
             }
             sw.Stop();
-            b = sw.ElapsedMilliseconds;
+            builders = sw.ElapsedMilliseconds;
 
-            sw.Reset();
-            sw.Start();
-            for (var i = 0; i < speed; i++)
-            {
-                user = await userRep.Get(x => x.Name == "aa");
-            }
-            sw.Stop();
-            linq = sw.ElapsedMilliseconds;
-
-            Console.WriteLine("lambda:{0},builders:{1}", linq, b);
+            Console.WriteLine("lambda:{0},builders:{1},buildersFun:{2}", lambda, builders, buildersFun);
             Console.WriteLine("GetAsync end");
 
             ;
