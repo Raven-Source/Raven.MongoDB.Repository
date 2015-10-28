@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace MongoDB.Repository.Test
 {
+    [MongoDB.Bson.Serialization.Attributes.BsonIgnoreExtraElements]
     public class User : IAutoIncr<long>
     {
         [BsonId]
@@ -23,6 +24,11 @@ namespace MongoDB.Repository.Test
             set;
         }
 
+        public int Age
+        { get; set; }
+
+
+
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime CreateTime
         {
@@ -30,9 +36,42 @@ namespace MongoDB.Repository.Test
             set;
         }
 
+        //public string Desc
+        //{
+        //    get;
+        //    set;
+        //}
+
         public User()
         {
             CreateTime = DateTime.Now;
         }
     }
+
+
+    [BsonIgnoreExtraElements]
+    public class MallCard : IAutoIncr<long>
+    {
+        /// <summary>
+        ///自增主键
+        /// </summary>
+        [BsonId]
+        public long ID { get; set; }
+
+        /// <summary>
+        ///// 商场id
+        ///// </summary>
+        public long MallID { get; set; }
+
+        ///// <summary>
+        ///// 用户UID[为0表示未绑定猫酷用户]
+        ///// </summary>
+        public long UID { get; set; }
+
+        ///// <summary>
+        ///// 会员卡类型ID
+        ///// </summary>
+        public long? CardTypeID { get; set; }
+    }
+
 }

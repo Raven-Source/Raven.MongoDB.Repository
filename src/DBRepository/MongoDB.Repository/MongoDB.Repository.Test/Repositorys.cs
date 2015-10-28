@@ -30,4 +30,13 @@ namespace MongoDB.Repository.Test
 
         }
     }
+
+    public class MallCardRep : MongoRepository<MallCard, long>
+    {
+        public MallCardRep()
+            : base(Repositorys.connString, Repositorys.dbName)
+        {
+
+        }
+    }
 }

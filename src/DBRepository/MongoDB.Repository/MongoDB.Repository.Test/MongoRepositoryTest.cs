@@ -10,7 +10,7 @@ namespace MongoDB.Repository.Test
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Insert()
         {
             UserRep userRep = new UserRep();
             userRep.Insert(new User() { Name = "ggg" });
@@ -21,6 +21,15 @@ namespace MongoDB.Repository.Test
             UserRep up = new UserRep();
             list = up.GetList(x => x.Name == "xxx").ToList();
             Assert.AreNotEqual(list.Count, 0);
+        }
+
+
+        [TestMethod]
+        public void TestMethod1()
+        {
+            MallCardRep mallCardRep = new MallCardRep();
+            var mallCard = mallCardRep.Get(x => x.MallID == 10002);
+
         }
     }
 

@@ -19,10 +19,21 @@ namespace MongoDB.Repository
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
     /// <remarks>add by liangyi on 2015/05/26</remarks>
-    public class MongoRepository<TEntity, TKey> : IMongoRepository<TEntity, TKey>
+    public class MongoRepository<TEntity, TKey>
         where TEntity : class,IEntity<TKey>, new()
     {
-        MongoSession _mongoSession;
+        private MongoSession _mongoSession;
+
+        /// <summary>
+        /// MongoDatabase
+        /// </summary>
+        public MongoDatabase Database
+        {
+            get
+            {
+                return _mongoSession.Database;
+            }
+        }
 
         /// <summary>
         /// 构造函数
@@ -37,12 +48,13 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
-        /// 获取支持linq操作的collection集合
+        /// 根据数据类型得到集合
         /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
         /// <returns></returns>
-        public IQueryable<TEntity> QueryableCollection()
+        public MongoCollection<TEntity> GetCollection()
         {
-            return _mongoSession.mongoDatabase.GetCollection<TEntity>(typeof(TEntity).Name).AsQueryable<TEntity>();
+            return _mongoSession.GetCollection<TEntity>();
         }
 
         /// <summary>
@@ -72,7 +84,7 @@ namespace MongoDB.Repository
         /// <summary>
         /// 根据id和其他条件获取实体
         /// </summary>
-        /// <param name="filterPredicate"条件></param>
+        /// <param name="filterPredicate">条件</param>
         /// <returns></returns>
         public TEntity Get(Expression<Func<TEntity, bool>> filterPredicate)
         {

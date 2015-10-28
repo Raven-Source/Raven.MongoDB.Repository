@@ -42,9 +42,8 @@ namespace MongoDB.Repository
         /// <param name="dbName">数据库名称</param>
         /// <param name="writeConcern">WriteConcern选项</param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
-        /// <param name="isSlaveOK"></param>
         /// <param name="readPreference"></param>
-        public MongoSessionAsync(string connString, string dbName, WriteConcern writeConcern = null, MongoSequence sequence = null, bool isSlaveOK = false, ReadPreference readPreference = null)
+        public MongoSessionAsync(string connString, string dbName, WriteConcern writeConcern = null, MongoSequence sequence = null, ReadPreference readPreference = null)
         {
             this._writeConcern = writeConcern ?? WriteConcern.Unacknowledged;
             this._sequence = sequence ?? new MongoSequence();
@@ -102,7 +101,8 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="fieldsExp"></param>
         /// <returns></returns>
-        public ProjectionDefinition<T> IncludeFields<T>(Expression<Func<T, object>> fieldsExp) where T : class, new()
+        public ProjectionDefinition<T> IncludeFields<T>(Expression<Func<T, object>> fieldsExp) 
+            where T : class, new()
         {
             var builder = Builders<T>.Projection;
 

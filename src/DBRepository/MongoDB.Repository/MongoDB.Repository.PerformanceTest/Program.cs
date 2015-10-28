@@ -29,9 +29,9 @@ namespace MongoDB.Repository.PerformanceTest
             long lambda, builders, buildersFun;
             int speed = 10000;
 
-            user = await userRep.Get(x => x.Name == "aa");
+            user = await userRep.GetAsync(x => x.Name == "aa");
             
-            user = await userRep.Get(UserRepAsync.Filter.Eq<string>(nameof(User.Name), "aa"));
+            user = await userRep.GetAsync(UserRepAsync.Filter.Eq<string>(nameof(User.Name), "aa"));
             //user = await userRep.Get(x => x.Eq<string>(nameof(User.Name), "aa"));
             Stopwatch sw = new Stopwatch();
 
@@ -39,7 +39,7 @@ namespace MongoDB.Repository.PerformanceTest
             sw.Start();
             for (var i = 0; i < speed; i++)
             {
-                user = await userRep.Get(x => x.Name == "aa");
+                user = await userRep.GetAsync(x => x.Name == "aa");
             }
             sw.Stop();
             lambda = sw.ElapsedMilliseconds;
@@ -62,7 +62,7 @@ namespace MongoDB.Repository.PerformanceTest
             sw.Start();
             for (var i = 0; i < speed; i++)
             {
-                user = await userRep.Get(Builders<User>.Filter.Eq<string>(nameof(User.Name), "aa"));
+                user = await userRep.GetAsync(Builders<User>.Filter.Eq<string>(nameof(User.Name), "aa"));
             }
             sw.Stop();
             builders = sw.ElapsedMilliseconds;
