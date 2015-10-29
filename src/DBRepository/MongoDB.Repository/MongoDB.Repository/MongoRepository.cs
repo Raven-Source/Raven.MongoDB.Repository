@@ -23,18 +23,7 @@ namespace MongoDB.Repository
         where TEntity : class,IEntity<TKey>, new()
     {
         private MongoSession _mongoSession;
-
-        /// <summary>
-        /// MongoDatabase
-        /// </summary>
-        public MongoDatabase Database
-        {
-            get
-            {
-                return _mongoSession.Database;
-            }
-        }
-
+		
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -48,13 +37,12 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
-        /// 根据数据类型得到集合
+        /// 获取支持linq操作的collection集合
         /// </summary>
-        /// <typeparam name="T">数据类型</typeparam>
         /// <returns></returns>
-        public MongoCollection<TEntity> GetCollection()
+        public IQueryable<TEntity> QueryableCollection()
         {
-            return _mongoSession.GetCollection<TEntity>();
+            return _mongoSession.mongoDatabase.GetCollection<TEntity>(typeof(TEntity).Name).AsQueryable<TEntity>();
         }
 
         /// <summary>

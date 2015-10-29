@@ -124,9 +124,9 @@ namespace MongoDB.Repository
         /// <summary>
         /// 创建自增ID
         /// </summary>
-        public Task<long> CreateIncIDAsync()
+        public async Task<long> CreateIncIDAsync(long inc = 1)
         {
-            return _mongoSession.CreateIncIDAsync<TEntity>();
+            return await _mongoSession.CreateIncIDAsync<TEntity>(inc);
         }
 
         /// <summary>
@@ -137,19 +137,28 @@ namespace MongoDB.Repository
         {
             long _id = 0;
             _id = await _mongoSession.CreateIncIDAsync<TEntity>();
+            AssignmentEntityID(entity, _id);
+        }
 
+        /// <summary>
+        /// ID赋值
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="id"></param>
+        public void AssignmentEntityID(TEntity entity, long id)
+        {
             IEntity<TKey> tEntity = entity as IEntity<TKey>;
             if (tEntity.ID is int)
             {
-                (entity as IEntity<int>).ID = (int)_id;
+                (entity as IEntity<int>).ID = (int)id;
             }
             else if (tEntity.ID is long)
             {
-                (entity as IEntity<long>).ID = (long)_id;
+                (entity as IEntity<long>).ID = (long)id;
             }
             else if (tEntity.ID is short)
             {
-                (entity as IEntity<short>).ID = (short)_id;
+                (entity as IEntity<short>).ID = (short)id;
             }
         }
 
@@ -314,13 +323,19 @@ namespace MongoDB.Repository
         /// <returns></returns>
         public async Task InsertBatchAsync(IEnumerable<TEntity> entitys)
         {
-            foreach (var entity in entitys)
+            //需要自增的实体
+            if (entitys.First() is IAutoIncr)
             {
-                if (entity is IAutoIncr)
+                int count = entitys.Count();
+                //自增ID值
+                long id = await CreateIncIDAsync(count);
+
+                foreach (var entity in entitys)
                 {
-                    await CreateIncIDAsync(entity);
+                    AssignmentEntityID(entity, id--);
                 }
-            }
+            }            
+
             //await _mongoSession.InsertBatchAsync(entitys);
             await _mongoSession.GetCollection<TEntity>().InsertManyAsync(entitys);
         }

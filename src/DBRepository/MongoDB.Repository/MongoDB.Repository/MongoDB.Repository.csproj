@@ -66,7 +66,6 @@
     <Compile Include="MongoRepository.cs" />
     <Compile Include="MongoRepositoryAsync.cs" />
     <Compile Include="MongoSequence.cs" />
-    <None Include="MongoSession.cs.backup" />
     <Compile Include="MongoSession.cs" />
     <Compile Include="MongoSessionAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

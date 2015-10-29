@@ -19,10 +19,10 @@ namespace MongoDB.Repository
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
     /// <remarks>add by liangyi on 2015/05/26</remarks>
-    public class MongoRepository<TEntity, TKey>
+    public class MongoRepository2<TEntity, TKey>
         where TEntity : class,IEntity<TKey>, new()
     {
-        private MongoSession _mongoSession;
+        private MongoSession2 _mongoSession;
 
         /// <summary>
         /// MongoDatabase
@@ -42,18 +42,19 @@ namespace MongoDB.Repository
         /// <param name="dbName">数据库名称</param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
         /// <param name="readPreference"></param>
-        public MongoRepository(string connString, string dbName, ReadPreference readPreference = null, MongoSequence sequence = null)
+        public MongoRepository2(string connString, string dbName, ReadPreference readPreference = null, MongoSequence sequence = null)
         {
-            _mongoSession = new MongoSession(connString, dbName, readPreference: readPreference, sequence: sequence);
+            _mongoSession = new MongoSession2(connString, dbName, readPreference: readPreference, sequence: sequence);
         }
 
         /// <summary>
-        /// 获取支持linq操作的collection集合
+        /// 根据数据类型得到集合
         /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
         /// <returns></returns>
-        public IQueryable<TEntity> QueryableCollection()
+        public MongoCollection<TEntity> GetCollection()
         {
-            return _mongoSession.Database.GetCollection<TEntity>(typeof(TEntity).Name).AsQueryable<TEntity>();
+            return _mongoSession.GetCollection<TEntity>();
         }
 
         /// <summary>
