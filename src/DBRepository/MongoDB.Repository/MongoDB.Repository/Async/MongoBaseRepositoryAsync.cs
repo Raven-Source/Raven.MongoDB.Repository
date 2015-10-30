@@ -10,6 +10,11 @@ using System.Threading.Tasks;
 
 namespace MongoDB.Repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
     public class MongoBaseRepositoryAsync<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
