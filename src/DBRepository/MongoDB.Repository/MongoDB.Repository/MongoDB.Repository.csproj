@@ -63,11 +63,15 @@
     <Compile Include="..\..\EntityFramework.Repository\EntityFramework.Repository\SortType.cs">
       <Link>SortType.cs</Link>
     </Compile>
+    <None Include="MongoRepository.csbackup" />
+    <Compile Include="Async\MongoBaseRepositoryAsync.cs" />
+    <Compile Include="Async\MongoReaderRepositoryAsync.cs" />
     <Compile Include="MongoRepository.cs" />
-    <Compile Include="MongoRepositoryAsync.cs" />
+    <Compile Include="Async\MongoRepositoryAsync.cs" />
     <Compile Include="MongoSequence.cs" />
+    <None Include="MongoSession.csbackup" />
     <Compile Include="MongoSession.cs" />
-    <Compile Include="MongoSessionAsync.cs" />
+    <Compile Include="Async\MongoSessionAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

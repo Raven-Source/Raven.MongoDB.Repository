@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MongoDB.Repository
 {
+    /// <summary>
+    /// Sequence
+    /// </summary>
     public class MongoSequence
     {
         /// <summary>

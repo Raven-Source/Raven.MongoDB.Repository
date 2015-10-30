@@ -10,6 +10,7 @@ using MongoDB.Bson;
 using System.Linq.Expressions;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
+using DB.Repository;
 
 namespace MongoDB.Repository
 {
@@ -20,10 +21,21 @@ namespace MongoDB.Repository
     /// <typeparam name="TKey"></typeparam>
     /// <remarks>add by liangyi on 2015/05/26</remarks>
     public class MongoRepository<TEntity, TKey>
-        where TEntity : class,IEntity<TKey>, new()
+        where TEntity : class, IEntity<TKey>, new()
     {
         private MongoSession _mongoSession;
-		
+
+        /// <summary>
+        /// MongoDatabase
+        /// </summary>
+        public MongoDatabase Database
+        {
+            get
+            {
+                return _mongoSession.Database;
+            }
+        }
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -37,12 +49,13 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
-        /// 获取支持linq操作的collection集合
+        /// 根据数据类型得到集合
         /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
         /// <returns></returns>
-        public IQueryable<TEntity> QueryableCollection()
+        public MongoCollection<TEntity> GetCollection()
         {
-            return _mongoSession.mongoDatabase.GetCollection<TEntity>(typeof(TEntity).Name).AsQueryable<TEntity>();
+            return _mongoSession.GetCollection<TEntity>();
         }
 
         /// <summary>
@@ -52,21 +65,39 @@ namespace MongoDB.Repository
         /// <returns></returns>
         public TEntity Get(TKey id)
         {
-            var query = MongoDB.Driver.Builders.Query<TEntity>.EQ(x => x.ID, id);
-            return _mongoSession.Get<TEntity>(query);
+            var query = Query<TEntity>.EQ(x => x.ID, id);
+            return _mongoSession.GetCollection<TEntity>().FindOne(query);
         }
+
+        ///// <summary>
+        ///// 获取系统当前时间
+        ///// </summary>
+        ///// <returns></returns>
+        //public DateTime GetSysDateTime()
+        //{
+        //    var result = Database.RunCommand("new Date()").Response;
+        //    return result.ToUniversalTime();
+        //}
 
         /// <summary>
         /// 根据id获取实体
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="fieldPredicate">查询字段表达式</param>
-        /// <param name="revolt">true|不加载字段,fale|加载字段</param>
+        /// <param name="includeFieldExp">查询字段表达式</param>
+        /// <param name="sortExp">排序表达式</param>
+        /// <param name="sortType">排序方式</param>
         /// <returns></returns>
-        public TEntity Get(TKey id, Expression<Func<TEntity, dynamic>> fieldPredicate, bool revolt = false)
+        public TEntity Get(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending)
         {
-            var query = MongoDB.Driver.Builders.Query<TEntity>.EQ(x => x.ID, id);
-            return _mongoSession.Get<TEntity>(query, null, GetFields(fieldPredicate, revolt));
+            var query = Query<TEntity>.EQ(x => x.ID, id);
+            FindOneArgs args = new FindOneArgs();
+            if (includeFieldExp != null)
+            {
+                args.Fields = _mongoSession.IncludeFields(includeFieldExp);
+            }
+
+            return this.GetCollection().FindOneAs<TEntity>(args);
         }
 
         /// <summary>
@@ -79,7 +110,7 @@ namespace MongoDB.Repository
             IMongoQuery query = null;
             if (filterPredicate != null)
             {
-                query = MongoDB.Driver.Builders.Query<TEntity>.Where(filterPredicate);
+                query = Query<TEntity>.Where(filterPredicate);
             }
             return _mongoSession.Get<TEntity>(query);
         }
@@ -426,33 +457,5 @@ namespace MongoDB.Repository
             var sort = SortBy<TEntity>.Descending(sortBy);
             return _mongoSession.FindAndModify<TEntity>(query, sort, update);
         }
-
-        #region 获取字段
-
-        /// <summary>
-        /// 获取字段
-        /// </summary>
-        /// <param name="fieldsPredicate"></param>
-        /// <param name="revolt">true|不加载字段,fale|加载字段</param>
-        /// <returns></returns>
-        protected FieldsDocument GetFields(Expression<Func<TEntity, dynamic>> fieldsPredicate = null, bool revolt = false)
-        {
-            FieldsDocument fieldDocument = null;
-            int val = revolt ? 0 : 1;
-            if (fieldsPredicate != null)
-            {
-                fieldDocument = new FieldsDocument();
-
-                var members = (fieldsPredicate.Body as NewExpression).Members;
-                foreach (var m in members)
-                {
-                    fieldDocument.Add(new BsonElement(m.Name, val));
-                }
-
-            }
-            return fieldDocument;
-        }
-
-        #endregion
     }
 }

@@ -12,15 +12,15 @@ namespace MongoDB.Repository.Test
         public static string connString = System.Configuration.ConfigurationManager.ConnectionStrings["RepositoryTest"].ConnectionString;
     }
 
-    public class UserRep : MongoRepository<User, long>
-    {
+    //public class UserRep : MongoRepository<User, long>
+    //{
 
-        public UserRep()
-            : base(Repositorys.connString, Repositorys.dbName)
-        {
+    //    public UserRep()
+    //        : base(Repositorys.connString, Repositorys.dbName)
+    //    {
 
-        }
-    }
+    //    }
+    //}
 
     public class UserRepAsync : MongoRepositoryAsync<User, long>
     {
@@ -31,12 +31,12 @@ namespace MongoDB.Repository.Test
         }
     }
 
-    public class MallCardRep : MongoRepository<MallCard, long>
-    {
-        public MallCardRep()
-            : base(Repositorys.connString, Repositorys.dbName)
-        {
+    //public class MallCardRep : MongoRepository<MallCard, long>
+    //{
+    //    public MallCardRep()
+    //        : base(Repositorys.connString, Repositorys.dbName)
+    //    {
 
-        }
-    }
+    //    }
+    //}
 }
