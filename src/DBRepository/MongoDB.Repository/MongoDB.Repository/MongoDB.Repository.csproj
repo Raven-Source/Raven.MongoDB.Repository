@@ -64,6 +64,9 @@
       <Link>SortType.cs</Link>
     </Compile>
     <None Include="MongoRepository.csbackup" />
+    <Compile Include="..\..\EntityFramework.Repository\EntityFramework.Repository\UniqueIDAttribute.cs">
+      <Link>UniqueIDAttribute.cs</Link>
+    </Compile>
     <Compile Include="Async\MongoBaseRepositoryAsync.cs" />
     <Compile Include="Async\MongoReaderRepositoryAsync.cs" />
     <Compile Include="MongoRepository.cs" />
