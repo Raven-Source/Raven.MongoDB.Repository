@@ -54,7 +54,7 @@ namespace MongoDB.Repository
             databaseSettings.ReadPreference = readPreference ?? ReadPreference.SecondaryPreferred;
 
             _mongoClient = new MongoClient(connString);
-            Database = _mongoClient.GetDatabase(dbName, databaseSettings);
+            Database = _mongoClient.GetDatabase(dbName, databaseSettings);            
         }
 
         #endregion
@@ -79,16 +79,19 @@ namespace MongoDB.Repository
         public async Task<long> CreateIncIDAsync<T>(long inc = 1) where T : class, new()
         {
             long id = 1;
-            var collection = Database.GetCollection<BsonDocument>(this._sequence.SequenceName);
+            var setting = new MongoCollectionSettings();
+            //setting.ReadPreference = ReadPreference.Primary;
+            var collection = Database.GetCollection<BsonDocument>(this._sequence.SequenceName, setting);
             var typeName = typeof(T).Name;
 
             var query = Builders<BsonDocument>.Filter.Eq(this._sequence.CollectionName, typeName);
             var update = Builders<BsonDocument>.Update.Inc(this._sequence.IncrementID, inc);
+            //update = update.SetOnInsert(this._sequence.IncrementID, id);
             var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>();
             options.IsUpsert = true;
             options.ReturnDocument = ReturnDocument.After;
 
-            var result = await collection.FindOneAndUpdateAsync(query, update, options);
+            var result = await collection.FindOneAndUpdateAsync(query, update, options).ConfigureAwait(false);
             id = result[this._sequence.IncrementID].AsInt64;
 
             return id;
