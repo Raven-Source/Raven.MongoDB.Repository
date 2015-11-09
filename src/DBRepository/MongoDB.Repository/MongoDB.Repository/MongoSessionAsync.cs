@@ -54,7 +54,7 @@ namespace MongoDB.Repository
             databaseSettings.ReadPreference = readPreference ?? ReadPreference.SecondaryPreferred;
 
             _mongoClient = new MongoClient(connString);
-            Database = _mongoClient.GetDatabase(dbName, databaseSettings);            
+            Database = _mongoClient.GetDatabase(dbName, databaseSettings);
         }
 
         #endregion
@@ -76,7 +76,7 @@ namespace MongoDB.Repository
         /// </summary>
         /// <typeparam name="T">数据类型</typeparam>
         /// <returns></returns>
-        public async Task<long> CreateIncIDAsync<T>(long inc = 1) where T : class, new()
+        public async Task<long> CreateIncIDAsync<T>(long inc = 1, int iteration = 0) where T : class, new()
         {
             long id = 1;
             var setting = new MongoCollectionSettings();
@@ -84,7 +84,7 @@ namespace MongoDB.Repository
             var collection = Database.GetCollection<BsonDocument>(this._sequence.SequenceName, setting);
             var typeName = typeof(T).Name;
 
-            var query = Builders<BsonDocument>.Filter.Eq(this._sequence.CollectionName, typeName);
+            var query = Builders<BsonDocument>.Filter.Eq("_id", typeName);
             var update = Builders<BsonDocument>.Update.Inc(this._sequence.IncrementID, inc);
             //update = update.SetOnInsert(this._sequence.IncrementID, id);
             var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>();
@@ -92,9 +92,19 @@ namespace MongoDB.Repository
             options.ReturnDocument = ReturnDocument.After;
 
             var result = await collection.FindOneAndUpdateAsync(query, update, options).ConfigureAwait(false);
-            id = result[this._sequence.IncrementID].AsInt64;
-
-            return id;
+            if (result != null)
+            {
+                id = result[this._sequence.IncrementID].AsInt64;
+                return id;
+            }
+            else if (iteration <= 1)
+            {
+                return await CreateIncIDAsync<T>(inc, ++iteration);
+            }
+            else
+            {
+                throw new Exception("Failed to get on the IncID");
+            }
         }
 
 

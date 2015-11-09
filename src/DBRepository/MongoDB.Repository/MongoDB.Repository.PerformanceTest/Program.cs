@@ -11,27 +11,81 @@ namespace MongoDB.Repository.PerformanceTest
 {
     class Program
     {
+        //static UserRepAsync userRepAsync = new UserRepAsync();
+        static UserRep userRep = new UserRep();
+        static int index;
         static void Main(string[] args)
         {
-            GetAsync().Wait();
+            //GetAsync().Wait();
+            Stopwatch sw = new Stopwatch();
 
+            //sw.Restart();
+            //for (var i = 0; i < 1000; i++)
+            //{
+            //    Insert2().Wait();
+            //}
+            //sw.Stop();
+            //Console.WriteLine("for:async:" + sw.ElapsedMilliseconds);
+
+
+            //sw.Restart();
+            //for (var i = 0; i < 1000; i++)
+            //{
+            //    Insert3();
+            //}
+            //sw.Stop();
+            //Console.WriteLine("for:sync:" + sw.ElapsedMilliseconds);
+
+            sw.Restart();
+            Parallel.For(0, 1000, x =>
+            {
+                Insert2().Wait();
+            });
+            sw.Stop();
+            Console.WriteLine("parallel:async:" + sw.ElapsedMilliseconds);
+
+            //sw.Restart();
+            //Parallel.For(0, 1000, x =>
+            //{
+            //    Insert3();
+            //});
+            //sw.Stop();
+            //Console.WriteLine("parallel:sync:" + sw.ElapsedMilliseconds);
+
+            Console.WriteLine("over...");
             Console.ReadLine();
         }
 
+
+        public static void Insert3()
+        {
+            UserRep userRep = new UserRep();
+            var user = new User();
+            user.Name = "cc";
+            userRep.Insert(user);
+        }
+
+        public static async Task Insert2()
+        {
+            UserRepAsync userRepAsync = new UserRepAsync();
+            var user = new User();
+            user.Name = "cc";
+            await userRepAsync.InsertAsync(user).ConfigureAwait(false);
+        }
 
         public static async Task GetAsync()
         {
             Console.WriteLine("GetAsync begin");
 
-            UserRepAsync userRep = new UserRepAsync();
+            UserRepAsync userRepAsync = new UserRepAsync();
             User user = null;
 
             long lambda, builders, buildersFun;
             int speed = 10000;
 
-            user = await userRep.GetAsync(x => x.Name == "aa");
-            
-            user = await userRep.GetAsync(UserRepAsync.Filter.Eq<string>(nameof(User.Name), "aa"));
+            user = await userRepAsync.GetAsync(x => x.Name == "aa");
+
+            user = await userRepAsync.GetAsync(UserRepAsync.Filter.Eq<string>(nameof(User.Name), "aa"));
             //user = await userRep.Get(x => x.Eq<string>(nameof(User.Name), "aa"));
             Stopwatch sw = new Stopwatch();
 
@@ -39,7 +93,7 @@ namespace MongoDB.Repository.PerformanceTest
             sw.Start();
             for (var i = 0; i < speed; i++)
             {
-                user = await userRep.GetAsync(x => x.Name == "aa");
+                user = await userRepAsync.GetAsync(x => x.Name == "aa");
             }
             sw.Stop();
             lambda = sw.ElapsedMilliseconds;
@@ -62,7 +116,7 @@ namespace MongoDB.Repository.PerformanceTest
             sw.Start();
             for (var i = 0; i < speed; i++)
             {
-                user = await userRep.GetAsync(Builders<User>.Filter.Eq<string>(nameof(User.Name), "aa"));
+                user = await userRepAsync.GetAsync(Builders<User>.Filter.Eq<string>(nameof(User.Name), "aa"));
             }
             sw.Stop();
             builders = sw.ElapsedMilliseconds;

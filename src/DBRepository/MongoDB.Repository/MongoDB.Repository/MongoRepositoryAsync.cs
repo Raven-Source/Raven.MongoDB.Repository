@@ -82,13 +82,14 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="connString">数据库连接节点</param>
         /// <param name="dbName">数据库名称</param>
-        /// <param name="sequence">Mongo自增长ID数据序列对象</param>
+        /// <param name="writeConcern"></param>
         /// <param name="readPreference"></param>
-        public MongoRepositoryAsync(string connString, string dbName, ReadPreference readPreference = null, MongoSequence sequence = null)
+        /// <param name="sequence">Mongo自增长ID数据序列对象</param>
+        public MongoRepositoryAsync(string connString, string dbName, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
         {
-            _mongoSession = new MongoSessionAsync(connString, dbName, readPreference: readPreference, sequence: sequence);
+            _mongoSession = new MongoSessionAsync(connString, dbName, writeConcern: writeConcern, readPreference: readPreference, sequence: sequence);
         }
-        
+
         /// <summary>
         /// 根据数据类型得到集合
         /// </summary>
@@ -110,7 +111,7 @@ namespace MongoDB.Repository
             var result = await _mongoSession.GetCollection<TEntity>().Indexes.CreateOneAsync(indexKey).ConfigureAwait(false);
             return result;
         }
-        
+
         /// <summary>
         /// 创建自增ID
         /// </summary>
@@ -321,7 +322,7 @@ namespace MongoDB.Repository
                 {
                     AssignmentEntityID(entity, id--);
                 }
-            }            
+            }
 
             //await _mongoSession.InsertBatchAsync(entitys);
             await _mongoSession.GetCollection<TEntity>().InsertManyAsync(entitys).ConfigureAwait(false);

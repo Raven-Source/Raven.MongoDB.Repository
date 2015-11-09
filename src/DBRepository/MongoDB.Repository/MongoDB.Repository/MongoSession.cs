@@ -94,10 +94,10 @@ namespace MongoDB.Repository
             var typeName = typeof(T).Name;
 
             if (collection.Exists() &&
-                collection.Find(MongoDB.Driver.Builders.Query.EQ(this._sequence.CollectionName, typeName)).Count() > 0)
+                collection.Find(MongoDB.Driver.Builders.Query.EQ("_id", typeName)).Count() > 0)
             {
                 var result = collection.FindAndModify(
-                    MongoDB.Driver.Builders.Query.EQ(this._sequence.CollectionName, typeName),
+                    MongoDB.Driver.Builders.Query.EQ("_id", typeName),
                     null,
                     MongoDB.Driver.Builders.Update.Inc(this._sequence.IncrementID, 1),
                     true);
@@ -109,7 +109,7 @@ namespace MongoDB.Repository
             {
                 collection.Insert(
                     new BsonDocument { 
-                        { this._sequence.CollectionName, typeName },
+                        { "_id", typeName },
                         { this._sequence.IncrementID, id }
                     },
                     this._writeConcern);
