@@ -1,2 +1,2 @@
-# DBRepository
-EntityFramework.Repository,MongoDB.Repository
+# MongoDB.Repository
+MongoDB.Repository
