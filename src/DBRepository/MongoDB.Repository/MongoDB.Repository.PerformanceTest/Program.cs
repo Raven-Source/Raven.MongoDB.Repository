@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,38 +30,42 @@ namespace MongoDB.Repository.PerformanceTest
             //GetAsync().Wait();
             Stopwatch sw = new Stopwatch();
 
-            sw.Restart();
-            for (var i = 0; i < speed; i++)
-            {
-                Insert2().Wait();
-            }
-            sw.Stop();
-            Console.WriteLine("for:async:" + sw.ElapsedMilliseconds);
+            //sw.Restart();
+            //for (var i = 0; i < speed; i++)
+            //{
+            //    Insert2().Wait();
+            //}
+            //sw.Stop();
+            //Console.WriteLine("for:async:" + sw.ElapsedMilliseconds);
 
 
-            sw.Restart();
-            for (var i = 0; i < speed; i++)
-            {
-                Insert3();
-            }
-            sw.Stop();
-            Console.WriteLine("for:sync:" + sw.ElapsedMilliseconds);
+            //sw.Restart();
+            //for (var i = 0; i < speed; i++)
+            //{
+            //    Insert3();
+            //}
+            //sw.Stop();
+            //Console.WriteLine("for:sync:" + sw.ElapsedMilliseconds);
 
-            sw.Restart();
-            Parallel.For(0, speed, x =>
-            {
-                Insert2().Wait();
-            });
-            sw.Stop();
-            Console.WriteLine("parallel:async:" + sw.ElapsedMilliseconds);
+            //sw.Restart();
+            //Parallel.For(0, speed, x =>
+            //{
+            //    Insert2().Wait();
+            //});
+            //sw.Stop();
+            //Console.WriteLine("parallel:async:" + sw.ElapsedMilliseconds);
 
-            sw.Restart();
-            Parallel.For(0, speed, x =>
-            {
-                Insert3();
-            });
-            sw.Stop();
-            Console.WriteLine("parallel:sync:" + sw.ElapsedMilliseconds);
+            //sw.Restart();
+            //Parallel.For(0, speed, x =>
+            //{
+            //    Insert3();
+            //});
+            //sw.Stop();
+            //Console.WriteLine("parallel:sync:" + sw.ElapsedMilliseconds);
+
+            //Expression<Func<User>> fieldsExp = () => new User { Age = 12, Name = "1111" };
+
+
 
             Console.WriteLine("over...");
             Console.ReadLine();

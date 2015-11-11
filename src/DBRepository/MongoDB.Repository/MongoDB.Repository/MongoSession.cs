@@ -81,7 +81,7 @@ namespace MongoDB.Repository
                 var body = (fieldsExp.Body as NewExpression);
                 if (body == null || body.Members == null)
                 {
-                    throw new Exception("fieldsExp表达式格式错误， eg: x => new { x.Field1, x.Field2 }");
+                    throw new Exception("fieldsExp is invalid expression format， eg: x => new { x.Field1, x.Field2 }");
                 }
                 foreach (var m in body.Members)
                 {
