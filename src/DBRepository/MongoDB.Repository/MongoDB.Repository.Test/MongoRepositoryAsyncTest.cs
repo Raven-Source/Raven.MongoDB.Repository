@@ -27,7 +27,7 @@ namespace MongoDB.Repository.Test
             user.Name = "cc";
             await userRep.InsertAsync(user);
         }
-
+        
         [TestMethod]
         public async Task InsertBatch()
         {

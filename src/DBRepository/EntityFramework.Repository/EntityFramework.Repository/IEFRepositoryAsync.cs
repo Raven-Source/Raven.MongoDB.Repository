@@ -46,7 +46,7 @@ namespace EntityFramework.Repository
         /// <summary>
         /// 根据id和其他条件获取实体
         /// </summary>
-        /// <param name="filterPredicate"条件></param>
+        /// <param name="filterPredicate">条件</param>
         /// <returns></returns>
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filterPredicate);
 

@@ -41,6 +41,8 @@ namespace MongoDB.Repository.Test
         //    get;
         //    set;
         //}
+        
+        public string Stamp { get; set; }
 
         public User()
         {

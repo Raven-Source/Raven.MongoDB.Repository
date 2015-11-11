@@ -34,11 +34,11 @@ namespace EntityFramework.Repository
         /// <param name="parameters"></param>
         /// <returns></returns>
         IQueryable<TEntity> GetWithDbSetSql(string query, params object[] parameters);
-        
+
         /// <summary>
         /// 根据id和其他条件获取实体
         /// </summary>
-        /// <param name="filterPredicate"条件></param>
+        /// <param name="filterPredicate">条件</param>
         /// <returns></returns>
         TEntity Get(Expression<Func<TEntity, bool>> filterPredicate);
 

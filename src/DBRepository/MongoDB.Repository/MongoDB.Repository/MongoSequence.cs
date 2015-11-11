@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MongoDB.Repository
 {
+    /// <summary>
+    /// Sequence
+    /// </summary>
     public class MongoSequence
     {
         /// <summary>
@@ -39,9 +42,9 @@ namespace MongoDB.Repository
         /// </summary>
         public MongoSequence()
         {
-            SequenceName = "Sequence";
+            SequenceName = "_Sequence";
             //CollectionName = "CollectionName";
-            IncrementID = "IncrementID";
+            IncrementID = "IncID";
         }
     }
 }

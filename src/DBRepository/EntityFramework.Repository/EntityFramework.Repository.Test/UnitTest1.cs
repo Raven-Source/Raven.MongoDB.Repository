@@ -73,7 +73,7 @@ namespace EntityFramework.Repository.Test
 
                 var cart = testContext.Get(all.First().ID);
             }
-            catch (Exception ex)
+            catch 
             { 
 
             }

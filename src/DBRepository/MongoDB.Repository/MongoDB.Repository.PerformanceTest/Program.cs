@@ -11,46 +11,56 @@ namespace MongoDB.Repository.PerformanceTest
 {
     class Program
     {
-        //static UserRepAsync userRepAsync = new UserRepAsync();
+        static UserRepAsync userRepAsync = new UserRepAsync();
         static UserRep userRep = new UserRep();
-        static int index;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        //static int index;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
+            int speed = 1000;
             //GetAsync().Wait();
             Stopwatch sw = new Stopwatch();
 
-            //sw.Restart();
-            //for (var i = 0; i < 1000; i++)
-            //{
-            //    Insert2().Wait();
-            //}
-            //sw.Stop();
-            //Console.WriteLine("for:async:" + sw.ElapsedMilliseconds);
+            sw.Restart();
+            for (var i = 0; i < speed; i++)
+            {
+                Insert2().Wait();
+            }
+            sw.Stop();
+            Console.WriteLine("for:async:" + sw.ElapsedMilliseconds);
 
-
-            //sw.Restart();
-            //for (var i = 0; i < 1000; i++)
-            //{
-            //    Insert3();
-            //}
-            //sw.Stop();
-            //Console.WriteLine("for:sync:" + sw.ElapsedMilliseconds);
 
             sw.Restart();
-            Parallel.For(0, 1000, x =>
+            for (var i = 0; i < speed; i++)
+            {
+                Insert3();
+            }
+            sw.Stop();
+            Console.WriteLine("for:sync:" + sw.ElapsedMilliseconds);
+
+            sw.Restart();
+            Parallel.For(0, speed, x =>
             {
                 Insert2().Wait();
             });
             sw.Stop();
             Console.WriteLine("parallel:async:" + sw.ElapsedMilliseconds);
 
-            //sw.Restart();
-            //Parallel.For(0, 1000, x =>
-            //{
-            //    Insert3();
-            //});
-            //sw.Stop();
-            //Console.WriteLine("parallel:sync:" + sw.ElapsedMilliseconds);
+            sw.Restart();
+            Parallel.For(0, speed, x =>
+            {
+                Insert3();
+            });
+            sw.Stop();
+            Console.WriteLine("parallel:sync:" + sw.ElapsedMilliseconds);
 
             Console.WriteLine("over...");
             Console.ReadLine();
@@ -59,7 +69,6 @@ namespace MongoDB.Repository.PerformanceTest
 
         public static void Insert3()
         {
-            UserRep userRep = new UserRep();
             var user = new User();
             user.Name = "cc";
             userRep.Insert(user);
@@ -67,7 +76,6 @@ namespace MongoDB.Repository.PerformanceTest
 
         public static async Task Insert2()
         {
-            UserRepAsync userRepAsync = new UserRepAsync();
             var user = new User();
             user.Name = "cc";
             await userRepAsync.InsertAsync(user).ConfigureAwait(false);

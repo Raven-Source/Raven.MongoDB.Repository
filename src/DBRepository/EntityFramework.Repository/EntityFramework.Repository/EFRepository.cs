@@ -21,8 +21,17 @@ namespace EntityFramework.Repository
     public class EFRepository<TEntity, TKey> : IEFRepository<TEntity, TKey>, IEFRepositoryAsync<TEntity, TKey>
         where TEntity : class,IEntity<TKey>, new()
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected DbContext context;
+        /// <summary>
+        /// 
+        /// </summary>
         protected DbSet<TEntity> dbSet;
+        /// <summary>
+        /// 
+        /// </summary>
         protected DbSet db;
 
         /// <summary>
