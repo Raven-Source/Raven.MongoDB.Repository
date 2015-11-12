@@ -53,6 +53,7 @@ namespace MongoDB.Repository
             var result = await _mongoSession.GetCollection<TEntity>().FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.ToListAsync().ConfigureAwait(false);
 
+
             return reslut.FirstOrDefault();
         }
 
@@ -213,7 +214,7 @@ namespace MongoDB.Repository
             {
                 option.Skip = skip;
             }
-
+                        
             return await _mongoSession.GetCollection<TEntity>().CountAsync(filterExp, option).ConfigureAwait(false);
         }
 

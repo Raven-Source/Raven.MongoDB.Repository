@@ -103,7 +103,7 @@ namespace MongoDB.Repository
         public SortDefinition<T> CreateSortDefinition<T>(Expression<Func<T, object>> sortExp, SortType sortType = SortType.Ascending)
         {
             SortDefinition<T> sort = null;
-            if (sort != null)
+            if (sortExp != null)
             {
                 if (sortType == SortType.Ascending)
                 {

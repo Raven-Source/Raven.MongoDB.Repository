@@ -119,7 +119,7 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <returns></returns>
-        public List<TEntity> GetListAsync(Expression<Func<TEntity, bool>> filterExp = null
+        public List<TEntity> GetList(Expression<Func<TEntity, bool>> filterExp = null
             , Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0)
@@ -159,7 +159,7 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <returns></returns>
-        public List<TEntity> GetListAsync(FilterDefinition<TEntity> filter
+        public List<TEntity> GetList(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
             , SortDefinition<TEntity> sort = null
             , int limit = 0, int skip = 0)
@@ -178,7 +178,7 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <returns></returns>
-        public long CountAsync(FilterDefinition<TEntity> filter
+        public long Count(FilterDefinition<TEntity> filter
             , int limit = 0, int skip = 0)
         {
             CountOptions option = new CountOptions();
@@ -201,7 +201,7 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <returns></returns>
-        public long CountAsync(Expression<Func<TEntity, bool>> filterExp
+        public long Count(Expression<Func<TEntity, bool>> filterExp
             , int limit = 0, int skip = 0)
         {
             CountOptions option = new CountOptions();

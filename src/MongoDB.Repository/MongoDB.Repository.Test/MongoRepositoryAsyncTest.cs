@@ -121,7 +121,7 @@ namespace MongoDB.Repository.Test
 
             user = await userRep.GetAsync(x => x.Name == "aa" && x.CreateTime > DateTime.Parse("2015/10/20"));
             Assert.AreNotEqual(user, null);
-
+            Builders<User>.Filter.Eq("Name", "aa");
             user = await userRep.GetAsync(Builders<User>.Filter.Eq("Name", "aa"), Builders<User>.Sort.Descending("_id"));
             Assert.AreNotEqual(user, null);
             user = await userRep.GetAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
@@ -138,6 +138,7 @@ namespace MongoDB.Repository.Test
             userList = await userRep.GetListAsync(null);
 
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa");
+            userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa", null, s => s.ID, SortType.Ascending);
 
             userList = await userRep.GetListAsync(filterExp: x => x.Name == "aa", includeFieldExp: x => new { x.CreateTime });
             userList = await userRep.GetListAsync(filter:Builders<User>.Filter.Eq("Name", "aa"), sort: Builders<User>.Sort.Descending("_id"));
