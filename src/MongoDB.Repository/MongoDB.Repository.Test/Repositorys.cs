@@ -31,7 +31,7 @@ namespace MongoDB.Repository.Test
         //}
 
         public UserRepAsync()
-            : base(Repositorys.connString, Repositorys.dbName, null, null, new MongoSequence { IncrementID = "IncrementID", CollectionName = "CollectionName", SequenceName = "Sequence" })
+            : base(Repositorys.connString, Repositorys.dbName, null, null)
         {
 
         }
