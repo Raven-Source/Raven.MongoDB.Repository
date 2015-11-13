@@ -26,7 +26,7 @@ namespace MongoDB.Repository
         /// <param name="readPreference"></param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
         public MongoReaderRepositoryAsync(string connString, string dbName, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
-            :base(connString, dbName, writeConcern, readPreference, sequence)
+            : base(connString, dbName, writeConcern, readPreference, sequence)
         {
         }
 
@@ -99,7 +99,8 @@ namespace MongoDB.Repository
         /// <param name="projection"></param>
         /// <returns></returns>
         public async Task<TEntity> GetAsync(FilterDefinition<TEntity> filter
-            , SortDefinition<TEntity> sort = null, ProjectionDefinition<TEntity, TEntity> projection = null)
+            , ProjectionDefinition<TEntity, TEntity> projection = null
+            , SortDefinition<TEntity> sort = null)
         {
             //var cursor = await _mongoSession.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
 
@@ -214,7 +215,7 @@ namespace MongoDB.Repository
             {
                 option.Skip = skip;
             }
-                        
+
             return await _mongoSession.GetCollection<TEntity>().CountAsync(filterExp, option).ConfigureAwait(false);
         }
 

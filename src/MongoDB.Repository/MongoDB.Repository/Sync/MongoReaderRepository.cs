@@ -98,7 +98,8 @@ namespace MongoDB.Repository
         /// <param name="projection"></param>
         /// <returns></returns>
         public TEntity Get(FilterDefinition<TEntity> filter
-            , SortDefinition<TEntity> sort = null, ProjectionDefinition<TEntity, TEntity> projection = null)
+            , ProjectionDefinition<TEntity, TEntity> projection = null
+            , SortDefinition<TEntity> sort = null)
         {
             //var cursor = await _mongoSession.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
 
