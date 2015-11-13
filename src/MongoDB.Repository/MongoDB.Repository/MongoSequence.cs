@@ -15,10 +15,10 @@ namespace MongoDB.Repository
         /// 存储数据的序列
         /// </summary>
         public string SequenceName { get; set; }
-        ///// <summary>
-        ///// 对应的Collection名称
-        ///// </summary>
-        //public string CollectionName { get; set; }
+        /// <summary>
+        /// 对应的Collection名称,默认为_id
+        /// </summary>
+        public string CollectionName { get; set; }
         /// <summary>
         /// 对应Collection的自增长ID
         /// </summary>
@@ -33,7 +33,7 @@ namespace MongoDB.Repository
         public MongoSequence(string sequence, string collectionName, string incrementID)
         {
             SequenceName = sequence;
-            //CollectionName = collectionName;
+            CollectionName = collectionName;
             IncrementID = incrementID;
         }
 
@@ -43,7 +43,7 @@ namespace MongoDB.Repository
         public MongoSequence()
         {
             SequenceName = "_Sequence";
-            //CollectionName = "CollectionName";
+            CollectionName = "_id";
             IncrementID = "IncID";
         }
     }

@@ -118,7 +118,7 @@ namespace MongoDB.Repository
             var collection = Database.GetCollection<BsonDocument>(this._sequence.SequenceName);
             var typeName = typeof(T).Name;
 
-            var query = Builders<BsonDocument>.Filter.Eq("_id", typeName);
+            var query = Builders<BsonDocument>.Filter.Eq(this._sequence.CollectionName, typeName);
             var update = Builders<BsonDocument>.Update.Inc(this._sequence.IncrementID, inc);
             var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>();
             options.IsUpsert = true;
