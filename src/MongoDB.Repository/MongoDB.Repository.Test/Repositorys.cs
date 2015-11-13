@@ -24,8 +24,14 @@ namespace MongoDB.Repository.Test
 
     public class UserRepAsync : MongoRepositoryAsync<User, long>
     {
+        //public UserRepAsync()
+        //    : base(Repositorys.connString, Repositorys.dbName, null, null, new MongoSequence { IncrementID = "IncrementID", CollectionName = "CollectionName", SequenceName = "Sequence" })
+        //{
+
+        //}
+
         public UserRepAsync()
-            : base(Repositorys.connString, Repositorys.dbName)
+            : base(Repositorys.connString, Repositorys.dbName, null, null, new MongoSequence { IncrementID = "IncrementID", CollectionName = "CollectionName", SequenceName = "Sequence" })
         {
 
         }

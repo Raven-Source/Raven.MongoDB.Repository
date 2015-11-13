@@ -30,13 +30,13 @@ namespace MongoDB.Repository.PerformanceTest
             //GetAsync().Wait();
             Stopwatch sw = new Stopwatch();
 
-            //sw.Restart();
-            //for (var i = 0; i < speed; i++)
-            //{
-            //    Insert2().Wait();
-            //}
-            //sw.Stop();
-            //Console.WriteLine("for:async:" + sw.ElapsedMilliseconds);
+            sw.Restart();
+            for (var i = 0; i < speed; i++)
+            {
+                Insert2().Wait();
+            }
+            sw.Stop();
+            Console.WriteLine("for:async:" + sw.ElapsedMilliseconds);
 
 
             //sw.Restart();
