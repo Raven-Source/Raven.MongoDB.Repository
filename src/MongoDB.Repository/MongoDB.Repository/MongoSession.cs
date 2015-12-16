@@ -47,6 +47,16 @@ namespace MongoDB.Repository
             databaseSettings.ReadPreference = readPreference ?? ReadPreference.SecondaryPreferred;
 
             _mongoClient = new MongoClient(connString);
+            if (_mongoClient.Settings.SocketTimeout == TimeSpan.Zero)
+            {
+                _mongoClient.Settings.SocketTimeout = TimeSpan.FromSeconds(10);
+            }
+
+            if (_mongoClient.Settings.WaitQueueTimeout == TimeSpan.Zero)
+            {
+                _mongoClient.Settings.WaitQueueTimeout = TimeSpan.FromSeconds(30);
+            }
+
             Database = _mongoClient.GetDatabase(dbName, databaseSettings);
         }
 
