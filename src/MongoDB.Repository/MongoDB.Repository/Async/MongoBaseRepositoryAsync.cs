@@ -101,9 +101,9 @@ namespace MongoDB.Repository
         /// 根据数据类型得到集合
         /// </summary>
         /// <returns></returns>
-        public IMongoCollection<TEntity> GetCollection()
+        public IMongoCollection<TEntity> GetCollection(MongoCollectionSettings settings = null)
         {
-            return _mongoSession.GetCollection<TEntity>();
+            return _mongoSession.GetCollection<TEntity>(settings);
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace MongoDB.Repository.Test
             user.Name = "cc";
             await userRep.InsertAsync(user);
         }
-        
+
         [TestMethod]
         public async Task InsertBatch()
         {
@@ -54,9 +54,13 @@ namespace MongoDB.Repository.Test
             await userRep.UpdateOneAsync(x => x.Name == "bb", UserRepAsync.Update.Set(nameof(User.CreateTime), DateTime.Now));
 
             long id = await userRep.CreateIncIDAsync();
-            var update = UserRepAsync.Update.Set(nameof(User.Name),"xyz");
+            var update = UserRepAsync.Update.Set(nameof(User.Name), "xyz");
             update = update.SetOnInsert(x => x.ID, id).SetOnInsert(x => x.CreateTime, DateTime.Now);
             await userRep.UpdateOneAsync(x => x.Name == "abc", update, true);
+
+            MongoCollectionSettings setting = new MongoCollectionSettings() { ReadPreference = ReadPreference.PrimaryPreferred, WriteConcern = WriteConcern.Acknowledged };
+            var res = await userRep.UpdateOneAsync(x => x.Name == "xyz", update, true, setting);
+            Assert.AreEqual(res.IsAcknowledged, true);
         }
 
         [TestMethod]
@@ -64,7 +68,7 @@ namespace MongoDB.Repository.Test
         {
             User user = new User();
             UserRepAsync userRep = new UserRepAsync();
-            
+
             user.Age += 1;
             user.CreateTime = DateTime.Now;
             user.Name = "zzz";
@@ -89,7 +93,7 @@ namespace MongoDB.Repository.Test
             user.CreateTime = DateTime.Now;
             //user.Desc = "ggggsdgsa";
 
-            await userRep.FindOneAndUpdateAsync(filterExp:x => x.ID == user.ID, updateEntity: user, isUpsert: false);
+            await userRep.FindOneAndUpdateAsync(filterExp: x => x.ID == user.ID, updateEntity: user, isUpsert: false);
         }
 
 
@@ -99,7 +103,7 @@ namespace MongoDB.Repository.Test
             UserRepAsync userRep = new UserRepAsync();
 
             var update = UserRepAsync.Update.Set(nameof(User.CreateTime), DateTime.Now);
-            
+
             await userRep.UpdateManyAsync(x => x.Name == "cc", update, true);
         }
 
@@ -141,7 +145,7 @@ namespace MongoDB.Repository.Test
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa", null, s => s.ID, SortType.Ascending);
 
             userList = await userRep.GetListAsync(filterExp: x => x.Name == "aa", includeFieldExp: x => new { x.CreateTime });
-            userList = await userRep.GetListAsync(filter:Builders<User>.Filter.Eq("Name", "aa"), sort: Builders<User>.Sort.Descending("_id"));
+            userList = await userRep.GetListAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), sort: Builders<User>.Sort.Descending("_id"));
             userList = await userRep.GetListAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
         }
 

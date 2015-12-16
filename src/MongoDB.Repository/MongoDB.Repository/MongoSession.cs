@@ -58,9 +58,9 @@ namespace MongoDB.Repository
         /// </summary>
         /// <typeparam name="T">数据类型</typeparam>
         /// <returns></returns>
-        public IMongoCollection<T> GetCollection<T>() where T : class, new()
+        public IMongoCollection<T> GetCollection<T>(MongoCollectionSettings settings = null) where T : class, new()
         {
-            return Database.GetCollection<T>(typeof(T).Name);
+            return Database.GetCollection<T>(typeof(T).Name, settings);
         }
 
         #region 获取字段

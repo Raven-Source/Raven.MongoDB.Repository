@@ -101,9 +101,9 @@ namespace MongoDB.Repository
         /// 根据数据类型得到集合
         /// </summary>
         /// <returns></returns>
-        public IMongoCollection<TEntity> GetCollection()
+        public IMongoCollection<TEntity> GetCollection(MongoCollectionSettings settings = null)
         {
-            return _mongoSession.GetCollection<TEntity>();
+            return _mongoSession.GetCollection<TEntity>(settings);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace MongoDB.Repository
         /// </summary>
         /// <typeparam name="T">数据类型</typeparam>
         /// <returns></returns>
-        public long CreateIncIDAsync<T>(long inc = 1, int iteration = 0) where T : class, new()
+        public long CreateIncID<T>(long inc = 1, int iteration = 0) where T : class, new()
         {
             long id = 1;
             var collection = Database.GetCollection<BsonDocument>(this._sequence.SequenceName);
@@ -123,8 +123,8 @@ namespace MongoDB.Repository
             var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>();
             options.IsUpsert = true;
             options.ReturnDocument = ReturnDocument.After;
-
-            var result = collection.FindOneAndUpdateAsync(query, update, options).Result;
+            
+            var result = collection.FindOneAndUpdate(query, update, options);
             if (result != null)
             {
                 id = result[this._sequence.IncrementID].AsInt64;
@@ -132,7 +132,7 @@ namespace MongoDB.Repository
             }
             else if (iteration <= 1)
             {
-                return CreateIncIDAsync<T>(inc, ++iteration);
+                return CreateIncID<T>(inc, ++iteration);
             }
             else
             {
@@ -155,19 +155,19 @@ namespace MongoDB.Repository
         /// <summary>
         /// 创建自增ID
         /// </summary>
-        public long CreateIncIDAsync(long inc = 1)
+        public long CreateIncID(long inc = 1)
         {
-            return this.CreateIncIDAsync<TEntity>(inc);
+            return this.CreateIncID<TEntity>(inc);
         }
 
         /// <summary>
         /// 创建自增ID
         /// </summary>
         /// <param name="entity"></param>
-        public void CreateIncIDAsync(TEntity entity)
+        public void CreateIncID(TEntity entity)
         {
             long _id = 0;
-            _id = this.CreateIncIDAsync<TEntity>();
+            _id = this.CreateIncID<TEntity>();
             AssignmentEntityID(entity, _id);
         }
 

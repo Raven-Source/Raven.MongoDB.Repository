@@ -37,9 +37,11 @@ namespace MongoDB.Repository
         /// <param name="includeFieldExp">查询字段表达式</param>
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
         public TEntity Get(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
-            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending)
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , MongoCollectionSettings settings = null)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
             //var cursor = await _mongoSession.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
@@ -50,10 +52,9 @@ namespace MongoDB.Repository
                 projection = _mongoSession.IncludeFields(includeFieldExp);
             }
             var option = _mongoSession.CreateFindOptions(projection, sortExp, sortType, limit: 1);
-            var result = _mongoSession.GetCollection<TEntity>().FindAsync(filter, option).Result;
-            var reslut = result.ToListAsync().Result;
+            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
 
-            return reslut.FirstOrDefault();
+            return result.FirstOrDefault();
         }
 
         /// <summary>
@@ -63,9 +64,11 @@ namespace MongoDB.Repository
         /// <param name="includeFieldExp">查询字段表达式</param>
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
         public TEntity Get(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> includeFieldExp = null
-                , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending)
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , MongoCollectionSettings settings = null)
         {
             FilterDefinition<TEntity> filter = null;
             ProjectionDefinition<TEntity, TEntity> projection = null;
@@ -84,10 +87,9 @@ namespace MongoDB.Repository
                 projection = _mongoSession.IncludeFields(includeFieldExp);
             }
             var option = _mongoSession.CreateFindOptions(projection, sortExp, sortType, limit: 1);
-            var result = _mongoSession.GetCollection<TEntity>().FindAsync(filter, option).Result;
-            var reslut = result.ToListAsync().Result;
+            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
 
-            return reslut.FirstOrDefault();
+            return result.FirstOrDefault();
         }
 
         /// <summary>
@@ -96,16 +98,18 @@ namespace MongoDB.Repository
         /// <param name="filter"></param>
         /// <param name="sort"></param>
         /// <param name="projection"></param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
         public TEntity Get(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
-            , SortDefinition<TEntity> sort = null)
+            , SortDefinition<TEntity> sort = null
+            , MongoCollectionSettings settings = null)
         {
             //var cursor = await _mongoSession.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
 
             var option = _mongoSession.CreateFindOptions(projection, sort, limit: 1);
-            var result = _mongoSession.GetCollection<TEntity>().FindAsync(filter, option).Result;
-            var reslut = result.ToListAsync().Result;
+            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
+            var reslut = result.ToList();
 
             return reslut.FirstOrDefault();
         }
@@ -119,11 +123,13 @@ namespace MongoDB.Repository
         /// <param name="sortType">排序方式</param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
         public List<TEntity> GetList(Expression<Func<TEntity, bool>> filterExp = null
             , Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , int limit = 0, int skip = 0)
+            , int limit = 0, int skip = 0
+            , MongoCollectionSettings settings = null)
         {
             FilterDefinition<TEntity> filter = null;
             ProjectionDefinition<TEntity, TEntity> projection = null;
@@ -145,8 +151,8 @@ namespace MongoDB.Repository
                 projection = _mongoSession.IncludeFields(includeFieldExp);
             }
             var option = _mongoSession.CreateFindOptions(projection, sort, limit, skip);
-            var result = _mongoSession.GetCollection<TEntity>().FindAsync(filter, option).Result;
-            var reslut = result.ToListAsync().Result;
+            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
+            var reslut = result.ToList();
 
             return reslut;
         }
@@ -159,15 +165,17 @@ namespace MongoDB.Repository
         /// <param name="sort"></param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
         public List<TEntity> GetList(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
             , SortDefinition<TEntity> sort = null
-            , int limit = 0, int skip = 0)
+            , int limit = 0, int skip = 0
+            , MongoCollectionSettings settings = null)
         {
             var option = _mongoSession.CreateFindOptions(projection, sort, limit, skip);
-            var result = _mongoSession.GetCollection<TEntity>().FindAsync(filter, option).Result;
-            var reslut = result.ToListAsync().Result;
+            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
+            var reslut = result.ToList();
 
             return reslut;
         }
@@ -178,9 +186,11 @@ namespace MongoDB.Repository
         /// <param name="filter"></param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
         public long Count(FilterDefinition<TEntity> filter
-            , int limit = 0, int skip = 0)
+            , int limit = 0, int skip = 0
+            , MongoCollectionSettings settings = null)
         {
             CountOptions option = new CountOptions();
             if (limit > 0)
@@ -192,7 +202,7 @@ namespace MongoDB.Repository
                 option.Skip = skip;
             }
 
-            return _mongoSession.GetCollection<TEntity>().CountAsync(filter, option).Result;
+            return _mongoSession.GetCollection<TEntity>(settings).Count(filter, option);
         }
 
         /// <summary>
@@ -201,9 +211,11 @@ namespace MongoDB.Repository
         /// <param name="filterExp"></param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
         public long Count(Expression<Func<TEntity, bool>> filterExp
-            , int limit = 0, int skip = 0)
+            , int limit = 0, int skip = 0
+            , MongoCollectionSettings settings = null)
         {
             CountOptions option = new CountOptions();
             if (limit > 0)
@@ -215,7 +227,7 @@ namespace MongoDB.Repository
                 option.Skip = skip;
             }
 
-            return _mongoSession.GetCollection<TEntity>().CountAsync(filterExp, option).Result;
+            return _mongoSession.GetCollection<TEntity>(settings).Count(filterExp, option);
         }
 
     }

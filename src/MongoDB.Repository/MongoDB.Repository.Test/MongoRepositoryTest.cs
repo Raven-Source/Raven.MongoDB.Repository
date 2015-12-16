@@ -19,7 +19,7 @@ namespace MongoDB.Repository.Test
 
             var list = userRep.GetList(x => x.Name == "ggg").ToList();
             UserRep up = new UserRep();
-            list = up.GetList(x => x.Name == "xxx").ToList();
+            list = up.GetList(x => x.Name == "ggg").ToList();
             Assert.AreNotEqual(list.Count, 0);
         }
 
@@ -27,8 +27,6 @@ namespace MongoDB.Repository.Test
         [TestMethod]
         public void TestMethod1()
         {
-            MallCardRep mallCardRep = new MallCardRep();
-            var mallCard = mallCardRep.Get(x => x.MallID == 10002);
 
         }
     }

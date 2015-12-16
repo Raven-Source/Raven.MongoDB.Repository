@@ -41,9 +41,9 @@ namespace MongoDB.Repository
         {
             if (entity is IAutoIncr)
             {
-                CreateIncIDAsync(entity);
+                CreateIncID(entity);
             }
-            _mongoSession.GetCollection<TEntity>().InsertOneAsync(entity).Wait();
+            _mongoSession.GetCollection<TEntity>().InsertOne(entity);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace MongoDB.Repository
             {
                 int count = entitys.Count();
                 //自增ID值
-                long id = CreateIncIDAsync(count);
+                long id = CreateIncID(count);
 
                 foreach (var entity in entitys)
                 {
@@ -67,7 +67,7 @@ namespace MongoDB.Repository
             }
 
             //await _mongoSession.InsertBatchAsync(entitys);
-            _mongoSession.GetCollection<TEntity>().InsertManyAsync(entitys).Wait();
+            _mongoSession.GetCollection<TEntity>().InsertMany(entitys);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace MongoDB.Repository
             BsonDocument bsDoc = updateEntity.ToBsonDocument();
             if (isUpsert && updateEntity is IAutoIncr)
             {
-                id = CreateIncIDAsync();
+                id = CreateIncID();
                 bsDoc.Remove("_id");
             }
             UpdateDefinition<TEntity> update = new UpdateDocument("$set", bsDoc);// string.Concat("{$set:", bsDoc.ToJson(), "}");
@@ -109,7 +109,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return _mongoSession.GetCollection<TEntity>().UpdateOneAsync(filterExp, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().UpdateOne(filterExp, update, option);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return _mongoSession.GetCollection<TEntity>().UpdateOneAsync(filter, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().UpdateOne(filter, update, option);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return _mongoSession.GetCollection<TEntity>().UpdateOneAsync(filterExp, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().UpdateOne(filterExp, update, option);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return _mongoSession.GetCollection<TEntity>().UpdateOneAsync(filter, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().UpdateOne(filter, update, option);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return _mongoSession.GetCollection<TEntity>().UpdateManyAsync(filterExp, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().UpdateMany(filterExp, update, option);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return _mongoSession.GetCollection<TEntity>().UpdateManyAsync(filter, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().UpdateMany(filter, update, option);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace MongoDB.Repository
 
             option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
-            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdateAsync(filterExp, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdate(filterExp, update, option);
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdateAsync(filterExp, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdate(filterExp, update, option);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace MongoDB.Repository
             option.Sort = sort;
             option.ReturnDocument = ReturnDocument.After;
 
-            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdateAsync(filter, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdate(filter, update, option);
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace MongoDB.Repository
             option.ReturnDocument = ReturnDocument.After;
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdateAsync(filter, update, option).Result;
+            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdate(filter, update, option);
         }
 
         /// <summary>
@@ -280,9 +280,9 @@ namespace MongoDB.Repository
 
             if (isUpsert && entity is IAutoIncr)
             {
-                CreateIncIDAsync(entity);
+                CreateIncID(entity);
             }
-            return _mongoSession.GetCollection<TEntity>().FindOneAndReplaceAsync(filterExp, entity, option).Result;
+            return _mongoSession.GetCollection<TEntity>().FindOneAndReplace(filterExp, entity, option);
         }
 
         /// <summary>
@@ -302,9 +302,9 @@ namespace MongoDB.Repository
 
             if (isUpsert && entity is IAutoIncr)
             {
-                CreateIncIDAsync(entity);
+                CreateIncID(entity);
             }
-            return _mongoSession.GetCollection<TEntity>().FindOneAndReplaceAsync(filter, entity, option).Result;
+            return _mongoSession.GetCollection<TEntity>().FindOneAndReplace(filter, entity, option);
         }
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace MongoDB.Repository
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
             option.Sort = sort;
-            return _mongoSession.GetCollection<TEntity>().FindOneAndDeleteAsync(filter, option).Result;
+            return _mongoSession.GetCollection<TEntity>().FindOneAndDelete(filter, option);
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace MongoDB.Repository
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
             option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
-            return _mongoSession.GetCollection<TEntity>().FindOneAndDeleteAsync(filterExp, option).Result;
+            return _mongoSession.GetCollection<TEntity>().FindOneAndDelete(filterExp, option);
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace MongoDB.Repository
         public DeleteResult DeleteOne(TKey id)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
-            return _mongoSession.GetCollection<TEntity>().DeleteOneAsync(filter).Result;
+            return _mongoSession.GetCollection<TEntity>().DeleteOne(filter);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         public DeleteResult DeleteOne(FilterDefinition<TEntity> filter)
         {
-            return _mongoSession.GetCollection<TEntity>().DeleteOneAsync(filter).Result;
+            return _mongoSession.GetCollection<TEntity>().DeleteOne(filter);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询条件</param>
         public DeleteResult DeleteOne(Expression<Func<TEntity, bool>> filterExp)
         {
-            return _mongoSession.GetCollection<TEntity>().DeleteOneAsync(filterExp).Result;
+            return _mongoSession.GetCollection<TEntity>().DeleteOne(filterExp);
         }
 
         /// <summary>
@@ -369,7 +369,7 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         public DeleteResult DeleteMany(FilterDefinition<TEntity> filter)
         {
-            return _mongoSession.GetCollection<TEntity>().DeleteManyAsync(filter).Result;
+            return _mongoSession.GetCollection<TEntity>().DeleteMany(filter);
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询条件</param>
         public DeleteResult DeleteMany(Expression<Func<TEntity, bool>> filterExp)
         {
-            return _mongoSession.GetCollection<TEntity>().DeleteManyAsync(filterExp).Result;
+            return _mongoSession.GetCollection<TEntity>().DeleteMany(filterExp);
         }
 
     }
