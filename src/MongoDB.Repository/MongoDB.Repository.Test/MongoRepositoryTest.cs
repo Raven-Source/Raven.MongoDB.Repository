@@ -13,6 +13,7 @@ namespace MongoDB.Repository.Test
         public void Insert()
         {
             UserRep userRep = new UserRep();
+            
             userRep.Insert(new User() { Name = "ggg" });
             userRep.Insert(new User() { Name = "BBB" });
             userRep.Insert(new User() { Name = "CCC" });
