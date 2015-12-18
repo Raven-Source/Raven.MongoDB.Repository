@@ -28,16 +28,30 @@ namespace MongoDB.Repository.PerformanceTest
         {
             int speed = 1000;
             //GetAsync().Wait();
+
+            Console.WriteLine("speed:{0}", speed);
             Stopwatch sw = new Stopwatch();
+
+            sw.Restart();
+            Task[] tasks = new Task[speed];
+            for (var i = 0; i < speed; i++)
+            {
+                tasks[i] = InsertAsync();
+            }
+
+            Task.WaitAll(tasks);
+            sw.Stop();
+            Console.WriteLine("for:Insert:" + sw.ElapsedMilliseconds);
+
 
             sw.Restart();
             for (var i = 0; i < speed; i++)
             {
-                Insert2().Wait();
+                tasks[i] = GetAsync(50);
             }
+            Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine("for:async:" + sw.ElapsedMilliseconds);
-
+            Console.WriteLine("for:Get:" + sw.ElapsedMilliseconds);
 
             //sw.Restart();
             //for (var i = 0; i < speed; i++)
@@ -72,18 +86,32 @@ namespace MongoDB.Repository.PerformanceTest
         }
 
 
-        public static void Insert3()
+        public static Task InsertAsync()
         {
             var user = new User();
             user.Name = "cc";
-            userRep.Insert(user);
+
+            return userRepAsync.InsertAsync(user);
         }
 
-        public static async Task Insert2()
+        public static void Get(long id)
+        {
+            var user = userRep.Get(id);            
+            //await userRepAsync.InsertAsync(user).ConfigureAwait(false);
+        }
+
+        public static Task<User> GetAsync(long id)
+        {
+            return userRepAsync.GetAsync(id);
+        }
+
+        public static void Insert()
         {
             var user = new User();
             user.Name = "cc";
-            await userRepAsync.InsertAsync(user).ConfigureAwait(false);
+
+            userRep.Insert(user);
+            //await userRepAsync.InsertAsync(user).ConfigureAwait(false);
         }
 
         public static async Task GetAsync()
