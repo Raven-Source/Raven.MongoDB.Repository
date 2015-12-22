@@ -51,6 +51,10 @@ namespace MongoDB.Repository.Test
             UserRepAsync userRep = new UserRepAsync();
             await userRep.UpdateOneAsync(x => x.ID == 4, UserRepAsync.Update.Set(nameof(User.CreateTime), DateTime.Now));
 
+            //UserRepAsync.Update.Set("_id", 1);
+            //UserRepAsync.Update.Set(x => x.ID, 1);
+
+
             await userRep.UpdateOneAsync(x => x.Name == "bb", UserRepAsync.Update.Set(nameof(User.CreateTime), DateTime.Now));
 
             long id = await userRep.CreateIncIDAsync();
@@ -93,7 +97,7 @@ namespace MongoDB.Repository.Test
             user.CreateTime = DateTime.Now;
             //user.Desc = "ggggsdgsa";
 
-            await userRep.FindOneAndUpdateAsync(filterExp: x => x.ID == user.ID, updateEntity: user, isUpsert: false);
+            user = await userRep.FindOneAndUpdateAsync(filterExp: x => x.ID == user.ID, updateEntity: user, isUpsert: false);
         }
 
 
@@ -126,8 +130,13 @@ namespace MongoDB.Repository.Test
             user = await userRep.GetAsync(x => x.Name == "aa" && x.CreateTime > DateTime.Parse("2015/10/20"));
             Assert.AreNotEqual(user, null);
             Builders<User>.Filter.Eq("Name", "aa");
+            
+            var filter = UserRepAsync.Filter.Eq(x => x.Name, "aa") & UserRepAsync.Filter.Eq(x => x.ID, 123);
+            UserRepAsync.Sort.Descending("_id");
+
             user = await userRep.GetAsync(Builders<User>.Filter.Eq("Name", "aa"), null, Builders<User>.Sort.Descending("_id"));
             Assert.AreNotEqual(user, null);
+            
             user = await userRep.GetAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
             Assert.AreNotEqual(user, null);
 
@@ -143,7 +152,7 @@ namespace MongoDB.Repository.Test
 
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa");
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa", null, s => s.ID, SortType.Ascending);
-
+            
             userList = await userRep.GetListAsync(filterExp: x => x.Name == "aa", includeFieldExp: x => new { x.CreateTime });
             userList = await userRep.GetListAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), sort: Builders<User>.Sort.Descending("_id"));
             userList = await userRep.GetListAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));

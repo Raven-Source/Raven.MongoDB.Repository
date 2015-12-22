@@ -35,6 +35,7 @@ namespace MongoDB.Repository.Test
         {
 
         }
+        
     }
 
     //public class MallCardRep : MongoRepository<MallCard, long>
