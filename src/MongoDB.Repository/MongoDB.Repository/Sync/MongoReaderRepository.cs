@@ -275,5 +275,34 @@ namespace MongoDB.Repository
             return base.GetCollection(settings).Count(filterExp, option);
         }
 
+        /// <summary>
+        /// 数量
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="settings">访问设置</param>
+        /// <returns></returns>
+        public bool Exists(FilterDefinition<TEntity> filter
+            , MongoCollectionSettings settings = null)
+        {
+            CountOptions option = new CountOptions();
+            option.Limit = 1;
+
+            return base.GetCollection(settings).Count(filter, option) > 0;
+        }
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        /// <param name="filterExp"></param>
+        /// <param name="settings">访问设置</param>
+        /// <returns></returns>
+        public bool Exists(Expression<Func<TEntity, bool>> filterExp
+            , MongoCollectionSettings settings = null)
+        {
+            CountOptions option = new CountOptions();
+            option.Limit = 1;
+
+            return base.GetCollection(settings).Count(filterExp, option) > 0;
+        }
     }
 }

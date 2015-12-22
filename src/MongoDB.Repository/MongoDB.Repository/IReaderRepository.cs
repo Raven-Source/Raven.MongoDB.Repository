@@ -124,5 +124,23 @@ namespace MongoDB.Repository
             , int limit = 0, int skip = 0
             , MongoCollectionSettings settings = null);
 
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="settings">访问设置</param>
+        /// <returns></returns>
+        bool Exists(FilterDefinition<TEntity> filter
+            , MongoCollectionSettings settings = null);
+
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        /// <param name="filterExp"></param>
+        /// <param name="settings">访问设置</param>
+        /// <returns></returns>
+        bool Exists(Expression<Func<TEntity, bool>> filterExp
+            , MongoCollectionSettings settings = null);
+
     }
 }

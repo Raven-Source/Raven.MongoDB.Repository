@@ -52,13 +52,14 @@ namespace MongoDB.Repository.Test
 
 
     [BsonIgnoreExtraElements]
-    public class MallCard : IAutoIncr<long>
+    public class MallCard : IEntity<string>
     {
         /// <summary>
         ///自增主键
         /// </summary>
         [BsonId]
-        public long ID { get; set; }
+        [BsonRepresentation(Bson.BsonType.ObjectId)]
+        public string ID { get; set; }
 
         /// <summary>
         ///// 商场id

@@ -278,5 +278,35 @@ namespace MongoDB.Repository
             return await base.GetCollection(settings).CountAsync(filterExp, option).ConfigureAwait(false);
         }
 
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="settings">访问设置</param>
+        /// <returns></returns>
+        public async Task<bool> ExistsAsync(FilterDefinition<TEntity> filter
+            , MongoCollectionSettings settings = null)
+        {
+            CountOptions option = new CountOptions();
+            option.Limit = 1;
+
+            return await base.GetCollection(settings).CountAsync(filter, option).ConfigureAwait(false) > 0;
+        }
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        /// <param name="filterExp"></param>
+        /// <param name="settings">访问设置</param>
+        /// <returns></returns>
+        public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp
+            , MongoCollectionSettings settings = null)
+        {
+            CountOptions option = new CountOptions();
+            option.Limit = 1;
+
+            return await base.GetCollection(settings).CountAsync(filterExp, option).ConfigureAwait(false) > 0;
+        }
     }
 }

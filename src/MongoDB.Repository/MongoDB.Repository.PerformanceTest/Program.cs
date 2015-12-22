@@ -14,6 +14,7 @@ namespace MongoDB.Repository.PerformanceTest
     {
         static UserRepAsync userRepAsync = new UserRepAsync();
         static UserRep userRep = new UserRep();
+        static MallCardRepAsync mallCardRep = new MallCardRepAsync();
 
         /// <summary>
         /// 
@@ -26,7 +27,7 @@ namespace MongoDB.Repository.PerformanceTest
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            int speed = 1000;
+            int speed = 5000;
             //GetAsync().Wait();
 
             Console.WriteLine("speed:{0}", speed);
@@ -85,10 +86,12 @@ namespace MongoDB.Repository.PerformanceTest
 
         public static Task InsertAsync()
         {
-            var user = new User();
-            user.Name = "cc";
+            var mall = new MallCard();
+            mall.MallID = 132;
+            mall.UID = 3241;
+            mall.CardTypeID = 24;
 
-            return userRepAsync.InsertAsync(user);
+            return mallCardRep.InsertAsync(mall);
         }
 
         public static void Get(long id)
