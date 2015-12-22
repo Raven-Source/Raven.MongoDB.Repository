@@ -21,7 +21,7 @@ namespace MongoDB.Repository
         /// <summary>
         /// Mongo自增长ID数据序列
         /// </summary>
-        private MongoSequence _sequence;
+        protected MongoSequence _sequence;
 
         /// <summary>
         /// 
@@ -106,77 +106,24 @@ namespace MongoDB.Repository
             return _mongoSession.GetCollection<TEntity>(settings);
         }
 
-        /// <summary>
-        /// 创建自增长ID
-        /// <remarks>默认自增ID存放 [Sequence] 集合</remarks>
-        /// </summary>
-        /// <typeparam name="T">数据类型</typeparam>
-        /// <returns></returns>
-        public long CreateIncID<T>(long inc = 1, int iteration = 0) where T : class, new()
-        {
-            long id = 1;
-            var collection = Database.GetCollection<BsonDocument>(this._sequence.SequenceName);
-            var typeName = typeof(T).Name;
-
-            var query = Builders<BsonDocument>.Filter.Eq(this._sequence.CollectionName, typeName);
-            var update = Builders<BsonDocument>.Update.Inc(this._sequence.IncrementID, inc);
-            var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>();
-            options.IsUpsert = true;
-            options.ReturnDocument = ReturnDocument.After;
-            
-            var result = collection.FindOneAndUpdate(query, update, options);
-            if (result != null)
-            {
-                id = result[this._sequence.IncrementID].AsInt64;
-                return id;
-            }
-            else if (iteration <= 1)
-            {
-                return CreateIncID<T>(inc, ++iteration);
-            }
-            else
-            {
-                throw new Exception("Failed to get on the IncID");
-            }
-        }
-
-        /// <summary>
-        /// 创建索引
-        /// </summary>
-        /// <param name="indexKeyExp"></param>
-        /// <returns></returns>
-        public async Task<string> CreateIndexAsync(Func<IndexKeysDefinitionBuilder<TEntity>, IndexKeysDefinition<TEntity>> indexKeyExp)
-        {
-            var indexKey = indexKeyExp(Builders<TEntity>.IndexKeys);
-            var result = await _mongoSession.GetCollection<TEntity>().Indexes.CreateOneAsync(indexKey).ConfigureAwait(false);
-            return result;
-        }
-
-        /// <summary>
-        /// 创建自增ID
-        /// </summary>
-        public long CreateIncID(long inc = 1)
-        {
-            return this.CreateIncID<TEntity>(inc);
-        }
-
-        /// <summary>
-        /// 创建自增ID
-        /// </summary>
-        /// <param name="entity"></param>
-        public void CreateIncID(TEntity entity)
-        {
-            long _id = 0;
-            _id = this.CreateIncID<TEntity>();
-            AssignmentEntityID(entity, _id);
-        }
+        ///// <summary>
+        ///// 创建索引
+        ///// </summary>
+        ///// <param name="indexKeyExp"></param>
+        ///// <returns></returns>
+        //public async Task<string> CreateIndexAsync(Func<IndexKeysDefinitionBuilder<TEntity>, IndexKeysDefinition<TEntity>> indexKeyExp)
+        //{
+        //    var indexKey = indexKeyExp(Builders<TEntity>.IndexKeys);
+        //    var result = await _mongoSession.GetCollection<TEntity>().Indexes.CreateOneAsync(indexKey).ConfigureAwait(false);
+        //    return result;
+        //} 
 
         /// <summary>
         /// ID赋值
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="id"></param>
-        public void AssignmentEntityID(TEntity entity, long id)
+        protected void AssignmentEntityID(TEntity entity, long id)
         {
             IEntity<TKey> tEntity = entity as IEntity<TKey>;
             if (tEntity.ID is int)

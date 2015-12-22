@@ -16,7 +16,7 @@ namespace MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class MongoRepositoryAsync<TEntity, TKey>: MongoReaderRepositoryAsync<TEntity, TKey>
+    public class MongoRepositoryAsync<TEntity, TKey>: MongoReaderRepositoryAsync<TEntity, TKey>, IRepositoryAsync<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
         /// <summary>
@@ -30,7 +30,7 @@ namespace MongoDB.Repository
         public MongoRepositoryAsync(string connString, string dbName, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
             :base(connString, dbName, writeConcern, readPreference, sequence)
         {
-        }        
+        }
 
         /// <summary>
         /// 添加数据
@@ -76,13 +76,13 @@ namespace MongoDB.Repository
         /// <param name="updateEntity"></param>
         /// <param name="isUpsert"></param>
         /// <returns></returns>
-        public async Task<UpdateDefinition<TEntity>> CreateUpdateDefinition(TEntity updateEntity, bool isUpsert = false)
+        public async Task<UpdateDefinition<TEntity>> CreateUpdateDefinitionAsync(TEntity updateEntity, bool isUpsert = false)
         {
             long id = 0;
             BsonDocument bsDoc = updateEntity.ToBsonDocument();
             if (isUpsert && updateEntity is IAutoIncr)
             {
-                id = await CreateIncIDAsync().ConfigureAwait(false);
+                id = await CreateIncIDAsync();
                 bsDoc.Remove("_id");
             }
             UpdateDefinition<TEntity> update = new UpdateDocument("$set", bsDoc);// string.Concat("{$set:", bsDoc.ToJson(), "}");
@@ -109,8 +109,7 @@ namespace MongoDB.Repository
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
 
-            UpdateDefinition<TEntity> update = await CreateUpdateDefinition(updateEntity, isUpsert).ConfigureAwait(false);
-
+            UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
             return await _mongoSession.GetCollection<TEntity>(settings).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
@@ -127,8 +126,7 @@ namespace MongoDB.Repository
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
 
-            UpdateDefinition<TEntity> update = await CreateUpdateDefinition(updateEntity, isUpsert).ConfigureAwait(false);
-
+            UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
             return await _mongoSession.GetCollection<TEntity>(settings).UpdateOneAsync(filter, update, option).ConfigureAwait(false);
         }
 
@@ -233,7 +231,7 @@ namespace MongoDB.Repository
             option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
 
-            UpdateDefinition<TEntity> update = await CreateUpdateDefinition(updateEntity, isUpsert).ConfigureAwait(false);
+            UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
 
             return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndUpdateAsync(filterExp, update, option).ConfigureAwait(false);
         }
@@ -276,7 +274,7 @@ namespace MongoDB.Repository
             option.Sort = sort;
             option.ReturnDocument = ReturnDocument.After;
 
-            UpdateDefinition<TEntity> update = await CreateUpdateDefinition(updateEntity, isUpsert).ConfigureAwait(false);
+            UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
 
             return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
         }

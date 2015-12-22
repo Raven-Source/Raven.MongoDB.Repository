@@ -16,7 +16,7 @@ namespace MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class MongoRepository<TEntity, TKey>: MongoReaderRepository<TEntity, TKey>
+    public class MongoRepository<TEntity, TKey>: MongoReaderRepository<TEntity, TKey>, IRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
         /// <summary>

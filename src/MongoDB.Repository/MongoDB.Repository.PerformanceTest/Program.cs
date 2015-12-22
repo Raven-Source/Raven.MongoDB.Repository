@@ -43,7 +43,6 @@ namespace MongoDB.Repository.PerformanceTest
             sw.Stop();
             Console.WriteLine("for:Insert:" + sw.ElapsedMilliseconds);
 
-
             sw.Restart();
             for (var i = 0; i < speed; i++)
             {
@@ -78,8 +77,6 @@ namespace MongoDB.Repository.PerformanceTest
             //Console.WriteLine("parallel:sync:" + sw.ElapsedMilliseconds);
 
             //Expression<Func<User>> fieldsExp = () => new User { Age = 12, Name = "1111" };
-
-
 
             Console.WriteLine("over...");
             Console.ReadLine();

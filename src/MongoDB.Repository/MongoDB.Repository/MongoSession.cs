@@ -116,7 +116,7 @@ namespace MongoDB.Repository
             if (sortExp != null)
             {
                 if (sortType == SortType.Ascending)
-                {
+                {                    
                     sort = Builders<T>.Sort.Ascending(sortExp);
                 }
                 else

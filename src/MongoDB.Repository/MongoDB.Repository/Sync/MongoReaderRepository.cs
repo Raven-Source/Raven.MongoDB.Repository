@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using Repository.IEntity;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class MongoReaderRepository<TEntity, TKey> : MongoBaseRepository<TEntity, TKey>
+    public partial class MongoReaderRepository<TEntity, TKey> : MongoBaseRepository<TEntity, TKey>, IReaderRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
         /// <summary>
@@ -28,6 +29,50 @@ namespace MongoDB.Repository
         public MongoReaderRepository(string connString, string dbName, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
             :base(connString, dbName, writeConcern, readPreference, sequence)
         {
+        }
+
+        /// <summary>
+        /// 创建自增长ID
+        /// <remarks>默认自增ID存放 [Sequence] 集合</remarks>
+        /// </summary>
+        /// <returns></returns>
+        public long CreateIncID(long inc = 1, int iteration = 0)
+        {
+            long id = 1;
+            var collection = Database.GetCollection<BsonDocument>(base._sequence.SequenceName);
+            var typeName = typeof(TEntity).Name;
+
+            var query = Builders<BsonDocument>.Filter.Eq(base._sequence.CollectionName, typeName);
+            var update = Builders<BsonDocument>.Update.Inc(base._sequence.IncrementID, inc);
+            var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>();
+            options.IsUpsert = true;
+            options.ReturnDocument = ReturnDocument.After;
+
+            var result = collection.FindOneAndUpdate(query, update, options);
+            if (result != null)
+            {
+                id = result[base._sequence.IncrementID].AsInt64;
+                return id;
+            }
+            else if (iteration <= 1)
+            {
+                return CreateIncID(inc, ++iteration);
+            }
+            else
+            {
+                throw new Exception("Failed to get on the IncID");
+            }
+        }
+
+        /// <summary>
+        /// 创建自增ID
+        /// </summary>
+        /// <param name="entity"></param>
+        public void CreateIncID(TEntity entity)
+        {
+            long _id = 0;
+            _id = this.CreateIncID();
+            AssignmentEntityID(entity, _id);
         }
 
         /// <summary>
