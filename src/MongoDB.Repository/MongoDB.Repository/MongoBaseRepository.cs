@@ -40,6 +40,15 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
+        /// 根据数据类型得到集合
+        /// </summary>
+        /// <returns></returns>
+        public IMongoCollection<TEntity> GetCollection(MongoCollectionSettings settings = null)
+        {
+            return Database.GetCollection<TEntity>(typeof(TEntity).Name, settings);
+        }
+
+        /// <summary>
         /// get Filter
         /// </summary>
         public static FilterDefinitionBuilder<TEntity> Filter
@@ -96,27 +105,135 @@ namespace MongoDB.Repository
             this._sequence = sequence ?? new MongoSequence();
             this._mongoSession = new MongoSession(connString, dbName, writeConcern: writeConcern, readPreference: readPreference);
         }
+        
+        #region 获取字段
 
         /// <summary>
-        /// 根据数据类型得到集合
+        /// 获取字段
         /// </summary>
+        /// <param name="fieldsExp"></param>
         /// <returns></returns>
-        public IMongoCollection<TEntity> GetCollection(MongoCollectionSettings settings = null)
+        public ProjectionDefinition<T> IncludeFields<T>(Expression<Func<T, object>> fieldsExp) where T : class, new()
         {
-            return _mongoSession.GetCollection<TEntity>(settings);
+            var builder = Builders<T>.Projection;
+
+            if (fieldsExp != null)
+            {
+                List<ProjectionDefinition<T>> fieldDocument = new List<ProjectionDefinition<T>>();
+                var body = (fieldsExp.Body as NewExpression);
+                if (body == null || body.Members == null)
+                {
+                    throw new Exception("fieldsExp is invalid expression format， eg: x => new { x.Field1, x.Field2 }");
+                }
+                foreach (var m in body.Members)
+                {
+                    fieldDocument.Add(builder.Include(m.Name));
+                }
+                return builder.Combine(fieldDocument);
+            }
+            return null;
         }
 
-        ///// <summary>
-        ///// 创建索引
-        ///// </summary>
-        ///// <param name="indexKeyExp"></param>
-        ///// <returns></returns>
-        //public async Task<string> CreateIndexAsync(Func<IndexKeysDefinitionBuilder<TEntity>, IndexKeysDefinition<TEntity>> indexKeyExp)
-        //{
-        //    var indexKey = indexKeyExp(Builders<TEntity>.IndexKeys);
-        //    var result = await _mongoSession.GetCollection<TEntity>().Indexes.CreateOneAsync(indexKey).ConfigureAwait(false);
-        //    return result;
-        //} 
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <returns></returns>
+        public SortDefinition<T> CreateSortDefinition<T>(Expression<Func<T, object>> sortExp, SortType sortType = SortType.Ascending)
+        {
+            SortDefinition<T> sort = null;
+            if (sortExp != null)
+            {
+                if (sortType == SortType.Ascending)
+                {
+                    sort = Builders<T>.Sort.Ascending(sortExp);
+                }
+                else
+                {
+                    sort = Builders<T>.Sort.Descending(sortExp);
+                }
+            }
+            return sort;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="projection"></param>
+        /// <param name="sort"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        public FindOptions<T, T> CreateFindOptions<T>(ProjectionDefinition<T, T> projection = null
+            , SortDefinition<T> sort = null
+            , int limit = 0, int skip = 0)
+        {
+            var option = new FindOptions<T, T>();
+            if (limit > 0)
+            {
+                option.Limit = limit;
+            }
+            if (skip > 0)
+            {
+                option.Skip = skip;
+            }
+
+            if (projection != null)
+            {
+                option.Projection = projection;
+            }
+
+            if (sort != null)
+            {
+                option.Sort = sort;
+            }
+
+            return option;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="projection"></param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        public FindOptions<T, T> CreateFindOptions<T>(ProjectionDefinition<T, T> projection = null
+            , Expression<Func<T, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0)
+        {
+            var option = new FindOptions<T, T>();
+            if (limit > 0)
+            {
+                option.Limit = limit;
+            }
+            if (skip > 0)
+            {
+                option.Skip = skip;
+            }
+
+            if (projection != null)
+            {
+                option.Projection = projection;
+            }
+
+            SortDefinition<T> sort = CreateSortDefinition(sortExp, sortType);
+            if (sort != null)
+            {
+                option.Sort = sort;
+            }
+
+            return option;
+        }
+
 
         /// <summary>
         /// ID赋值

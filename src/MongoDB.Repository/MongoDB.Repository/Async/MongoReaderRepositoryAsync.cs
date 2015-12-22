@@ -89,15 +89,15 @@ namespace MongoDB.Repository
             , MongoCollectionSettings settings = null)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
-            //var cursor = await _mongoSession.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
+            //var cursor = await base.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
 
             ProjectionDefinition<TEntity, TEntity> projection = null;
             if (includeFieldExp != null)
             {
-                projection = _mongoSession.IncludeFields(includeFieldExp);
+                projection = base.IncludeFields(includeFieldExp);
             }
-            var option = _mongoSession.CreateFindOptions(projection, sortExp, sortType, limit: 1);
-            var result = await _mongoSession.GetCollection<TEntity>(settings).FindAsync(filter, option).ConfigureAwait(false);
+            var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1);
+            var result = await base.GetCollection(settings).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.FirstOrDefaultAsync().ConfigureAwait(false);
 
 
@@ -131,10 +131,10 @@ namespace MongoDB.Repository
 
             if (includeFieldExp != null)
             {
-                projection = _mongoSession.IncludeFields(includeFieldExp);
+                projection = base.IncludeFields(includeFieldExp);
             }
-            var option = _mongoSession.CreateFindOptions(projection, sortExp, sortType, limit: 1);
-            var result = await _mongoSession.GetCollection<TEntity>(settings).FindAsync(filter, option).ConfigureAwait(false);
+            var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1);
+            var result = await base.GetCollection(settings).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.FirstOrDefaultAsync().ConfigureAwait(false);
 
             return reslut;
@@ -153,10 +153,10 @@ namespace MongoDB.Repository
             , SortDefinition<TEntity> sort = null
             , MongoCollectionSettings settings = null)
         {
-            //var cursor = await _mongoSession.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
+            //var cursor = await base.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
 
-            var option = _mongoSession.CreateFindOptions(projection, sort, limit: 1);
-            var result = await _mongoSession.GetCollection<TEntity>(settings).FindAsync(filter, option).ConfigureAwait(false);
+            var option = base.CreateFindOptions(projection, sort, limit: 1);
+            var result = await base.GetCollection(settings).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.FirstOrDefaultAsync().ConfigureAwait(false);
 
             return reslut;
@@ -192,14 +192,14 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
-            sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
+            sort = base.CreateSortDefinition(sortExp, sortType);
 
             if (includeFieldExp != null)
             {
-                projection = _mongoSession.IncludeFields(includeFieldExp);
+                projection = base.IncludeFields(includeFieldExp);
             }
-            var option = _mongoSession.CreateFindOptions(projection, sort, limit, skip);
-            var result = await _mongoSession.GetCollection<TEntity>(settings).FindAsync(filter, option).ConfigureAwait(false);
+            var option = base.CreateFindOptions(projection, sort, limit, skip);
+            var result = await base.GetCollection(settings).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.ToListAsync().ConfigureAwait(false);
 
             return reslut;
@@ -221,8 +221,8 @@ namespace MongoDB.Repository
             , int limit = 0, int skip = 0
             , MongoCollectionSettings settings = null)
         {
-            var option = _mongoSession.CreateFindOptions(projection, sort, limit, skip);
-            var result = await _mongoSession.GetCollection<TEntity>(settings).FindAsync(filter, option).ConfigureAwait(false);
+            var option = base.CreateFindOptions(projection, sort, limit, skip);
+            var result = await base.GetCollection(settings).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.ToListAsync().ConfigureAwait(false);
 
             return reslut;
@@ -250,7 +250,7 @@ namespace MongoDB.Repository
                 option.Skip = skip;
             }
 
-            return await _mongoSession.GetCollection<TEntity>(settings).CountAsync(filter, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).CountAsync(filter, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace MongoDB.Repository
                 option.Skip = skip;
             }
 
-            return await _mongoSession.GetCollection<TEntity>(settings).CountAsync(filterExp, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).CountAsync(filterExp, option).ConfigureAwait(false);
         }
 
     }

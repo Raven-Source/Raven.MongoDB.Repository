@@ -94,10 +94,10 @@ namespace MongoDB.Repository
             ProjectionDefinition<TEntity, TEntity> projection = null;
             if (includeFieldExp != null)
             {
-                projection = _mongoSession.IncludeFields(includeFieldExp);
+                projection = base.IncludeFields(includeFieldExp);
             }
-            var option = _mongoSession.CreateFindOptions(projection, sortExp, sortType, limit: 1);
-            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
+            var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1);
+            var result = base.GetCollection(settings).FindSync(filter, option);
 
             return result.FirstOrDefault();
         }
@@ -129,10 +129,10 @@ namespace MongoDB.Repository
 
             if (includeFieldExp != null)
             {
-                projection = _mongoSession.IncludeFields(includeFieldExp);
+                projection = base.IncludeFields(includeFieldExp);
             }
-            var option = _mongoSession.CreateFindOptions(projection, sortExp, sortType, limit: 1);
-            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
+            var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1);
+            var result = base.GetCollection(settings).FindSync(filter, option);
 
             return result.FirstOrDefault();
         }
@@ -150,10 +150,10 @@ namespace MongoDB.Repository
             , SortDefinition<TEntity> sort = null
             , MongoCollectionSettings settings = null)
         {
-            //var cursor = await _mongoSession.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
+            //var cursor = await base.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
 
-            var option = _mongoSession.CreateFindOptions(projection, sort, limit: 1);
-            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
+            var option = base.CreateFindOptions(projection, sort, limit: 1);
+            var result = base.GetCollection(settings).FindSync(filter, option);
             var reslut = result.ToList();
 
             return reslut.FirstOrDefault();
@@ -189,14 +189,14 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
-            sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
+            sort = base.CreateSortDefinition(sortExp, sortType);
 
             if (includeFieldExp != null)
             {
-                projection = _mongoSession.IncludeFields(includeFieldExp);
+                projection = base.IncludeFields(includeFieldExp);
             }
-            var option = _mongoSession.CreateFindOptions(projection, sort, limit, skip);
-            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
+            var option = base.CreateFindOptions(projection, sort, limit, skip);
+            var result = base.GetCollection(settings).FindSync(filter, option);
             var reslut = result.ToList();
 
             return reslut;
@@ -218,8 +218,8 @@ namespace MongoDB.Repository
             , int limit = 0, int skip = 0
             , MongoCollectionSettings settings = null)
         {
-            var option = _mongoSession.CreateFindOptions(projection, sort, limit, skip);
-            var result = _mongoSession.GetCollection<TEntity>(settings).FindSync(filter, option);
+            var option = base.CreateFindOptions(projection, sort, limit, skip);
+            var result = base.GetCollection(settings).FindSync(filter, option);
             var reslut = result.ToList();
 
             return reslut;
@@ -247,7 +247,7 @@ namespace MongoDB.Repository
                 option.Skip = skip;
             }
 
-            return _mongoSession.GetCollection<TEntity>(settings).Count(filter, option);
+            return base.GetCollection(settings).Count(filter, option);
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace MongoDB.Repository
                 option.Skip = skip;
             }
 
-            return _mongoSession.GetCollection<TEntity>(settings).Count(filterExp, option);
+            return base.GetCollection(settings).Count(filterExp, option);
         }
 
     }

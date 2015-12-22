@@ -43,7 +43,7 @@ namespace MongoDB.Repository
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }
-            await _mongoSession.GetCollection<TEntity>().InsertOneAsync(entity).ConfigureAwait(false);
+            await base.GetCollection().InsertOneAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace MongoDB.Repository
                 }
             }
 
-            //await _mongoSession.InsertBatchAsync(entitys);
-            await _mongoSession.GetCollection<TEntity>().InsertManyAsync(entitys).ConfigureAwait(false);
+            //await base.InsertBatchAsync(entitys);
+            await base.GetCollection().InsertManyAsync(entitys).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace MongoDB.Repository
             option.IsUpsert = isUpsert;
 
             UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
-            return await _mongoSession.GetCollection<TEntity>(settings).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace MongoDB.Repository
             option.IsUpsert = isUpsert;
 
             UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
-            return await _mongoSession.GetCollection<TEntity>(settings).UpdateOneAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).UpdateOneAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await _mongoSession.GetCollection<TEntity>(settings).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await _mongoSession.GetCollection<TEntity>(settings).UpdateOneAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).UpdateOneAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await _mongoSession.GetCollection<TEntity>(settings).UpdateManyAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).UpdateManyAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await _mongoSession.GetCollection<TEntity>(settings).UpdateManyAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).UpdateManyAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -207,9 +207,9 @@ namespace MongoDB.Repository
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
 
-            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
+            option.Sort = base.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
-            return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndUpdateAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).FindOneAndUpdateAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -228,12 +228,12 @@ namespace MongoDB.Repository
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
-            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
+            option.Sort = base.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
 
             UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
 
-            return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndUpdateAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).FindOneAndUpdateAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace MongoDB.Repository
             option.IsUpsert = isUpsert;
             option.Sort = sort;
             option.ReturnDocument = ReturnDocument.After;
-            return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
 
-            return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -295,14 +295,14 @@ namespace MongoDB.Repository
         {
             FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
             option.IsUpsert = isUpsert;
-            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
+            option.Sort = base.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
 
             if (isUpsert && entity is IAutoIncr)
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }
-            return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndReplaceAsync(filterExp, entity, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).FindOneAndReplaceAsync(filterExp, entity, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace MongoDB.Repository
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }
-            return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndReplaceAsync(filter, entity, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).FindOneAndReplaceAsync(filter, entity, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace MongoDB.Repository
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
             option.Sort = sort;
-            return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndDeleteAsync(filter, option).ConfigureAwait(false);
+            return await base.GetCollection(settings).FindOneAndDeleteAsync(filter, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -357,8 +357,8 @@ namespace MongoDB.Repository
             , MongoCollectionSettings settings = null)
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
-            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
-            return await _mongoSession.GetCollection<TEntity>(settings).FindOneAndDeleteAsync(filterExp, option).ConfigureAwait(false);
+            option.Sort = base.CreateSortDefinition(sortExp, sortType);
+            return await base.GetCollection(settings).FindOneAndDeleteAsync(filterExp, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace MongoDB.Repository
             , MongoCollectionSettings settings = null)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
-            return await _mongoSession.GetCollection<TEntity>(settings).DeleteOneAsync(filter).ConfigureAwait(false);
+            return await base.GetCollection(settings).DeleteOneAsync(filter).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace MongoDB.Repository
         public async Task<DeleteResult> DeleteOneAsync(FilterDefinition<TEntity> filter
             , MongoCollectionSettings settings = null)
         {
-            return await _mongoSession.GetCollection<TEntity>(settings).DeleteOneAsync(filter).ConfigureAwait(false);
+            return await base.GetCollection(settings).DeleteOneAsync(filter).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -392,7 +392,7 @@ namespace MongoDB.Repository
         public async Task<DeleteResult> DeleteOneAsync(Expression<Func<TEntity, bool>> filterExp
             , MongoCollectionSettings settings = null)
         {
-            return await _mongoSession.GetCollection<TEntity>(settings).DeleteOneAsync(filterExp).ConfigureAwait(false);
+            return await base.GetCollection(settings).DeleteOneAsync(filterExp).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace MongoDB.Repository
         public async Task<DeleteResult> DeleteManyAsync(FilterDefinition<TEntity> filter
             , MongoCollectionSettings settings = null)
         {
-            return await _mongoSession.GetCollection<TEntity>(settings).DeleteManyAsync(filter).ConfigureAwait(false);
+            return await base.GetCollection(settings).DeleteManyAsync(filter).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace MongoDB.Repository
         public async Task<DeleteResult> DeleteManyAsync(Expression<Func<TEntity, bool>> filterExp
             , MongoCollectionSettings settings = null)
         {
-            return await _mongoSession.GetCollection<TEntity>(settings).DeleteManyAsync(filterExp).ConfigureAwait(false);
+            return await base.GetCollection(settings).DeleteManyAsync(filterExp).ConfigureAwait(false);
         }
 
     }

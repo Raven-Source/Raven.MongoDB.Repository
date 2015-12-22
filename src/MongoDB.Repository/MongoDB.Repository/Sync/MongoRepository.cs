@@ -43,7 +43,7 @@ namespace MongoDB.Repository
             {
                 CreateIncID(entity);
             }
-            _mongoSession.GetCollection<TEntity>().InsertOne(entity);
+            base.GetCollection().InsertOne(entity);
         }
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace MongoDB.Repository
                 }
             }
 
-            //await _mongoSession.InsertBatchAsync(entitys);
-            _mongoSession.GetCollection<TEntity>().InsertMany(entitys);
+            //await base.InsertBatchAsync(entitys);
+            base.GetCollection().InsertMany(entitys);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return _mongoSession.GetCollection<TEntity>().UpdateOne(filterExp, update, option);
+            return base.GetCollection().UpdateOne(filterExp, update, option);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return _mongoSession.GetCollection<TEntity>().UpdateOne(filter, update, option);
+            return base.GetCollection().UpdateOne(filter, update, option);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return _mongoSession.GetCollection<TEntity>().UpdateOne(filterExp, update, option);
+            return base.GetCollection().UpdateOne(filterExp, update, option);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return _mongoSession.GetCollection<TEntity>().UpdateOne(filter, update, option);
+            return base.GetCollection().UpdateOne(filter, update, option);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return _mongoSession.GetCollection<TEntity>().UpdateMany(filterExp, update, option);
+            return base.GetCollection().UpdateMany(filterExp, update, option);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace MongoDB.Repository
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return _mongoSession.GetCollection<TEntity>().UpdateMany(filter, update, option);
+            return base.GetCollection().UpdateMany(filter, update, option);
         }
 
         /// <summary>
@@ -195,9 +195,9 @@ namespace MongoDB.Repository
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
 
-            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
+            option.Sort = base.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
-            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdate(filterExp, update, option);
+            return base.GetCollection().FindOneAndUpdate(filterExp, update, option);
         }
 
         /// <summary>
@@ -214,12 +214,12 @@ namespace MongoDB.Repository
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
-            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
+            option.Sort = base.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
 
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdate(filterExp, update, option);
+            return base.GetCollection().FindOneAndUpdate(filterExp, update, option);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace MongoDB.Repository
             option.Sort = sort;
             option.ReturnDocument = ReturnDocument.After;
 
-            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdate(filter, update, option);
+            return base.GetCollection().FindOneAndUpdate(filter, update, option);
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace MongoDB.Repository
             option.ReturnDocument = ReturnDocument.After;
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return _mongoSession.GetCollection<TEntity>().FindOneAndUpdate(filter, update, option);
+            return base.GetCollection().FindOneAndUpdate(filter, update, option);
         }
 
         /// <summary>
@@ -275,14 +275,14 @@ namespace MongoDB.Repository
         {
             FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
             option.IsUpsert = isUpsert;
-            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
+            option.Sort = base.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
 
             if (isUpsert && entity is IAutoIncr)
             {
                 CreateIncID(entity);
             }
-            return _mongoSession.GetCollection<TEntity>().FindOneAndReplace(filterExp, entity, option);
+            return base.GetCollection().FindOneAndReplace(filterExp, entity, option);
         }
 
         /// <summary>
@@ -304,7 +304,7 @@ namespace MongoDB.Repository
             {
                 CreateIncID(entity);
             }
-            return _mongoSession.GetCollection<TEntity>().FindOneAndReplace(filter, entity, option);
+            return base.GetCollection().FindOneAndReplace(filter, entity, option);
         }
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace MongoDB.Repository
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
             option.Sort = sort;
-            return _mongoSession.GetCollection<TEntity>().FindOneAndDelete(filter, option);
+            return base.GetCollection().FindOneAndDelete(filter, option);
         }
 
         /// <summary>
@@ -331,8 +331,8 @@ namespace MongoDB.Repository
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending)
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
-            option.Sort = _mongoSession.CreateSortDefinition(sortExp, sortType);
-            return _mongoSession.GetCollection<TEntity>().FindOneAndDelete(filterExp, option);
+            option.Sort = base.CreateSortDefinition(sortExp, sortType);
+            return base.GetCollection().FindOneAndDelete(filterExp, option);
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace MongoDB.Repository
         public DeleteResult DeleteOne(TKey id)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
-            return _mongoSession.GetCollection<TEntity>().DeleteOne(filter);
+            return base.GetCollection().DeleteOne(filter);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         public DeleteResult DeleteOne(FilterDefinition<TEntity> filter)
         {
-            return _mongoSession.GetCollection<TEntity>().DeleteOne(filter);
+            return base.GetCollection().DeleteOne(filter);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询条件</param>
         public DeleteResult DeleteOne(Expression<Func<TEntity, bool>> filterExp)
         {
-            return _mongoSession.GetCollection<TEntity>().DeleteOne(filterExp);
+            return base.GetCollection().DeleteOne(filterExp);
         }
 
         /// <summary>
@@ -369,7 +369,7 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         public DeleteResult DeleteMany(FilterDefinition<TEntity> filter)
         {
-            return _mongoSession.GetCollection<TEntity>().DeleteMany(filter);
+            return base.GetCollection().DeleteMany(filter);
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询条件</param>
         public DeleteResult DeleteMany(Expression<Func<TEntity, bool>> filterExp)
         {
-            return _mongoSession.GetCollection<TEntity>().DeleteMany(filterExp);
+            return base.GetCollection().DeleteMany(filterExp);
         }
 
     }

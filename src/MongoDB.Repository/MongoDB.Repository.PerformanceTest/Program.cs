@@ -120,7 +120,7 @@ namespace MongoDB.Repository.PerformanceTest
 
             long lambda, builders, buildersFun;
             int speed = 10000;
-
+            
             user = await userRepAsync.GetAsync(x => x.Name == "aa");
 
             user = await userRepAsync.GetAsync(UserRepAsync.Filter.Eq<string>(nameof(User.Name), "aa"));
