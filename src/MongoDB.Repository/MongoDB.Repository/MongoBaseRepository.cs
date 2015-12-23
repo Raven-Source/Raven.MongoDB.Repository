@@ -168,10 +168,11 @@ namespace MongoDB.Repository
         /// <param name="sort"></param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="hint"></param>
         /// <returns></returns>
         public FindOptions<T, T> CreateFindOptions<T>(ProjectionDefinition<T, T> projection = null
             , SortDefinition<T> sort = null
-            , int limit = 0, int skip = 0)
+            , int limit = 0, int skip = 0, BsonValue hint = null)
         {
             var option = new FindOptions<T, T>();
             if (limit > 0)
@@ -193,6 +194,14 @@ namespace MongoDB.Repository
                 option.Sort = sort;
             }
 
+            if (hint != null)
+            {
+                option.Modifiers = new BsonDocument
+                {
+                    { "$hint",hint }
+                };
+            }
+
             return option;
         }
 
@@ -205,10 +214,11 @@ namespace MongoDB.Repository
         /// <param name="sortType"></param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="hint"></param>
         /// <returns></returns>
         public FindOptions<T, T> CreateFindOptions<T>(ProjectionDefinition<T, T> projection = null
             , Expression<Func<T, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , int limit = 0, int skip = 0)
+            , int limit = 0, int skip = 0, BsonValue hint = null)
         {
             var option = new FindOptions<T, T>();
             if (limit > 0)
@@ -231,9 +241,43 @@ namespace MongoDB.Repository
                 option.Sort = sort;
             }
 
+            if (hint != null)
+            {
+                option.Modifiers = new BsonDocument
+                {
+                    { "$hint",hint }
+                };
+            }
+
             return option;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="hint"></param>
+        /// <returns></returns>
+        public CountOptions CreateCountOptions(int limit = 0, int skip = 0, BsonValue hint = null)
+        {
+            CountOptions option = new CountOptions();
+            if (limit > 0)
+            {
+                option.Limit = limit;
+            }
+            if (skip > 0)
+            {
+                option.Skip = skip;
+            }
+
+            if (hint != null)
+            {
+                option.Hint = hint;
+            }
+
+            return option;
+        }
 
         /// <summary>
         /// ID赋值

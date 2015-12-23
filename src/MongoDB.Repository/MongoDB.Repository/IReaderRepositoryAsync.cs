@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,10 +36,11 @@ namespace MongoDB.Repository
         /// <param name="includeFieldExp">查询字段表达式</param>
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
+        /// <param name="hint">hint索引</param>
         /// <param name="settings">访问设置</param>
         /// <returns></returns>
         Task<TEntity> GetAsync(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
-            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
             , MongoCollectionSettings settings = null);
 
         /// <summary>
@@ -48,10 +50,11 @@ namespace MongoDB.Repository
         /// <param name="includeFieldExp">查询字段表达式</param>
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
+        /// <param name="hint">hint索引</param>
         /// <param name="settings">访问设置</param>
         /// <returns></returns>
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> includeFieldExp = null
-            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
             , MongoCollectionSettings settings = null);
 
         /// <summary>
@@ -60,11 +63,12 @@ namespace MongoDB.Repository
         /// <param name="filter"></param>
         /// <param name="sort"></param>
         /// <param name="projection"></param>
+        /// <param name="hint">hint索引</param>
         /// <param name="settings">访问设置</param>
         /// <returns></returns>
         Task<TEntity> GetAsync(FilterDefinition<TEntity> filter
              , ProjectionDefinition<TEntity, TEntity> projection = null
-             , SortDefinition<TEntity> sort = null
+             , SortDefinition<TEntity> sort = null, BsonValue hint = null
              , MongoCollectionSettings settings = null);
 
         /// <summary>
@@ -76,12 +80,13 @@ namespace MongoDB.Repository
         /// <param name="sortType">排序方式</param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="hint">hint索引</param>
         /// <param name="settings">访问设置</param>
         /// <returns></returns>
         Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filterExp = null
             , Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , int limit = 0, int skip = 0
+            , int limit = 0, int skip = 0, BsonValue hint = null
             , MongoCollectionSettings settings = null);
 
         /// <summary>
@@ -92,12 +97,13 @@ namespace MongoDB.Repository
         /// <param name="sort"></param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="hint">hint索引</param>
         /// <param name="settings">访问设置</param>
         /// <returns></returns>
         Task<List<TEntity>> GetListAsync(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
             , SortDefinition<TEntity> sort = null
-            , int limit = 0, int skip = 0
+            , int limit = 0, int skip = 0, BsonValue hint = null
             , MongoCollectionSettings settings = null);
 
         /// <summary>
@@ -106,10 +112,11 @@ namespace MongoDB.Repository
         /// <param name="filter"></param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="hint">hint索引</param>
         /// <param name="settings">访问设置</param>
         /// <returns></returns>
         Task<long> CountAsync(FilterDefinition<TEntity> filter
-            , int limit = 0, int skip = 0
+            , int limit = 0, int skip = 0, BsonValue hint = null
             , MongoCollectionSettings settings = null);
 
         /// <summary>
@@ -118,28 +125,31 @@ namespace MongoDB.Repository
         /// <param name="filterExp"></param>
         /// <param name="limit"></param>
         /// <param name="skip"></param>
+        /// <param name="hint">hint索引</param>
         /// <param name="settings">访问设置</param>
         /// <returns></returns>
         Task<long> CountAsync(Expression<Func<TEntity, bool>> filterExp
-             , int limit = 0, int skip = 0
+             , int limit = 0, int skip = 0, BsonValue hint = null
              , MongoCollectionSettings settings = null);
 
         /// <summary>
         /// 数量
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="hint">hint索引</param>
         /// <param name="settings">访问设置</param>
         /// <returns></returns>
-        Task<bool> ExistsAsync(FilterDefinition<TEntity> filter
+        Task<bool> ExistsAsync(FilterDefinition<TEntity> filter, BsonValue hint = null
             , MongoCollectionSettings settings = null);
 
         /// <summary>
         /// 数量
         /// </summary>
         /// <param name="filterExp"></param>
+        /// <param name="hint">hint索引</param>
         /// <param name="settings">访问设置</param>
         /// <returns></returns>
-        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp
+        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp, BsonValue hint = null
              , MongoCollectionSettings settings = null);
     }
 }
