@@ -142,6 +142,20 @@ namespace MongoDB.Repository.Test
 
         }
 
+        [TestMethod]
+        public async Task Get2()
+        {
+            UserRepAsync userRep = new UserRepAsync();
+
+            User user = null;
+            user = await userRep.GetAsync(filterExp: x => x.Name == "aa", sortExp: x => x.ID, sortType: SortType.Descending, hint: "Name_1");
+            Assert.AreEqual(user.Name, "aa");
+
+            user = await userRep.GetAsync(filterExp: x => x.Name == "aa", sortExp: x => x.ID, sortType: SortType.Descending);
+            Assert.AreEqual(user.Name, "aa");
+
+        }
+
 
         [TestMethod]
         public async Task GetList()
