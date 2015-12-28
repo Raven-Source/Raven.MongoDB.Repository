@@ -72,6 +72,7 @@
     <Compile Include="MongoBaseRepository.cs" />
     <Compile Include="Sync\MongoReaderRepository.cs" />
     <Compile Include="Sync\MongoRepository.cs" />
+    <Compile Include="Util.cs" />
     <None Include="MongoSession.csbackup" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />

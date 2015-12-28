@@ -36,22 +36,26 @@ namespace MongoDB.Repository
         /// 添加数据
         /// </summary>
         /// <param name="entity">待添加数据</param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
-        public async Task InsertAsync(TEntity entity)
+        public async Task InsertAsync(TEntity entity
+            , MongoCollectionSettings settings = null)
         {
             if (entity is IAutoIncr)
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }
-            await base.GetCollection().InsertOneAsync(entity).ConfigureAwait(false);
+            await base.GetCollection(settings).InsertOneAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
         /// 批量添加数据
         /// </summary>
         /// <param name="entitys">待添加数据集合</param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
-        public async Task InsertBatchAsync(IEnumerable<TEntity> entitys)
+        public async Task InsertBatchAsync(IEnumerable<TEntity> entitys
+            , MongoCollectionSettings settings = null)
         {
             //需要自增的实体
             if (entitys.First() is IAutoIncr)
@@ -67,7 +71,7 @@ namespace MongoDB.Repository
             }
 
             //await base.InsertBatchAsync(entitys);
-            await base.GetCollection().InsertManyAsync(entitys).ConfigureAwait(false);
+            await base.GetCollection(settings).InsertManyAsync(entitys).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -83,12 +87,12 @@ namespace MongoDB.Repository
             if (isUpsert && updateEntity is IAutoIncr)
             {
                 id = await CreateIncIDAsync();
-                bsDoc.Remove("_id");
+                bsDoc.Remove(Util.PrimaryKeyName);
             }
             UpdateDefinition<TEntity> update = new UpdateDocument("$set", bsDoc);// string.Concat("{$set:", bsDoc.ToJson(), "}");
             if (isUpsert && updateEntity is IAutoIncr)
             {
-                update = update.SetOnInsert("_id", id);
+                update = update.SetOnInsert(Util.PrimaryKeyName, id);
             }
 
             return update;
@@ -148,6 +152,23 @@ namespace MongoDB.Repository
         /// <summary>
         /// 修改单条数据
         /// </summary>
+        /// <param name="filterExp">查询表达式</param>
+        /// <param name="updateExp">更新内容表达式</param>
+        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
+        /// <param name="settings">访问设置</param>
+        public async Task<UpdateResult> UpdateOneAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
+            , MongoCollectionSettings settings = null)
+        {
+            var update = updateExp(Update);
+
+            UpdateOptions option = new UpdateOptions();
+            option.IsUpsert = isUpsert;
+            return await base.GetCollection(settings).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 修改单条数据
+        /// </summary>
         /// <param name="filter">查询条件</param>
         /// <param name="update">更新内容</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
@@ -170,6 +191,23 @@ namespace MongoDB.Repository
         public async Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
             , MongoCollectionSettings settings = null)
         {
+            UpdateOptions option = new UpdateOptions();
+            option.IsUpsert = isUpsert;
+            return await base.GetCollection(settings).UpdateManyAsync(filterExp, update, option).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 修改多条数据
+        /// </summary>
+        /// <param name="filterExp">查询表达式</param>
+        /// <param name="updateExp">更新内容表达式</param>
+        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
+        /// <param name="settings">访问设置</param>
+        public async Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
+            , MongoCollectionSettings settings = null)
+        {
+            var update = updateExp(Update);
+
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
             return await base.GetCollection(settings).UpdateManyAsync(filterExp, update, option).ConfigureAwait(false);

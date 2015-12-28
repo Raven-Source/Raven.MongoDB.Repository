@@ -37,21 +37,21 @@ namespace MongoDB.Repository.PerformanceTest
             Task[] tasks = new Task[speed];
             for (var i = 0; i < speed; i++)
             {
-                //tasks[i] = InsertAsync();
+                tasks[i] = InsertAsync();
             }
 
-            //Task.WaitAll(tasks);
+            Task.WaitAll(tasks);
             sw.Stop();
             Console.WriteLine("for:Insert:" + sw.ElapsedMilliseconds);
 
-            sw.Restart();
-            for (var i = 0; i < speed; i++)
-            {
-                tasks[i] = GetAsync(50);
-            }
-            Task.WaitAll(tasks);
-            sw.Stop();
-            Console.WriteLine("for:Get:" + sw.ElapsedMilliseconds);
+            //sw.Restart();
+            //for (var i = 0; i < speed; i++)
+            //{
+            //    tasks[i] = GetAsync(50);
+            //}
+            //Task.WaitAll(tasks);
+            //sw.Stop();
+            //Console.WriteLine("for:Get:" + sw.ElapsedMilliseconds);
 
             //sw.Restart();
             //for (var i = 0; i < speed; i++)

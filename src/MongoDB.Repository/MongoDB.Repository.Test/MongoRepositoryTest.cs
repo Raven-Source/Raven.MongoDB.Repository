@@ -26,9 +26,10 @@ namespace MongoDB.Repository.Test
 
 
         [TestMethod]
-        public void TestMethod1()
+        public void UpdateOne()
         {
-
+            UserRep up = new UserRep();
+            up.UpdateOne(filterExp: x => x.Name == "ggg", updateExp: u => u.Set(x => x.Name, ""));
         }
     }
 

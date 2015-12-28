@@ -19,15 +19,19 @@ namespace MongoDB.Repository
         /// 添加数据
         /// </summary>
         /// <param name="entity">待添加数据</param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
-        Task InsertAsync(TEntity entity);
+        Task InsertAsync(TEntity entity
+            , MongoCollectionSettings settings = null);
 
         /// <summary>
         /// 批量添加数据
         /// </summary>
         /// <param name="entitys">待添加数据集合</param>
+        /// <param name="settings">访问设置</param>
         /// <returns></returns>
-        Task InsertBatchAsync(IEnumerable<TEntity> entitys);
+        Task InsertBatchAsync(IEnumerable<TEntity> entitys
+            , MongoCollectionSettings settings = null);
 
         /// <summary>
         /// 根据实体创建UpdateDefinition
@@ -68,6 +72,17 @@ namespace MongoDB.Repository
         Task<UpdateResult> UpdateOneAsync(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
             , MongoCollectionSettings settings = null);
 
+
+        /// <summary>
+        /// 修改单条数据
+        /// </summary>
+        /// <param name="filterExp">查询表达式</param>
+        /// <param name="updateExp">更新内容表达式</param>
+        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
+        /// <param name="settings">访问设置</param>
+        Task<UpdateResult> UpdateOneAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
+            , MongoCollectionSettings settings = null);
+
         /// <summary>
         /// 修改单条数据
         /// </summary>
@@ -96,6 +111,16 @@ namespace MongoDB.Repository
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
         /// <param name="settings">访问设置</param>
         Task<UpdateResult> UpdateManyAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
+            , MongoCollectionSettings settings = null);
+
+        /// <summary>
+        /// 修改多条数据
+        /// </summary>
+        /// <param name="filterExp">查询表达式</param>
+        /// <param name="updateExp">更新内容表达式</param>
+        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
+        /// <param name="settings">访问设置</param>
+        Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
             , MongoCollectionSettings settings = null);
 
         /// <summary>
