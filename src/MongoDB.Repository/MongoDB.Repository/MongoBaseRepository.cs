@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace MongoDB.Repository
 {
     /// <summary>
-    /// 同步仓储
+    /// 仓储Base
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>

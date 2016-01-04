@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MongoDB.Repository.PerformanceTest
@@ -27,22 +28,37 @@ namespace MongoDB.Repository.PerformanceTest
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            int speed = 5000;
+            int seed = 5000;
             //GetAsync().Wait();
 
-            Console.WriteLine("speed:{0}", speed);
+            Console.WriteLine("seed:{0}", seed);
             Stopwatch sw = new Stopwatch();
+            Task[] tasks = new Task[seed];
 
             sw.Restart();
-            Task[] tasks = new Task[speed];
-            for (var i = 0; i < speed; i++)
+            for (var i = 0; i < seed; i++)
             {
                 tasks[i] = InsertAsync();
             }
 
             Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine("for:Insert:" + sw.ElapsedMilliseconds);
+
+            Console.WriteLine("for:Insert:{0}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine("qps:{0}", seed / sw.Elapsed.TotalSeconds);
+
+            Thread.SpinWait(10);
+            sw.Restart();
+            for (var i = 0; i < seed; i++)
+            {
+                tasks[i] = GetAsync(1);
+            }
+
+            Task.WaitAll(tasks);
+            sw.Stop();
+
+            Console.WriteLine("for:Get:{0}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine("qps:{0}", seed / sw.Elapsed.TotalSeconds);
 
             //sw.Restart();
             //for (var i = 0; i < speed; i++)
@@ -96,7 +112,7 @@ namespace MongoDB.Repository.PerformanceTest
 
         public static void Get(long id)
         {
-            var user = userRep.Get(id);            
+            var user = userRep.Get(id);
             //await userRepAsync.InsertAsync(user).ConfigureAwait(false);
         }
 
@@ -123,7 +139,7 @@ namespace MongoDB.Repository.PerformanceTest
 
             long lambda, builders, buildersFun;
             int speed = 10000;
-            
+
             user = await userRepAsync.GetAsync(x => x.Name == "aa");
 
             user = await userRepAsync.GetAsync(UserRepAsync.Filter.Eq<string>(nameof(User.Name), "aa"));

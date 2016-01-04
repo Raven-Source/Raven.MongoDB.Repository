@@ -33,7 +33,6 @@ namespace MongoDB.Repository
 
         /// <summary>
         /// 创建自增长ID
-        /// <remarks>默认自增ID存放 [Sequence] 集合</remarks>
         /// </summary>
         /// <returns></returns>
         public long CreateIncID(long inc = 1, int iteration = 0)
@@ -154,8 +153,6 @@ namespace MongoDB.Repository
             , SortDefinition<TEntity> sort = null, BsonValue hint = null
             , ReadConcern readConcern = null)
         {
-            //var cursor = await base.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
-
             var option = base.CreateFindOptions(projection, sort, limit: 1, hint: hint);
             var result = base.GetCollection(readConcern).FindSync(filter, option);
             var reslut = result.ToList();
