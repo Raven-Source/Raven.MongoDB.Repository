@@ -62,8 +62,8 @@ namespace MongoDB.Repository.Test
             update = update.SetOnInsert(x => x.ID, id).SetOnInsert(x => x.CreateTime, DateTime.Now);
             await userRep.UpdateOneAsync(x => x.Name == "abc", update, true);
 
-            MongoCollectionSettings setting = new MongoCollectionSettings() { ReadPreference = ReadPreference.PrimaryPreferred, WriteConcern = WriteConcern.Acknowledged };
-            var res = await userRep.UpdateOneAsync(x => x.Name == "xyz", update, true, setting);
+            //MongoCollectionSettings setting = new MongoCollectionSettings() { ReadPreference = ReadPreference.PrimaryPreferred, WriteConcern = WriteConcern.Acknowledged };
+            var res = await userRep.UpdateOneAsync(x => x.Name == "xyz", update, true, WriteConcern.Acknowledged);
             Assert.AreEqual(res.IsAcknowledged, true);
         }
 

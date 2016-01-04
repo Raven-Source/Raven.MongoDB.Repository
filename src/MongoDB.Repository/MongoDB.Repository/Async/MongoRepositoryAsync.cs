@@ -36,26 +36,26 @@ namespace MongoDB.Repository
         /// 添加数据
         /// </summary>
         /// <param name="entity">待添加数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task InsertAsync(TEntity entity
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             if (entity is IAutoIncr)
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }
-            await base.GetCollection(settings).InsertOneAsync(entity).ConfigureAwait(false);
+            await base.GetCollection(writeConcern).InsertOneAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
         /// 批量添加数据
         /// </summary>
         /// <param name="entitys">待添加数据集合</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task InsertBatchAsync(IEnumerable<TEntity> entitys
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             //需要自增的实体
             if (entitys.First() is IAutoIncr)
@@ -71,7 +71,7 @@ namespace MongoDB.Repository
             }
 
             //await base.InsertBatchAsync(entitys);
-            await base.GetCollection(settings).InsertManyAsync(entitys).ConfigureAwait(false);
+            await base.GetCollection(writeConcern).InsertManyAsync(entitys).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -105,16 +105,16 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="updateEntity">更新实体（不是replace，updateEntity不会减少原实体字段）</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<UpdateResult> UpdateOneAsync(Expression<Func<TEntity, bool>> filterExp, TEntity updateEntity, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             var filter = Filter.Eq(x => x.ID, updateEntity.ID);
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
 
             UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
-            return await base.GetCollection(settings).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -123,15 +123,15 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         /// <param name="updateEntity">更新实体（不是replace，updateEntity不会减少原实体字段）</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<UpdateResult> UpdateOneAsync(FilterDefinition<TEntity> filter, TEntity updateEntity, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
 
             UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
-            return await base.GetCollection(settings).UpdateOneAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).UpdateOneAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -140,13 +140,13 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="update">更新内容</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<UpdateResult> UpdateOneAsync(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await base.GetCollection(settings).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -155,15 +155,15 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="updateExp">更新内容表达式</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<UpdateResult> UpdateOneAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             var update = updateExp(Update);
 
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await base.GetCollection(settings).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).UpdateOneAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -172,13 +172,13 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         /// <param name="update">更新内容</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<UpdateResult> UpdateOneAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await base.GetCollection(settings).UpdateOneAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).UpdateOneAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -187,13 +187,13 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="update">更新内容</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await base.GetCollection(settings).UpdateManyAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).UpdateManyAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -202,15 +202,15 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="updateExp">更新内容表达式</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             var update = updateExp(Update);
 
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await base.GetCollection(settings).UpdateManyAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).UpdateManyAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -219,13 +219,13 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         /// <param name="update">更新内容</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<UpdateResult> UpdateManyAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return await base.GetCollection(settings).UpdateManyAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).UpdateManyAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -236,18 +236,18 @@ namespace MongoDB.Repository
         /// <param name="isUpsert"></param>
         /// <param name="sortExp"></param>
         /// <param name="sortType"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndUpdateAsync(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
 
             option.Sort = base.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
-            return await base.GetCollection(settings).FindOneAndUpdateAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).FindOneAndUpdateAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -258,11 +258,11 @@ namespace MongoDB.Repository
         /// <param name="isUpsert"></param>
         /// <param name="sortExp"></param>
         /// <param name="sortType"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndUpdateAsync(Expression<Func<TEntity, bool>> filterExp, TEntity updateEntity, bool isUpsert = false
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
@@ -271,7 +271,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
 
-            return await base.GetCollection(settings).FindOneAndUpdateAsync(filterExp, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).FindOneAndUpdateAsync(filterExp, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -281,17 +281,17 @@ namespace MongoDB.Repository
         /// <param name="update"></param>
         /// <param name="isUpsert"></param>
         /// <param name="sort"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndUpdateAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
             , SortDefinition<TEntity> sort = null
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
             option.Sort = sort;
             option.ReturnDocument = ReturnDocument.After;
-            return await base.GetCollection(settings).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -301,11 +301,11 @@ namespace MongoDB.Repository
         /// <param name="updateEntity">更新实体</param>
         /// <param name="isUpsert"></param>
         /// <param name="sort"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndUpdateAsync(FilterDefinition<TEntity> filter, TEntity updateEntity, bool isUpsert = false
             , SortDefinition<TEntity> sort = null
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
@@ -314,7 +314,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = await CreateUpdateDefinitionAsync(updateEntity, isUpsert);
 
-            return await base.GetCollection(settings).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -325,11 +325,11 @@ namespace MongoDB.Repository
         /// <param name="isUpsert"></param>
         /// <param name="sortExp"></param>
         /// <param name="sortType"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndReplaceAsync(Expression<Func<TEntity, bool>> filterExp, TEntity entity, bool isUpsert = false
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
             option.IsUpsert = isUpsert;
@@ -340,7 +340,7 @@ namespace MongoDB.Repository
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }
-            return await base.GetCollection(settings).FindOneAndReplaceAsync(filterExp, entity, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).FindOneAndReplaceAsync(filterExp, entity, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -350,10 +350,10 @@ namespace MongoDB.Repository
         /// <param name="entity"></param>
         /// <param name="isUpsert"></param>
         /// <param name="sort"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndReplaceAsync(FilterDefinition<TEntity> filter, TEntity entity, bool isUpsert = false, SortDefinition<TEntity> sort = null
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
             option.IsUpsert = isUpsert;
@@ -364,7 +364,7 @@ namespace MongoDB.Repository
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }
-            return await base.GetCollection(settings).FindOneAndReplaceAsync(filter, entity, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).FindOneAndReplaceAsync(filter, entity, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -372,14 +372,14 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="sort"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndDeleteAsync(FilterDefinition<TEntity> filter, SortDefinition<TEntity> sort = null
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
             option.Sort = sort;
-            return await base.GetCollection(settings).FindOneAndDeleteAsync(filter, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).FindOneAndDeleteAsync(filter, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -388,71 +388,71 @@ namespace MongoDB.Repository
         /// <param name="filterExp"></param>
         /// <param name="sortExp"></param>
         /// <param name="sortType"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> FindOneAndDeleteAsync(Expression<Func<TEntity, bool>> filterExp
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
             option.Sort = base.CreateSortDefinition(sortExp, sortType);
-            return await base.GetCollection(settings).FindOneAndDeleteAsync(filterExp, option).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).FindOneAndDeleteAsync(filterExp, option).ConfigureAwait(false);
         }
 
         /// <summary>
         /// 删除单条数据
         /// </summary>
         /// <param name="id">ID</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<DeleteResult> DeleteOneAsync(TKey id
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
-            return await base.GetCollection(settings).DeleteOneAsync(filter).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).DeleteOneAsync(filter).ConfigureAwait(false);
         }
 
         /// <summary>
         /// 删除单条数据
         /// </summary>
         /// <param name="filter">查询条件</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<DeleteResult> DeleteOneAsync(FilterDefinition<TEntity> filter
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
-            return await base.GetCollection(settings).DeleteOneAsync(filter).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).DeleteOneAsync(filter).ConfigureAwait(false);
         }
 
         /// <summary>
         /// 删除多条数据
         /// </summary>
         /// <param name="filterExp">查询条件</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<DeleteResult> DeleteOneAsync(Expression<Func<TEntity, bool>> filterExp
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
-            return await base.GetCollection(settings).DeleteOneAsync(filterExp).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).DeleteOneAsync(filterExp).ConfigureAwait(false);
         }
 
         /// <summary>
         /// 删除多条数据
         /// </summary>
         /// <param name="filter">查询条件</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<DeleteResult> DeleteManyAsync(FilterDefinition<TEntity> filter
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
-            return await base.GetCollection(settings).DeleteManyAsync(filter).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).DeleteManyAsync(filter).ConfigureAwait(false);
         }
 
         /// <summary>
         /// 修改单条数据
         /// </summary>
         /// <param name="filterExp">查询条件</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public async Task<DeleteResult> DeleteManyAsync(Expression<Func<TEntity, bool>> filterExp
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
-            return await base.GetCollection(settings).DeleteManyAsync(filterExp).ConfigureAwait(false);
+            return await base.GetCollection(writeConcern).DeleteManyAsync(filterExp).ConfigureAwait(false);
         }
 
     }

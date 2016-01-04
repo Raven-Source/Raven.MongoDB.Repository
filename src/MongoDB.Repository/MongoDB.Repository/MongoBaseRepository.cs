@@ -49,6 +49,36 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
+        /// 根据数据类型得到集合
+        /// </summary>
+        /// <returns></returns>
+        public IMongoCollection<TEntity> GetCollection(WriteConcern writeConcern = null)
+        {
+            MongoCollectionSettings settings = null;
+            if (writeConcern != null)
+            {
+                settings = new MongoCollectionSettings();
+                settings.WriteConcern = writeConcern;
+            }
+            return Database.GetCollection<TEntity>(typeof(TEntity).Name, settings);
+        }
+
+        /// <summary>
+        /// 根据数据类型得到集合
+        /// </summary>
+        /// <returns></returns>
+        public IMongoCollection<TEntity> GetCollection(ReadConcern readConcern = null)
+        {
+            MongoCollectionSettings settings = null;
+            if (readConcern != null)
+            {
+                settings = new MongoCollectionSettings();
+                settings.ReadConcern = readConcern;
+            }
+            return Database.GetCollection<TEntity>(typeof(TEntity).Name, settings);
+        }
+
+        /// <summary>
         /// get Filter
         /// </summary>
         public static FilterDefinitionBuilder<TEntity> Filter
@@ -105,7 +135,7 @@ namespace MongoDB.Repository
             this._sequence = sequence ?? new MongoSequence();
             this._mongoSession = new MongoSession(connString, dbName, writeConcern: writeConcern, readPreference: readPreference);
         }
-        
+
         #region 获取字段
 
         /// <summary>

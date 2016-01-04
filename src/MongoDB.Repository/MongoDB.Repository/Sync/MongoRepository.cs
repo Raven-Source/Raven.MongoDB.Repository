@@ -36,26 +36,26 @@ namespace MongoDB.Repository
         /// 添加数据
         /// </summary>
         /// <param name="entity">待添加数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public void Insert(TEntity entity
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             if (entity is IAutoIncr)
             {
                 CreateIncID(entity);
             }
-            base.GetCollection(settings).InsertOne(entity);
+            base.GetCollection(writeConcern).InsertOne(entity);
         }
 
         /// <summary>
         /// 批量添加数据
         /// </summary>
         /// <param name="entitys">待添加数据集合</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public void InsertBatch(IEnumerable<TEntity> entitys
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             //需要自增的实体
             if (entitys.First() is IAutoIncr)
@@ -71,7 +71,7 @@ namespace MongoDB.Repository
             }
 
             //await base.InsertBatchAsync(entitys);
-            base.GetCollection(settings).InsertMany(entitys);
+            base.GetCollection(writeConcern).InsertMany(entitys);
         }
 
         /// <summary>
@@ -105,9 +105,9 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="updateEntity">更新实体（不是replace，updateEntity不会减少原实体字段）</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public UpdateResult UpdateOne(Expression<Func<TEntity, bool>> filterExp, TEntity updateEntity, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             var filter = Filter.Eq(x => x.ID, updateEntity.ID);
             UpdateOptions option = new UpdateOptions();
@@ -115,7 +115,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return base.GetCollection(settings).UpdateOne(filterExp, update, option);
+            return base.GetCollection(writeConcern).UpdateOne(filterExp, update, option);
         }
 
         /// <summary>
@@ -124,16 +124,16 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         /// <param name="updateEntity">更新实体（不是replace，updateEntity不会减少原实体字段）</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public UpdateResult UpdateOne(FilterDefinition<TEntity> filter, TEntity updateEntity, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
 
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return base.GetCollection(settings).UpdateOne(filter, update, option);
+            return base.GetCollection(writeConcern).UpdateOne(filter, update, option);
         }
 
         /// <summary>
@@ -142,13 +142,13 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="update">更新内容</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public UpdateResult UpdateOne(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return base.GetCollection(settings).UpdateOne(filterExp, update, option);
+            return base.GetCollection(writeConcern).UpdateOne(filterExp, update, option);
         }
 
         /// <summary>
@@ -157,15 +157,15 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="updateExp">更新内容表达式</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public UpdateResult UpdateOne(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             var update = updateExp(Update);
 
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return base.GetCollection(settings).UpdateOne(filterExp, update, option);
+            return base.GetCollection(writeConcern).UpdateOne(filterExp, update, option);
         }
 
         /// <summary>
@@ -174,13 +174,13 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         /// <param name="update">更新内容</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public UpdateResult UpdateOne(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return base.GetCollection(settings).UpdateOne(filter, update, option);
+            return base.GetCollection(writeConcern).UpdateOne(filter, update, option);
         }
 
         /// <summary>
@@ -189,13 +189,13 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="update">更新内容</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public UpdateResult UpdateMany(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return base.GetCollection(settings).UpdateMany(filterExp, update, option);
+            return base.GetCollection(writeConcern).UpdateMany(filterExp, update, option);
         }
 
         /// <summary>
@@ -204,15 +204,15 @@ namespace MongoDB.Repository
         /// <param name="filterExp">查询表达式</param>
         /// <param name="updateExp">更新内容表达式</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public UpdateResult UpdateMany(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             var update = updateExp(Update);
 
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return base.GetCollection(settings).UpdateMany(filterExp, update, option);
+            return base.GetCollection(writeConcern).UpdateMany(filterExp, update, option);
         }
 
         /// <summary>
@@ -221,13 +221,13 @@ namespace MongoDB.Repository
         /// <param name="filter">查询条件</param>
         /// <param name="update">更新内容</param>
         /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public UpdateResult UpdateMany(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             UpdateOptions option = new UpdateOptions();
             option.IsUpsert = isUpsert;
-            return base.GetCollection(settings).UpdateMany(filter, update, option);
+            return base.GetCollection(writeConcern).UpdateMany(filter, update, option);
         }
 
         /// <summary>
@@ -238,18 +238,18 @@ namespace MongoDB.Repository
         /// <param name="isUpsert"></param>
         /// <param name="sortExp"></param>
         /// <param name="sortType"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public TEntity FindOneAndUpdate(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
 
             option.Sort = base.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
-            return base.GetCollection(settings).FindOneAndUpdate(filterExp, update, option);
+            return base.GetCollection(writeConcern).FindOneAndUpdate(filterExp, update, option);
         }
 
         /// <summary>
@@ -260,11 +260,11 @@ namespace MongoDB.Repository
         /// <param name="isUpsert"></param>
         /// <param name="sortExp"></param>
         /// <param name="sortType"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public TEntity FindOneAndUpdate(Expression<Func<TEntity, bool>> filterExp, TEntity updateEntity, bool isUpsert = false
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
@@ -273,7 +273,7 @@ namespace MongoDB.Repository
 
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return base.GetCollection(settings).FindOneAndUpdate(filterExp, update, option);
+            return base.GetCollection(writeConcern).FindOneAndUpdate(filterExp, update, option);
         }
 
         /// <summary>
@@ -283,18 +283,18 @@ namespace MongoDB.Repository
         /// <param name="update"></param>
         /// <param name="isUpsert"></param>
         /// <param name="sort"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public TEntity FindOneAndUpdate(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
             , SortDefinition<TEntity> sort = null
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
             option.Sort = sort;
             option.ReturnDocument = ReturnDocument.After;
 
-            return base.GetCollection(settings).FindOneAndUpdate(filter, update, option);
+            return base.GetCollection(writeConcern).FindOneAndUpdate(filter, update, option);
         }
 
         /// <summary>
@@ -304,11 +304,11 @@ namespace MongoDB.Repository
         /// <param name="updateEntity">更新实体</param>
         /// <param name="isUpsert"></param>
         /// <param name="sort"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public TEntity FindOneAndUpdate(FilterDefinition<TEntity> filter, TEntity updateEntity, bool isUpsert = false
             , SortDefinition<TEntity> sort = null
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
             option.IsUpsert = isUpsert;
@@ -316,7 +316,7 @@ namespace MongoDB.Repository
             option.ReturnDocument = ReturnDocument.After;
             UpdateDefinition<TEntity> update = CreateUpdateDefinition(updateEntity, isUpsert);
 
-            return base.GetCollection(settings).FindOneAndUpdate(filter, update, option);
+            return base.GetCollection(writeConcern).FindOneAndUpdate(filter, update, option);
         }
 
         /// <summary>
@@ -327,11 +327,11 @@ namespace MongoDB.Repository
         /// <param name="isUpsert"></param>
         /// <param name="sortExp"></param>
         /// <param name="sortType"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public TEntity FindOneAndReplace(Expression<Func<TEntity, bool>> filterExp, TEntity entity, bool isUpsert = false
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
             option.IsUpsert = isUpsert;
@@ -342,7 +342,7 @@ namespace MongoDB.Repository
             {
                 CreateIncID(entity);
             }
-            return base.GetCollection(settings).FindOneAndReplace(filterExp, entity, option);
+            return base.GetCollection(writeConcern).FindOneAndReplace(filterExp, entity, option);
         }
 
         /// <summary>
@@ -352,10 +352,10 @@ namespace MongoDB.Repository
         /// <param name="entity"></param>
         /// <param name="isUpsert"></param>
         /// <param name="sort"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public TEntity FindOneAndReplace(FilterDefinition<TEntity> filter, TEntity entity, bool isUpsert = false, SortDefinition<TEntity> sort = null
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
             option.IsUpsert = isUpsert;
@@ -366,7 +366,7 @@ namespace MongoDB.Repository
             {
                 CreateIncID(entity);
             }
-            return base.GetCollection(settings).FindOneAndReplace(filter, entity, option);
+            return base.GetCollection(writeConcern).FindOneAndReplace(filter, entity, option);
         }
 
         /// <summary>
@@ -374,14 +374,14 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="sort"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public TEntity FindOneAndDelete(FilterDefinition<TEntity> filter, SortDefinition<TEntity> sort = null
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
             option.Sort = sort;
-            return base.GetCollection(settings).FindOneAndDelete(filter, option);
+            return base.GetCollection(writeConcern).FindOneAndDelete(filter, option);
         }
 
         /// <summary>
@@ -390,71 +390,71 @@ namespace MongoDB.Repository
         /// <param name="filterExp"></param>
         /// <param name="sortExp"></param>
         /// <param name="sortType"></param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
         public TEntity FindOneAndDelete(Expression<Func<TEntity, bool>> filterExp
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             FindOneAndDeleteOptions<TEntity> option = new FindOneAndDeleteOptions<TEntity>();
             option.Sort = base.CreateSortDefinition(sortExp, sortType);
-            return base.GetCollection(settings).FindOneAndDelete(filterExp, option);
+            return base.GetCollection(writeConcern).FindOneAndDelete(filterExp, option);
         }
 
         /// <summary>
         /// 删除单条数据
         /// </summary>
         /// <param name="id">ID</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public DeleteResult DeleteOne(TKey id
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
-            return base.GetCollection(settings).DeleteOne(filter);
+            return base.GetCollection(writeConcern).DeleteOne(filter);
         }
 
         /// <summary>
         /// 删除单条数据
         /// </summary>
         /// <param name="filter">查询条件</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public DeleteResult DeleteOne(FilterDefinition<TEntity> filter
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
-            return base.GetCollection().DeleteOne(filter);
+            return base.GetCollection(writeConcern).DeleteOne(filter);
         }
 
         /// <summary>
         /// 删除多条数据
         /// </summary>
         /// <param name="filterExp">查询条件</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public DeleteResult DeleteOne(Expression<Func<TEntity, bool>> filterExp
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
-            return base.GetCollection(settings).DeleteOne(filterExp);
+            return base.GetCollection(writeConcern).DeleteOne(filterExp);
         }
 
         /// <summary>
         /// 删除多条数据
         /// </summary>
         /// <param name="filter">查询条件</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public DeleteResult DeleteMany(FilterDefinition<TEntity> filter
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
-            return base.GetCollection(settings).DeleteMany(filter);
+            return base.GetCollection(writeConcern).DeleteMany(filter);
         }
 
         /// <summary>
         /// 修改单条数据
         /// </summary>
         /// <param name="filterExp">查询条件</param>
-        /// <param name="settings">访问设置</param>
+        /// <param name="writeConcern">访问设置</param>
         public DeleteResult DeleteMany(Expression<Func<TEntity, bool>> filterExp
-            , MongoCollectionSettings settings = null)
+            , WriteConcern writeConcern = null)
         {
-            return base.GetCollection(settings).DeleteMany(filterExp);
+            return base.GetCollection(writeConcern).DeleteMany(filterExp);
         }
 
     }
