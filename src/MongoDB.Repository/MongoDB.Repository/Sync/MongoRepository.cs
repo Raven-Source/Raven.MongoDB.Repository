@@ -63,10 +63,10 @@ namespace MongoDB.Repository
                 int count = entitys.Count();
                 //自增ID值
                 long id = CreateIncID(count);
-
+                id = id - count;
                 foreach (var entity in entitys)
                 {
-                    AssignmentEntityID(entity, id--);
+                    AssignmentEntityID(entity, ++id);
                 }
             }
 
