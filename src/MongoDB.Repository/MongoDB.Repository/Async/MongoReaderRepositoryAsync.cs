@@ -33,7 +33,6 @@ namespace MongoDB.Repository
 
         /// <summary>
         /// 创建自增长ID
-        /// <remarks>默认自增ID存放 [Sequence] 集合</remarks>
         /// </summary>
         /// <returns></returns>
         public async Task<long> CreateIncIDAsync(long inc = 1, int iteration = 0)
@@ -100,7 +99,6 @@ namespace MongoDB.Repository
             var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1, hint: hint);
             var result = await base.GetCollection(readConcern).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.FirstOrDefaultAsync().ConfigureAwait(false);
-
 
             return reslut;
         }
