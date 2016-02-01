@@ -167,13 +167,13 @@ namespace MongoDB.Repository
         /// <summary>
         /// 找到并更新
         /// </summary>
-        /// <param name="filter"></param>
+        /// <param name="filterExp"></param>
         /// <param name="updateExp"></param>
         /// <param name="isUpsert"></param>
         /// <param name="sort"></param>
         /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>
-        Task<TEntity> FindOneAndUpdateAsync(FilterDefinition<TEntity> filter, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
+        Task<TEntity> FindOneAndUpdateAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
             , SortDefinition<TEntity> sort = null
             , WriteConcern writeConcern = null);
 
