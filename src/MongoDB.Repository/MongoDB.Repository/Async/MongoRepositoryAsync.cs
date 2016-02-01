@@ -299,6 +299,28 @@ namespace MongoDB.Repository
         /// 找到并更新
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="updateExp"></param>
+        /// <param name="isUpsert"></param>
+        /// <param name="sort"></param>
+        /// <param name="writeConcern">访问设置</param>
+        /// <returns></returns>
+        public async Task<TEntity> FindOneAndUpdateAsync(FilterDefinition<TEntity> filter, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
+            , SortDefinition<TEntity> sort = null
+            , WriteConcern writeConcern = null)
+        {
+            var update = updateExp(Update);
+
+            FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
+            option.IsUpsert = isUpsert;
+            option.Sort = sort;
+            option.ReturnDocument = ReturnDocument.After;
+            return await base.GetCollection(writeConcern).FindOneAndUpdateAsync(filter, update, option).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 找到并更新
+        /// </summary>
+        /// <param name="filter"></param>
         /// <param name="updateEntity">更新实体</param>
         /// <param name="isUpsert"></param>
         /// <param name="sort"></param>

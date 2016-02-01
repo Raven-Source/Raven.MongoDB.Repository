@@ -297,6 +297,29 @@ namespace MongoDB.Repository
             return base.GetCollection(writeConcern).FindOneAndUpdate(filter, update, option);
         }
 
+
+        /// <summary>
+        /// 找到并更新
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="updateExp"></param>
+        /// <param name="isUpsert"></param>
+        /// <param name="sort"></param>
+        /// <param name="writeConcern">访问设置</param>
+        /// <returns></returns>
+        public TEntity FindOneAndUpdate(FilterDefinition<TEntity> filter, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
+            , SortDefinition<TEntity> sort = null
+            , WriteConcern writeConcern = null)
+        {
+            var update = updateExp(Update);
+
+            FindOneAndUpdateOptions<TEntity> option = new FindOneAndUpdateOptions<TEntity>();
+            option.IsUpsert = isUpsert;
+            option.Sort = sort;
+            option.ReturnDocument = ReturnDocument.After;
+            return base.GetCollection(writeConcern).FindOneAndUpdate(filter, update, option);
+        }
+
         /// <summary>
         /// 找到并更新
         /// </summary>

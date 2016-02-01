@@ -60,8 +60,6 @@ namespace MongoDB.Repository.PerformanceTest
             Console.WriteLine("for:Get:{0}ms", sw.ElapsedMilliseconds);
             Console.WriteLine("qps:{0}", seed / sw.Elapsed.TotalSeconds);
 
-            System.Threading.Tasks.Task<int>.Factory.FromAsync(
-
             //sw.Restart();
             //for (var i = 0; i < speed; i++)
             //{
