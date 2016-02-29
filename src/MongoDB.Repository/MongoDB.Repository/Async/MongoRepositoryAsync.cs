@@ -85,10 +85,11 @@ namespace MongoDB.Repository
         {
             long id = 0;
             BsonDocument bsDoc = updateEntity.ToBsonDocument();
+            bsDoc.Remove(Util.PrimaryKeyName);
+
             if (isUpsert && updateEntity is IAutoIncr)
             {
                 id = await CreateIncIDAsync();
-                bsDoc.Remove(Util.PrimaryKeyName);
             }
             UpdateDefinition<TEntity> update = new UpdateDocument("$set", bsDoc);// string.Concat("{$set:", bsDoc.ToJson(), "}");
             if (isUpsert && updateEntity is IAutoIncr)

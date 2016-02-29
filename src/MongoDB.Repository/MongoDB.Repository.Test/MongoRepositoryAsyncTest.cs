@@ -26,6 +26,10 @@ namespace MongoDB.Repository.Test
             user = new User();
             user.Name = "cc";
             await userRep.InsertAsync(user);
+
+
+            MallCardRepAsync mallcardRep = new MallCardRepAsync();
+            await mallcardRep.InsertAsync(new MallCard() { UID = 1 });
         }
 
         [TestMethod]
@@ -65,6 +69,12 @@ namespace MongoDB.Repository.Test
             //MongoCollectionSettings setting = new MongoCollectionSettings() { ReadPreference = ReadPreference.PrimaryPreferred, WriteConcern = WriteConcern.Acknowledged };
             var res = await userRep.UpdateOneAsync(x => x.Name == "xyz", update, true, WriteConcern.Acknowledged);
             Assert.AreEqual(res.IsAcknowledged, true);
+
+            MallCardRepAsync mallcardRep = new MallCardRepAsync();
+            MallCard mc = new MallCard();
+            mc.UID = 2;
+            mc.MallID = 455;
+            await mallcardRep.UpdateOneAsync(filterExp:x =>x.UID == 1 , updateEntity: mc);
         }
 
         [TestMethod]

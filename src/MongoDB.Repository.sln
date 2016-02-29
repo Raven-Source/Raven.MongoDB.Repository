@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.Repository.Test", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.IEntity", "..\modules\src\Repository.IEntity\Repository.IEntity.csproj", "{D2C193B0-7CC1-4C40-9A07-B099BCC2E4B4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.x", "1.x", "{4DF14499-E26C-49E1-AB48-B9ED9856F488}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.Repository", "1.x\MongoDB.Repository\MongoDB.Repository.csproj", "{BF01530A-19E0-4183-827D-537F61839984}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +37,15 @@ Global
 		{D2C193B0-7CC1-4C40-9A07-B099BCC2E4B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2C193B0-7CC1-4C40-9A07-B099BCC2E4B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2C193B0-7CC1-4C40-9A07-B099BCC2E4B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF01530A-19E0-4183-827D-537F61839984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF01530A-19E0-4183-827D-537F61839984}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF01530A-19E0-4183-827D-537F61839984}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF01530A-19E0-4183-827D-537F61839984}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BF01530A-19E0-4183-827D-537F61839984} = {4DF14499-E26C-49E1-AB48-B9ED9856F488}
 	EndGlobalSection
 EndGlobal
