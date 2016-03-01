@@ -82,11 +82,11 @@ namespace MongoDB.Repository
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> GetAsync(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
             //var cursor = await base.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
@@ -97,7 +97,7 @@ namespace MongoDB.Repository
                 projection = base.IncludeFields(includeFieldExp);
             }
             var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1, hint: hint);
-            var result = await base.GetCollection(readConcern).FindAsync(filter, option).ConfigureAwait(false);
+            var result = await base.GetCollection(readPreference).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.FirstOrDefaultAsync().ConfigureAwait(false);
 
             return reslut;
@@ -111,11 +111,11 @@ namespace MongoDB.Repository
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = null;
             ProjectionDefinition<TEntity, TEntity> projection = null;
@@ -134,7 +134,7 @@ namespace MongoDB.Repository
                 projection = base.IncludeFields(includeFieldExp);
             }
             var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1, hint: hint);
-            var result = await base.GetCollection(readConcern).FindAsync(filter, option).ConfigureAwait(false);
+            var result = await base.GetCollection(readPreference).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.FirstOrDefaultAsync().ConfigureAwait(false);
 
             return reslut;
@@ -147,15 +147,15 @@ namespace MongoDB.Repository
         /// <param name="sort"></param>
         /// <param name="projection"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> GetAsync(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
             , SortDefinition<TEntity> sort = null, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateFindOptions(projection, sort: sort, limit: 1, hint: hint);
-            var result = await base.GetCollection(readConcern).FindAsync(filter, option).ConfigureAwait(false);
+            var result = await base.GetCollection(readPreference).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.FirstOrDefaultAsync().ConfigureAwait(false);
 
             return reslut;
@@ -171,13 +171,13 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filterExp = null
             , Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = null;
             ProjectionDefinition<TEntity, TEntity> projection = null;
@@ -199,7 +199,7 @@ namespace MongoDB.Repository
                 projection = base.IncludeFields(includeFieldExp);
             }
             var option = base.CreateFindOptions(projection, sort, limit, skip, hint: hint);
-            var result = await base.GetCollection(readConcern).FindAsync(filter, option).ConfigureAwait(false);
+            var result = await base.GetCollection(readPreference).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.ToListAsync().ConfigureAwait(false);
 
             return reslut;
@@ -214,16 +214,16 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<List<TEntity>> GetListAsync(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
             , SortDefinition<TEntity> sort = null
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateFindOptions(projection, sort, limit, skip, hint: hint);
-            var result = await base.GetCollection(readConcern).FindAsync(filter, option).ConfigureAwait(false);
+            var result = await base.GetCollection(readPreference).FindAsync(filter, option).ConfigureAwait(false);
             var reslut = await result.ToListAsync().ConfigureAwait(false);
 
             return reslut;
@@ -236,15 +236,15 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<long> CountAsync(FilterDefinition<TEntity> filter
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateCountOptions(limit, skip, hint);
 
-            return await base.GetCollection(readConcern).CountAsync(filter, option).ConfigureAwait(false);
+            return await base.GetCollection(readPreference).CountAsync(filter, option).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -254,15 +254,15 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<long> CountAsync(Expression<Func<TEntity, bool>> filterExp
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateCountOptions(limit, skip, hint);
 
-            return await base.GetCollection(readConcern).CountAsync(filterExp, option).ConfigureAwait(false);
+            return await base.GetCollection(readPreference).CountAsync(filterExp, option).ConfigureAwait(false);
         }
 
 
@@ -271,15 +271,15 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<bool> ExistsAsync(FilterDefinition<TEntity> filter
             , BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateCountOptions(1, 0, hint);
 
-            return await base.GetCollection(readConcern).CountAsync(filter, option).ConfigureAwait(false) > 0;
+            return await base.GetCollection(readPreference).CountAsync(filter, option).ConfigureAwait(false) > 0;
         }
 
         /// <summary>
@@ -287,15 +287,15 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="filterExp"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp
             , BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateCountOptions(1, 0, hint);
 
-            return await base.GetCollection(readConcern).CountAsync(filterExp, option).ConfigureAwait(false) > 0;
+            return await base.GetCollection(readPreference).CountAsync(filterExp, option).ConfigureAwait(false) > 0;
         }
     }
 }

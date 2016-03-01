@@ -37,11 +37,11 @@ namespace MongoDB.Repository
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<TEntity> GetAsync(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
-            , ReadConcern readConcern = null);
+            , ReadPreference readPreference = null);
 
         /// <summary>
         /// 根据条件获取实体
@@ -51,11 +51,11 @@ namespace MongoDB.Repository
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
-            , ReadConcern readConcern = null);
+            , ReadPreference readPreference = null);
 
         /// <summary>
         /// 根据条件获取实体
@@ -64,12 +64,12 @@ namespace MongoDB.Repository
         /// <param name="sort"></param>
         /// <param name="projection"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<TEntity> GetAsync(FilterDefinition<TEntity> filter
              , ProjectionDefinition<TEntity, TEntity> projection = null
              , SortDefinition<TEntity> sort = null, BsonValue hint = null
-             , ReadConcern readConcern = null);
+             , ReadPreference readPreference = null);
 
         /// <summary>
         /// 根据条件获取获取列表
@@ -81,13 +81,13 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filterExp = null
             , Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null);
+            , ReadPreference readPreference = null);
 
         /// <summary>
         /// 根据条件获取获取列表
@@ -98,13 +98,13 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<List<TEntity>> GetListAsync(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
             , SortDefinition<TEntity> sort = null
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null);
+            , ReadPreference readPreference = null);
 
         /// <summary>
         /// 数量
@@ -113,11 +113,11 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<long> CountAsync(FilterDefinition<TEntity> filter
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null);
+            , ReadPreference readPreference = null);
 
         /// <summary>
         /// 数量
@@ -126,30 +126,30 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<long> CountAsync(Expression<Func<TEntity, bool>> filterExp
              , int limit = 0, int skip = 0, BsonValue hint = null
-             , ReadConcern readConcern = null);
+             , ReadPreference readPreference = null);
 
         /// <summary>
         /// 数量
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<bool> ExistsAsync(FilterDefinition<TEntity> filter, BsonValue hint = null
-            , ReadConcern readConcern = null);
+            , ReadPreference readPreference = null);
 
         /// <summary>
         /// 数量
         /// </summary>
         /// <param name="filterExp"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp, BsonValue hint = null
-             , ReadConcern readConcern = null);
+             , ReadPreference readPreference = null);
     }
 }

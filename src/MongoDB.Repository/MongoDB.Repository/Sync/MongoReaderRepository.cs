@@ -82,11 +82,11 @@ namespace MongoDB.Repository
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public TEntity Get(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
             //var cursor = await _mongoSession.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
@@ -98,7 +98,7 @@ namespace MongoDB.Repository
             }
 
             var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1, hint: hint);
-            var result = base.GetCollection(readConcern).FindSync(filter, option);
+            var result = base.GetCollection(readPreference).FindSync(filter, option);
 
             return result.FirstOrDefault();
         }
@@ -111,11 +111,11 @@ namespace MongoDB.Repository
         /// <param name="sortExp">排序表达式</param>
         /// <param name="sortType">排序方式</param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public TEntity Get(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = null;
             ProjectionDefinition<TEntity, TEntity> projection = null;
@@ -134,7 +134,7 @@ namespace MongoDB.Repository
                 projection = base.IncludeFields(includeFieldExp);
             }
             var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1, hint: hint);
-            var result = base.GetCollection(readConcern).FindSync(filter, option);
+            var result = base.GetCollection(readPreference).FindSync(filter, option);
 
             return result.FirstOrDefault();
         }
@@ -146,15 +146,15 @@ namespace MongoDB.Repository
         /// <param name="sort"></param>
         /// <param name="projection"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public TEntity Get(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
             , SortDefinition<TEntity> sort = null, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateFindOptions(projection, sort, limit: 1, hint: hint);
-            var result = base.GetCollection(readConcern).FindSync(filter, option);
+            var result = base.GetCollection(readPreference).FindSync(filter, option);
             var reslut = result.ToList();
 
             return reslut.FirstOrDefault();
@@ -170,13 +170,13 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public List<TEntity> GetList(Expression<Func<TEntity, bool>> filterExp = null
             , Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = null;
             ProjectionDefinition<TEntity, TEntity> projection = null;
@@ -198,7 +198,7 @@ namespace MongoDB.Repository
                 projection = base.IncludeFields(includeFieldExp);
             }
             var option = base.CreateFindOptions(projection, sort, limit, skip, hint: hint);
-            var result = base.GetCollection(readConcern).FindSync(filter, option);
+            var result = base.GetCollection(readPreference).FindSync(filter, option);
             var reslut = result.ToList();
 
             return reslut;
@@ -213,16 +213,16 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public List<TEntity> GetList(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
             , SortDefinition<TEntity> sort = null
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateFindOptions(projection, sort, limit, skip, hint: hint);
-            var result = base.GetCollection(readConcern).FindSync(filter, option);
+            var result = base.GetCollection(readPreference).FindSync(filter, option);
             var reslut = result.ToList();
 
             return reslut;
@@ -235,15 +235,15 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public long Count(FilterDefinition<TEntity> filter
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateCountOptions(limit, skip, hint);
 
-            return base.GetCollection(readConcern).Count(filter, option);
+            return base.GetCollection(readPreference).Count(filter, option);
         }
 
         /// <summary>
@@ -253,15 +253,15 @@ namespace MongoDB.Repository
         /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public long Count(Expression<Func<TEntity, bool>> filterExp
             , int limit = 0, int skip = 0, BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateCountOptions(limit, skip, hint);
 
-            return base.GetCollection(readConcern).Count(filterExp, option);
+            return base.GetCollection(readPreference).Count(filterExp, option);
         }
 
         /// <summary>
@@ -269,15 +269,15 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public bool Exists(FilterDefinition<TEntity> filter
             , BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateCountOptions(1, 0, hint);
 
-            return base.GetCollection(readConcern).Count(filter, option) > 0;
+            return base.GetCollection(readPreference).Count(filter, option) > 0;
         }
 
         /// <summary>
@@ -285,15 +285,15 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="filterExp"></param>
         /// <param name="hint">hint索引</param>
-        /// <param name="readConcern">访问设置</param>
+        /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public bool Exists(Expression<Func<TEntity, bool>> filterExp
             , BsonValue hint = null
-            , ReadConcern readConcern = null)
+            , ReadPreference readPreference = null)
         {
             var option = base.CreateCountOptions(1, 0, hint);
 
-            return base.GetCollection(readConcern).Count(filterExp, option) > 0;
+            return base.GetCollection(readPreference).Count(filterExp, option) > 0;
         }
     }
 }

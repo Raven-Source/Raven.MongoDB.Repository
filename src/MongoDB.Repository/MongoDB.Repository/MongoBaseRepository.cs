@@ -52,7 +52,7 @@ namespace MongoDB.Repository
         /// 根据数据类型得到集合
         /// </summary>
         /// <returns></returns>
-        public IMongoCollection<TEntity> GetCollection(WriteConcern writeConcern = null)
+        public IMongoCollection<TEntity> GetCollection(WriteConcern writeConcern)
         {
             MongoCollectionSettings settings = null;
             if (writeConcern != null)
@@ -67,13 +67,13 @@ namespace MongoDB.Repository
         /// 根据数据类型得到集合
         /// </summary>
         /// <returns></returns>
-        public IMongoCollection<TEntity> GetCollection(ReadConcern readConcern = null)
+        public IMongoCollection<TEntity> GetCollection(ReadPreference readPreference)
         {
             MongoCollectionSettings settings = null;
-            if (readConcern != null)
+            if (readPreference != null)
             {
                 settings = new MongoCollectionSettings();
-                settings.ReadConcern = readConcern;
+                settings.ReadPreference = readPreference;
             }
             return Database.GetCollection<TEntity>(typeof(TEntity).Name, settings);
         }

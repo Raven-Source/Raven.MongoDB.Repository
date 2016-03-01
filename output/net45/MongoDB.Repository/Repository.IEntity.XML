@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Repository.IEntity</name>
+    </assembly>
+    <members>
+        <member name="T:Repository.IEntity.IAutoIncr">
+            <summary>
+            自增Entity
+            </summary>
+        </member>
+        <member name="T:Repository.IEntity.IAutoIncr`1">
+            <summary>
+            自增Entity
+            </summary>
+        </member>
+        <member name="T:Repository.IEntity.IEntity`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="TKey"></typeparam>
+        </member>
+        <member name="P:Repository.IEntity.IEntity`1.ID">
+            <summary>
+            主键
+            </summary>
+        </member>
+    </members>
+</doc>
