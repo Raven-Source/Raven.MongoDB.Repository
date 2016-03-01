@@ -74,6 +74,33 @@ namespace MongoDB.Repository
             base.GetCollection(writeConcern).InsertMany(entitys);
         }
 
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="entitys"></param>
+        ///// <param name="writeConcern"></param>
+        ///// <returns></returns>
+        //public BulkWriteResult<TEntity> BulkInsert(IEnumerable<InsertOneModel<TEntity>> entitys
+        //    , WriteConcern writeConcern = null)
+        //{
+        //    //var insertEntitys = entitys.Where(x => x.ModelType == WriteModelType.InsertOne);
+        //    //需要自增的实体
+        //    if (entitys.First().Document is IAutoIncr)
+        //    {
+        //        int count = entitys.Count();
+        //        //自增ID值
+        //        long id = CreateIncID(count);
+        //        id = id - count;
+
+        //        foreach (var entity in entitys)
+        //        {
+        //            AssignmentEntityID(entity.Document, ++id);
+        //        }
+        //    }
+
+        //    return base.GetCollection(writeConcern).BulkWrite(entitys);
+        //}
+
         /// <summary>
         /// 根据实体创建UpdateDefinition
         /// </summary>

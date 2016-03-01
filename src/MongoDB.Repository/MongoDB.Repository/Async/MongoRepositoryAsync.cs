@@ -16,7 +16,7 @@ namespace MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class MongoRepositoryAsync<TEntity, TKey>: MongoReaderRepositoryAsync<TEntity, TKey>, IRepositoryAsync<TEntity, TKey>
+    public class MongoRepositoryAsync<TEntity, TKey> : MongoReaderRepositoryAsync<TEntity, TKey>, IRepositoryAsync<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
         /// <summary>
@@ -28,7 +28,7 @@ namespace MongoDB.Repository
         /// <param name="readPreference"></param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
         public MongoRepositoryAsync(string connString, string dbName, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
-            :base(connString, dbName, writeConcern, readPreference, sequence)
+            : base(connString, dbName, writeConcern, readPreference, sequence)
         {
         }
 
@@ -74,6 +74,33 @@ namespace MongoDB.Repository
             //await base.InsertBatchAsync(entitys);
             await base.GetCollection(writeConcern).InsertManyAsync(entitys).ConfigureAwait(false);
         }
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="entitys"></param>
+        ///// <param name="writeConcern"></param>
+        ///// <returns></returns>
+        //public async Task<BulkWriteResult<TEntity>> BulkInsertAsync(IEnumerable<InsertOneModel<TEntity>> entitys
+        //    , WriteConcern writeConcern = null)
+        //{
+        //    //var insertEntitys = entitys.Where(x => x.ModelType == WriteModelType.InsertOne);
+        //    //需要自增的实体
+        //    if (entitys.First().Document is IAutoIncr)
+        //    {
+        //        int count = entitys.Count();
+        //        //自增ID值
+        //        long id = await CreateIncIDAsync(count).ConfigureAwait(false);
+        //        id = id - count;
+
+        //        foreach (var entity in entitys)
+        //        {
+        //            AssignmentEntityID(entity.Document, ++id);
+        //        }                
+        //    }            
+
+        //    return await base.GetCollection(writeConcern).BulkWriteAsync(entitys).ConfigureAwait(false);
+        //}
 
         /// <summary>
         /// 根据实体创建UpdateDefinition

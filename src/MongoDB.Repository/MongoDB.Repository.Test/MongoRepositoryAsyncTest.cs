@@ -15,21 +15,34 @@ namespace MongoDB.Repository.Test
         {
             UserRepAsync userRep = new UserRepAsync();
 
-            User user = new User();
-            user.Name = "aa";
-            await userRep.InsertAsync(user);
+            //User user = new User();
+            //user.Name = "aa";
+            //await userRep.InsertAsync(user);
 
-            user = new User();
-            user.Name = "bb";
-            await userRep.InsertAsync(user);
+            //user = new User();
+            //user.Name = "bb";
+            //await userRep.InsertAsync(user);
 
-            user = new User();
-            user.Name = "cc";
-            await userRep.InsertAsync(user);
+            //user = new User();
+            //user.Name = "cc";
+            //await userRep.InsertAsync(user);
 
 
             MallCardRepAsync mallcardRep = new MallCardRepAsync();
-            await mallcardRep.InsertAsync(new MallCard() { UID = 1 });
+            //await mallcardRep.InsertAsync(new MallCard() { UID = 1 });
+            //await mallcardRep.InsertAsync(new MallCard() { UID = 2 });
+            //await mallcardRep.InsertAsync(new MallCard() { UID = 3 });
+            //await mallcardRep.InsertAsync(new MallCard() { UID = 4 });
+
+            List<InsertOneModel<MallCard>> list = new List<InsertOneModel<MallCard>>();
+            list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 5 }));
+            list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 6 }));
+            list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 1 }));
+            list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 2 }));
+
+            var res = await mallcardRep.BulkInsertAsync(list);
+            
+
         }
 
         [TestMethod]
@@ -74,7 +87,10 @@ namespace MongoDB.Repository.Test
             MallCard mc = new MallCard();
             mc.UID = 2;
             mc.MallID = 455;
-            await mallcardRep.UpdateOneAsync(filterExp:x =>x.UID == 1 , updateEntity: mc);
+            await mallcardRep.UpdateOneAsync(filterExp: x => x.UID == 1, updateEntity: mc);
+
+            await mallcardRep.UpdateOneAsync(filterExp: x => x.UID == 1, updateExp: u => u.Set(x => x.UID, 1).Set(x => x.MallID, 1245263));
+
         }
 
         [TestMethod]
@@ -140,13 +156,13 @@ namespace MongoDB.Repository.Test
             user = await userRep.GetAsync(x => x.Name == "aa" && x.CreateTime > DateTime.Parse("2015/10/20"));
             Assert.AreNotEqual(user, null);
             Builders<User>.Filter.Eq("Name", "aa");
-            
+
             var filter = UserRepAsync.Filter.Eq(x => x.Name, "aa") & UserRepAsync.Filter.Eq(x => x.ID, 123);
             UserRepAsync.Sort.Descending("_id");
 
             user = await userRep.GetAsync(Builders<User>.Filter.Eq("Name", "aa"), null, Builders<User>.Sort.Descending("_id"));
             Assert.AreNotEqual(user, null);
-            
+
             user = await userRep.GetAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
             Assert.AreNotEqual(user, null);
 
@@ -176,8 +192,9 @@ namespace MongoDB.Repository.Test
 
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa");
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa", null, s => s.ID, SortType.Ascending);
-            
+
             userList = await userRep.GetListAsync(filterExp: x => x.Name == "aa", includeFieldExp: x => new { x.CreateTime });
+
             userList = await userRep.GetListAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), sort: Builders<User>.Sort.Descending("_id"));
             userList = await userRep.GetListAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
         }
