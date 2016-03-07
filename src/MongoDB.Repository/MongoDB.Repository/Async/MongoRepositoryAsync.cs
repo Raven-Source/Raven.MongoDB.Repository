@@ -96,8 +96,8 @@ namespace MongoDB.Repository
         //        foreach (var entity in entitys)
         //        {
         //            AssignmentEntityID(entity.Document, ++id);
-        //        }                
-        //    }            
+        //        }
+        //    }
 
         //    return await base.GetCollection(writeConcern).BulkWriteAsync(entitys).ConfigureAwait(false);
         //}

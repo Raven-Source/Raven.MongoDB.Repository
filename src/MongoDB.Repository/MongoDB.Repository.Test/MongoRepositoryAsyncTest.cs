@@ -35,8 +35,9 @@ namespace MongoDB.Repository.Test
             //await mallcardRep.InsertAsync(new MallCard() { UID = 4 });
 
             List<InsertOneModel<MallCard>> list = new List<InsertOneModel<MallCard>>();
-            list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 5 }));
+            //list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 5 }));
             list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 6 }));
+            list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 10 }));
             list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 1 }));
             list.Add(new InsertOneModel<MallCard>(new MallCard() { UID = 2 }));
 
@@ -199,6 +200,12 @@ namespace MongoDB.Repository.Test
             userList = await userRep.GetListAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
         }
 
+        [TestMethod]
+        public async Task Distinct()
+        {
+            UserRepAsync userRep = new UserRepAsync();
+            var list = await userRep.DistinctAsync(x => x.Name, null);
 
+        }
     }
 }

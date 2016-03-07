@@ -27,7 +27,7 @@ namespace MongoDB.Repository
         /// <param name="readPreference"></param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
         public MongoReaderRepository(string connString, string dbName, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
-            :base(connString, dbName, writeConcern, readPreference, sequence)
+            : base(connString, dbName, writeConcern, readPreference, sequence)
         {
         }
 
@@ -153,11 +153,15 @@ namespace MongoDB.Repository
             , SortDefinition<TEntity> sort = null, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
             var option = base.CreateFindOptions(projection, sort, limit: 1, hint: hint);
             var result = base.GetCollection(readPreference).FindSync(filter, option);
-            var reslut = result.ToList();
 
-            return reslut.FirstOrDefault();
+            return result.FirstOrDefault();
         }
 
         /// <summary>
@@ -199,9 +203,8 @@ namespace MongoDB.Repository
             }
             var option = base.CreateFindOptions(projection, sort, limit, skip, hint: hint);
             var result = base.GetCollection(readPreference).FindSync(filter, option);
-            var reslut = result.ToList();
 
-            return reslut;
+            return result.ToList();
         }
 
         /// <summary>
@@ -221,11 +224,80 @@ namespace MongoDB.Repository
             , int limit = 0, int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
             var option = base.CreateFindOptions(projection, sort, limit, skip, hint: hint);
             var result = base.GetCollection(readPreference).FindSync(filter, option);
-            var reslut = result.ToList();
 
-            return reslut;
+            return result.ToList();
+        }
+
+        /// <summary>
+        /// Distinct
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="fieldExp"></param>
+        /// <param name="filterExp"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        public List<TField> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, Expression<Func<TEntity, bool>> filterExp
+            , ReadPreference readPreference = null)
+        {
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Builders<TEntity>.Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
+            var result = base.GetCollection(readPreference).Distinct(fieldExp, filter);
+            return result.ToList();
+        }
+
+        /// <summary>
+        /// Distinct
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="fieldExp"></param>
+        /// <param name="filter"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        public List<TField> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, FilterDefinition<TEntity> filter
+            , ReadPreference readPreference = null)
+        {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
+            var result = base.GetCollection(readPreference).Distinct(fieldExp, filter);
+            return result.ToList();
+        }
+
+        /// <summary>
+        /// Distinct
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="filter"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        public List<TField> DistinctAsync<TField>(FieldDefinition<TEntity, TField> field, FilterDefinition<TEntity> filter
+            , ReadPreference readPreference = null)
+        {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
+            var result = base.GetCollection(readPreference).Distinct(field, filter);
+            return result.ToList();
         }
 
         /// <summary>
@@ -241,6 +313,10 @@ namespace MongoDB.Repository
             , int limit = 0, int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
             var option = base.CreateCountOptions(limit, skip, hint);
 
             return base.GetCollection(readPreference).Count(filter, option);
@@ -259,9 +335,18 @@ namespace MongoDB.Repository
             , int limit = 0, int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
-            var option = base.CreateCountOptions(limit, skip, hint);
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Builders<TEntity>.Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
 
-            return base.GetCollection(readPreference).Count(filterExp, option);
+            var option = base.CreateCountOptions(limit, skip, hint);
+            return base.GetCollection(readPreference).Count(filter, option);
         }
 
         /// <summary>
