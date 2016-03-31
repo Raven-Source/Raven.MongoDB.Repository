@@ -47,6 +47,34 @@ namespace MongoDB.Repository.Test
             UserRep up = new UserRep();
             up.UpdateOne(filterExp: x => x.Name == "ggg", updateExp: u => u.Set(x => x.Name, ""));
         }
+
+        [TestMethod]
+        public void Get()
+        {
+            UserRep userRep = RepositoryContainer.Resolve<UserRep>();
+            User user = null;
+            try
+            {
+                user = userRep.Get(1);
+            }
+            catch { }
+            //Assert.AreEqual(user.ID, 1);
+            
+            try
+            {
+                userRep = RepositoryContainer.Resolve<UserRep>();
+                user = userRep.Get(x => x.Name == "aa");
+            }
+            catch { }
+
+            RepositoryContainer.Register(new UserRep());
+            try
+            {
+                userRep = RepositoryContainer.Resolve<UserRep>();
+                user = userRep.Get(x => x.Name == "aa");
+            }
+            catch { }
+        }
     }
 
 }

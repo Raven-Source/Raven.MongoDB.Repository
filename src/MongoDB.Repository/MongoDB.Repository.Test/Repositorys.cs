@@ -20,6 +20,12 @@ namespace MongoDB.Repository.Test
         {
 
         }
+
+        public UserRep(string connString, string dbName)
+            : base(connString, dbName)
+        {
+
+        }
     }
 
     public class UserRepAsync : MongoRepositoryAsync<User, long>
@@ -35,7 +41,7 @@ namespace MongoDB.Repository.Test
         {
 
         }
-        
+
     }
 
     public class MallCardRepAsync : MongoRepositoryAsync<MallCard, string>

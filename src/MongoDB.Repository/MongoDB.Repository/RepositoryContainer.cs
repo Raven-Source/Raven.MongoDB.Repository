@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,27 +10,35 @@ namespace MongoDB.Repository
     /// <summary>
     /// 容器
     /// </summary>
-    public class RepositoryContainer
+    public static class RepositoryContainer
     {
-        #region Instance
+        //#region Instance
 
-        private static Lazy<RepositoryContainer> _instance = new Lazy<RepositoryContainer>(() => new RepositoryContainer());
-        private static RepositoryContainer Instance
+        //private static Lazy<RepositoryContainer> _instance = new Lazy<RepositoryContainer>(() => new RepositoryContainer());
+        //private static RepositoryContainer Instance
+        //{
+        //    get
+        //    {
+        //        return _instance.Value;
+        //    }
+        //}
+
+        //#endregion
+
+        //private RepositoryContainer()
+        //{
+        //    Repositorys = new Dictionary<Type, Lazy<object>>();
+        //}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        static RepositoryContainer()
         {
-            get
-            {
-                return _instance.Value;
-            }
+            Repositorys = new ConcurrentDictionary<Type, Lazy<object>>();
         }
 
-        #endregion
-
-        private RepositoryContainer()
-        {
-            Repositorys = new Dictionary<Type, Lazy<object>>();
-        }
-
-        private Dictionary<Type, Lazy<object>> Repositorys { get; set; }
+        private static ConcurrentDictionary<Type, Lazy<object>> Repositorys { get; set; }
 
         /// <summary>
         /// 
@@ -38,7 +47,10 @@ namespace MongoDB.Repository
         /// <param name="service"></param>
         public static void Register<T>(T service)
         {
-            Instance.Repositorys[typeof(T)] = new Lazy<object>(() => service);
+            var t = typeof(T);
+            var lazy = new Lazy<object>(() => service);
+
+            Repositorys.AddOrUpdate(t, lazy, (x, y) => lazy);
         }
 
         /// <summary>
@@ -48,7 +60,10 @@ namespace MongoDB.Repository
         public static void Register<T>()
             where T : new()
         {
-            Instance.Repositorys[typeof(T)] = new Lazy<object>(() => new T());
+            var t = typeof(T);
+            var lazy = new Lazy<object>(() => new T());
+
+            Repositorys.AddOrUpdate(t, lazy, (x, y) => lazy);
         }
 
         /// <summary>
@@ -58,7 +73,10 @@ namespace MongoDB.Repository
         /// <param name="function"></param>
         public static void Register<T>(Func<object> function)
         {
-            Instance.Repositorys[typeof(T)] = new Lazy<object>(function);
+            var t = typeof(T);
+            var lazy = new Lazy<object>(function);
+
+            Repositorys.AddOrUpdate(t, lazy, (x, y) => lazy);
         }
 
         /// <summary>
@@ -69,17 +87,34 @@ namespace MongoDB.Repository
         public static T Resolve<T>()
             where T : new()
         {
+            var t = typeof(T);
+
             Lazy<object> repository;
-            if (Instance.Repositorys.TryGetValue(typeof(T), out repository))
+            if (Repositorys.TryGetValue(t, out repository))
             {
                 return (T)repository.Value;
             }
             else
             {
-                Instance.Repositorys[typeof(T)] = new Lazy<object>(() => new T());
+                //Repositorys[t] = new Lazy<object>(() => new T());
+                var lazy = new Lazy<object>(() => new T());
+                Repositorys.AddOrUpdate(t, lazy, (x, y) => lazy);
+
                 return Resolve<T>();
                 //throw new KeyNotFoundException(string.Format("Service not found for type '{0}'", typeof(T)));
             }
         }
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="service"></param>
+        //public static void Replace<T>(T service)
+        //{
+        //    var t = typeof(T);
+        //    var lazy = new Lazy<object>(() => service);
+        //    Repositorys.AddOrUpdate(t, lazy, (x, y) => lazy);
+        //}
     }
 }
