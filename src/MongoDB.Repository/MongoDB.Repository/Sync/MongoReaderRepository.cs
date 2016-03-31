@@ -365,7 +365,7 @@ namespace MongoDB.Repository
             }
             var option = base.CreateCountOptions(1, 0, hint);
 
-            return base.GetCollection(readPreference).Count(filter, option) > 0;
+            return this.Get(filter, Projection.Include(x => x.ID), null, hint, readPreference) != null;
         }
 
         /// <summary>
@@ -388,7 +388,6 @@ namespace MongoDB.Repository
             {
                 filter = Builders<TEntity>.Filter.Empty;
             }
-            var option = base.CreateCountOptions(1, 0, hint);
 
             return this.Exists(filter, hint, readPreference);
         }
@@ -446,7 +445,6 @@ namespace MongoDB.Repository
             , int limit = 0, int skip = 0
             , ReadPreference readPreference = null)
         {
-
             FilterDefinition<TEntity> filter = null;
             if (filterExp != null)
             {

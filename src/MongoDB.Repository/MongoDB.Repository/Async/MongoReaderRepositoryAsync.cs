@@ -366,7 +366,8 @@ namespace MongoDB.Repository
             }
             var option = base.CreateCountOptions(1, 0, hint);
 
-            return base.GetCollection(readPreference).CountAsync(filter, option).ContinueWith(x => x.Result > 0);
+            return this.GetAsync(filter, Projection.Include(x => x.ID), null, hint, readPreference).ContinueWith(x => x.Result != null);
+            //return base.GetCollection(readPreference).CountAsync(filter, option).ContinueWith(x => x.Result > 0);
         }
 
         /// <summary>
@@ -380,8 +381,6 @@ namespace MongoDB.Repository
             , BsonValue hint = null
             , ReadPreference readPreference = null)
         {
-            var option = base.CreateCountOptions(1, 0, hint);
-
             FilterDefinition<TEntity> filter = null;
             if (filterExp != null)
             {
@@ -447,7 +446,6 @@ namespace MongoDB.Repository
             , int limit = 0, int skip = 0
             , ReadPreference readPreference = null)
         {
-
             FilterDefinition<TEntity> filter = null;
             if (filterExp != null)
             {

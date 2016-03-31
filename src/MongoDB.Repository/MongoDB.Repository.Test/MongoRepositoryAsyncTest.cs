@@ -208,5 +208,23 @@ namespace MongoDB.Repository.Test
             var list = await userRep.DistinctAsync(x => x.Name, null);
 
         }
+
+
+        [TestMethod]
+        public async Task Count_Exists()
+        {
+            UserRepAsync userRep = new UserRepAsync();
+            var res = await userRep.ExistsAsync(x => x.Name == "aa");
+            Assert.AreEqual(res, true);
+
+            res = await userRep.ExistsAsync(x => x.Name == "------");
+            Assert.AreEqual(res, false);
+
+            var res2 = await userRep.CountAsync(x => x.Name == "aa");
+            Assert.AreNotEqual(res2, 0);
+
+            res2 = await userRep.CountAsync(x => x.Name == "------");
+            Assert.AreEqual(res2, 0);
+        }
     }
 }
