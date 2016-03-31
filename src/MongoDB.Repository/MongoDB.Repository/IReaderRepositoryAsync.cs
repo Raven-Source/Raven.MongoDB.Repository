@@ -106,6 +106,39 @@ namespace MongoDB.Repository
             , int limit = 0, int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null);
 
+
+        /// <summary>
+        /// Distinct
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="fieldExp"></param>
+        /// <param name="filterExp"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        Task<List<TField>> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, Expression<Func<TEntity, bool>> filterExp
+            , ReadPreference readPreference = null);
+
+        /// <summary>
+        /// Distinct
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="fieldExp"></param>
+        /// <param name="filter"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        Task<List<TField>> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, FilterDefinition<TEntity> filter
+            , ReadPreference readPreference = null);
+
+        /// <summary>
+        /// Distinct
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="filter"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        Task<List<TField>> DistinctAsync<TField>(FieldDefinition<TEntity, TField> field, FilterDefinition<TEntity> filter
+            , ReadPreference readPreference = null);
         /// <summary>
         /// 数量
         /// </summary>
@@ -151,5 +184,44 @@ namespace MongoDB.Repository
         /// <returns></returns>
         Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp, BsonValue hint = null
              , ReadPreference readPreference = null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
+        /// <param name="filterExp"></param>
+        /// <param name="id">$group -> _id</param>
+        /// <param name="group">$group</param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        Task<List<TResult>> AggregateAsync<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
+            , Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
+        /// <param name="filterExp"></param>
+        /// <param name="group"></param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        Task<List<TResult>> AggregateAsync<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
+            , ProjectionDefinition<TEntity, TResult> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null);
     }
 }

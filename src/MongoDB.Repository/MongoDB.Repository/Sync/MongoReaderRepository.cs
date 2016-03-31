@@ -89,7 +89,6 @@ namespace MongoDB.Repository
             , ReadPreference readPreference = null)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
-            //var cursor = await _mongoSession.FindAsync(filter: filter, fieldExp: fieldExp, limit: 1);
 
             ProjectionDefinition<TEntity, TEntity> projection = null;
             if (includeFieldExp != null)
@@ -243,7 +242,7 @@ namespace MongoDB.Repository
         /// <param name="filterExp"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        public List<TField> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, Expression<Func<TEntity, bool>> filterExp
+        public List<TField> Distinct<TField>(Expression<Func<TEntity, TField>> fieldExp, Expression<Func<TEntity, bool>> filterExp
             , ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = null;
@@ -256,8 +255,9 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
-            var result = base.GetCollection(readPreference).Distinct(fieldExp, filter);
-            return result.ToList();
+            //var result = base.GetCollection(readPreference).Distinct(fieldExp, filter);
+            //return result.ToList();
+            return this.Distinct(fieldExp, filter);
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace MongoDB.Repository
         /// <param name="filter"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        public List<TField> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, FilterDefinition<TEntity> filter
+        public List<TField> Distinct<TField>(Expression<Func<TEntity, TField>> fieldExp, FilterDefinition<TEntity> filter
             , ReadPreference readPreference = null)
         {
             if (filter == null)
@@ -288,7 +288,7 @@ namespace MongoDB.Repository
         /// <param name="filter"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        public List<TField> DistinctAsync<TField>(FieldDefinition<TEntity, TField> field, FilterDefinition<TEntity> filter
+        public List<TField> Distinct<TField>(FieldDefinition<TEntity, TField> field, FilterDefinition<TEntity> filter
             , ReadPreference readPreference = null)
         {
             if (filter == null)
@@ -345,8 +345,7 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
-            var option = base.CreateCountOptions(limit, skip, hint);
-            return base.GetCollection(readPreference).Count(filter, option);
+            return this.Count(filter, limit, skip, hint, readPreference);
         }
 
         /// <summary>
@@ -360,6 +359,10 @@ namespace MongoDB.Repository
             , BsonValue hint = null
             , ReadPreference readPreference = null)
         {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
             var option = base.CreateCountOptions(1, 0, hint);
 
             return base.GetCollection(readPreference).Count(filter, option) > 0;
@@ -376,9 +379,87 @@ namespace MongoDB.Repository
             , BsonValue hint = null
             , ReadPreference readPreference = null)
         {
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Builders<TEntity>.Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
             var option = base.CreateCountOptions(1, 0, hint);
 
-            return base.GetCollection(readPreference).Count(filterExp, option) > 0;
+            return this.Exists(filter, hint, readPreference);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
+        /// <param name="filterExp"></param>
+        /// <param name="id">$group -> _id</param>
+        /// <param name="group">$group</param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        public List<TResult> Aggregate<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
+            , Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null)
+        {
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Builders<TEntity>.Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
+            var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), limit, skip, readPreference);
+            return fluent.Group(id, group).ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
+        /// <param name="filterExp"></param>
+        /// <param name="group"></param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        public List<TResult> Aggregate<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
+            , ProjectionDefinition<TEntity, TResult> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null)
+        {
+
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Builders<TEntity>.Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
+            var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), limit, skip, readPreference);
+            return fluent.Group(group).ToList();
+        }
+
     }
 }

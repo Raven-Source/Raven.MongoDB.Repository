@@ -143,44 +143,30 @@ namespace MongoDB.Repository.Test
         {
             UserRepAsync userRep = new UserRepAsync();
             User user = null;
-            try
-            {
-                user = await userRep.GetAsync(1);
-            }
-            catch { }
-            //Assert.AreEqual(user.ID, 1);
 
-            try
-            {
-                user = await userRep.GetAsync(x => x.Name == "aa");
-            }
-            catch { }
+            user = await userRep.GetAsync(1);
+            Assert.AreEqual(user.ID, 1);
+            user = await userRep.GetAsync(x => x.Name == "aa");
 
-            try
-            {
-                user = await userRep.GetAsync(x => x.Name == "aa");
-            }
-            catch { }
-
-            //Assert.AreNotEqual(user, null);
+            Assert.AreNotEqual(user, null);
             user = await userRep.GetAsync(x => x.Name == "aa", x => new { x.Name });
 
-            //Assert.AreNotEqual(user, null);
+            Assert.AreNotEqual(user, null);
             user = await userRep.GetAsync(x => x.Name == "aa", x => new { x.CreateTime });
-            //Assert.AreNotEqual(user, null);
+            Assert.AreNotEqual(user, null);
 
             user = await userRep.GetAsync(x => x.Name == "aa" && x.CreateTime > DateTime.Parse("2015/10/20"));
-            //Assert.AreNotEqual(user, null);
+            Assert.AreNotEqual(user, null);
             Builders<User>.Filter.Eq("Name", "aa");
 
             var filter = UserRepAsync.Filter.Eq(x => x.Name, "aa") & UserRepAsync.Filter.Eq(x => x.ID, 123);
             UserRepAsync.Sort.Descending("_id");
 
             user = await userRep.GetAsync(Builders<User>.Filter.Eq("Name", "aa"), null, Builders<User>.Sort.Descending("_id"));
-            //Assert.AreNotEqual(user, null);
+            Assert.AreNotEqual(user, null);
 
             user = await userRep.GetAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
-            //Assert.AreNotEqual(user, null);
+            Assert.AreNotEqual(user, null);
 
         }
 

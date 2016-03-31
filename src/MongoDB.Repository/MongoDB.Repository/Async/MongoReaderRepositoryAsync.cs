@@ -67,11 +67,13 @@ namespace MongoDB.Repository
         /// 创建自增ID
         /// </summary>
         /// <param name="entity"></param>
-        public async Task CreateIncIDAsync(TEntity entity)
+        public Task CreateIncIDAsync(TEntity entity)
         {
-            long _id = 0;
-            _id = await this.CreateIncIDAsync();
-            AssignmentEntityID(entity, _id);
+            return this.CreateIncIDAsync().ContinueWith(x =>
+            {
+                long _id = x.Result;
+                AssignmentEntityID(entity, _id);
+            });
         }
 
         /// <summary>
@@ -242,7 +244,7 @@ namespace MongoDB.Repository
         /// <param name="filterExp"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        public async Task<List<TField>> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, Expression<Func<TEntity, bool>> filterExp
+        public Task<List<TField>> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, Expression<Func<TEntity, bool>> filterExp
             , ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = null;
@@ -255,8 +257,7 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
-            var result = await base.GetCollection(readPreference).DistinctAsync(fieldExp, filter);
-            return await result.ToListAsync();
+            return this.DistinctAsync(fieldExp, filter);
         }
 
         /// <summary>
@@ -308,13 +309,17 @@ namespace MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        public async Task<long> CountAsync(FilterDefinition<TEntity> filter
+        public Task<long> CountAsync(FilterDefinition<TEntity> filter
             , int limit = 0, int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
             var option = base.CreateCountOptions(limit, skip, hint);
 
-            return await base.GetCollection(readPreference).CountAsync(filter, option).ConfigureAwait(false);
+            return base.GetCollection(readPreference).CountAsync(filter, option);
         }
 
         /// <summary>
@@ -326,13 +331,21 @@ namespace MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        public async Task<long> CountAsync(Expression<Func<TEntity, bool>> filterExp
+        public Task<long> CountAsync(Expression<Func<TEntity, bool>> filterExp
             , int limit = 0, int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
-            var option = base.CreateCountOptions(limit, skip, hint);
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Builders<TEntity>.Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
 
-            return await base.GetCollection(readPreference).CountAsync(filterExp, option).ConfigureAwait(false);
+            return this.CountAsync(filter, limit, skip, hint, readPreference);
         }
 
 
@@ -343,13 +356,17 @@ namespace MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        public async Task<bool> ExistsAsync(FilterDefinition<TEntity> filter
+        public Task<bool> ExistsAsync(FilterDefinition<TEntity> filter
             , BsonValue hint = null
             , ReadPreference readPreference = null)
         {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
             var option = base.CreateCountOptions(1, 0, hint);
 
-            return await base.GetCollection(readPreference).CountAsync(filter, option).ConfigureAwait(false) > 0;
+            return base.GetCollection(readPreference).CountAsync(filter, option).ContinueWith(x => x.Result > 0);
         }
 
         /// <summary>
@@ -359,13 +376,91 @@ namespace MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp
+        public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp
             , BsonValue hint = null
             , ReadPreference readPreference = null)
         {
             var option = base.CreateCountOptions(1, 0, hint);
 
-            return await base.GetCollection(readPreference).CountAsync(filterExp, option).ConfigureAwait(false) > 0;
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Builders<TEntity>.Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+            return this.ExistsAsync(filter, hint, readPreference);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
+        /// <param name="filterExp"></param>
+        /// <param name="id">$group -> _id</param>
+        /// <param name="group">$group</param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        public Task<List<TResult>> AggregateAsync<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
+            , Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null)
+        {
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Builders<TEntity>.Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
+            var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), limit, skip, readPreference);
+            return fluent.Group(id, group).ToListAsync();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
+        /// <param name="filterExp"></param>
+        /// <param name="group"></param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        public Task<List<TResult>> AggregateAsync<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
+            , ProjectionDefinition<TEntity, TResult> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null)
+        {
+
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Builders<TEntity>.Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
+            var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), limit, skip, readPreference);
+            return fluent.Group(group).ToListAsync();
+        }
+
     }
 }

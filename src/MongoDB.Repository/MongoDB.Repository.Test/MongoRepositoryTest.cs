@@ -53,28 +53,24 @@ namespace MongoDB.Repository.Test
         {
             UserRep userRep = RepositoryContainer.Resolve<UserRep>();
             User user = null;
-            try
-            {
-                user = userRep.Get(1);
-            }
-            catch { }
+            user = userRep.Get(1);
             //Assert.AreEqual(user.ID, 1);
-            
-            try
-            {
-                userRep = RepositoryContainer.Resolve<UserRep>();
-                user = userRep.Get(x => x.Name == "aa");
-            }
-            catch { }
 
-            RepositoryContainer.Register(new UserRep());
-            try
-            {
-                userRep = RepositoryContainer.Resolve<UserRep>();
-                user = userRep.Get(x => x.Name == "aa");
-            }
-            catch { }
+            userRep = RepositoryContainer.Resolve<UserRep>();
+            user = userRep.Get(x => x.Name == "aa");
         }
+
+        [TestMethod]
+        public void Aggregate()
+        {
+            UserRep userRep = RepositoryContainer.Resolve<UserRep>();
+            var list = userRep.Aggregate(x => x.Age == 0, x => x.Name, x => new UserGroup() { Name = x.Key }, limit:9);
+        }
+    }
+
+    public class UserGroup
+    {
+        public string Name { get; set; }
     }
 
 }

@@ -331,5 +331,39 @@ namespace MongoDB.Repository
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="sort"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        protected IAggregateFluent<TEntity> CreateAggregate(FilterDefinition<TEntity> filter
+            , SortDefinition<TEntity> sort
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null)
+        {
+            var fluent = GetCollection(readPreference).Aggregate();            
+
+            if (sort != null)
+            {
+                fluent = fluent.Sort(sort);
+            }
+
+            fluent = fluent.Match(filter);
+            if (limit > 0)
+            {
+                fluent = fluent.Limit(limit);
+            }
+
+            if (skip > 0)
+            {
+                fluent = fluent.Skip(skip);
+            }
+
+            return fluent;
+        }
     }
 }
