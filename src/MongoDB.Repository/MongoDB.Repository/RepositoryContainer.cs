@@ -35,10 +35,10 @@ namespace MongoDB.Repository
         /// </summary>
         static RepositoryContainer()
         {
-            Repositorys = new ConcurrentDictionary<Type, Lazy<object>>();
+            Repositorys = new ConcurrentDictionary<string, Lazy<object>>();
         }
 
-        private static ConcurrentDictionary<Type, Lazy<object>> Repositorys { get; set; }
+        private static ConcurrentDictionary<string, Lazy<object>> Repositorys { get; set; }
 
         /// <summary>
         /// 
@@ -50,7 +50,7 @@ namespace MongoDB.Repository
             var t = typeof(T);
             var lazy = new Lazy<object>(() => service);
 
-            Repositorys.AddOrUpdate(t, lazy, (x, y) => lazy);
+            Repositorys.AddOrUpdate(GetKey(t), lazy, (x, y) => lazy);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace MongoDB.Repository
             var t = typeof(T);
             var lazy = new Lazy<object>(() => new T());
 
-            Repositorys.AddOrUpdate(t, lazy, (x, y) => lazy);
+            Repositorys.AddOrUpdate(GetKey(t), lazy, (x, y) => lazy);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace MongoDB.Repository
             var t = typeof(T);
             var lazy = new Lazy<object>(function);
 
-            Repositorys.AddOrUpdate(t, lazy, (x, y) => lazy);
+            Repositorys.AddOrUpdate(GetKey(t), lazy, (x, y) => lazy);
         }
 
         /// <summary>
@@ -88,9 +88,10 @@ namespace MongoDB.Repository
             where T : new()
         {
             var t = typeof(T);
+            var k = GetKey(t);
 
             Lazy<object> repository;
-            if (Repositorys.TryGetValue(t, out repository))
+            if (Repositorys.TryGetValue(k, out repository))
             {
                 return (T)repository.Value;
             }
@@ -98,11 +99,22 @@ namespace MongoDB.Repository
             {
                 //Repositorys[t] = new Lazy<object>(() => new T());
                 var lazy = new Lazy<object>(() => new T());
-                Repositorys.AddOrUpdate(t, lazy, (x, y) => lazy);
+                Repositorys.AddOrUpdate(k, lazy, (x, y) => lazy);
 
                 return Resolve<T>();
                 //throw new KeyNotFoundException(string.Format("Service not found for type '{0}'", typeof(T)));
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        private static string GetKey(Type t)
+        {
+            //return string.Concat(t.AssemblyQualifiedName, ",", t.FullName);
+            return t.FullName;
         }
 
         ///// <summary>

@@ -52,6 +52,8 @@ namespace MongoDB.Repository.Test
         public void Get()
         {
             UserRep userRep = RepositoryContainer.Resolve<UserRep>();
+            userRep = RepositoryContainer.Resolve<UserRep>();
+            userRep = RepositoryContainer.Resolve<UserRep>();
             User user = null;
             user = userRep.Get(1);
             //Assert.AreEqual(user.ID, 1);
@@ -64,7 +66,7 @@ namespace MongoDB.Repository.Test
         public void Aggregate()
         {
             UserRep userRep = RepositoryContainer.Resolve<UserRep>();
-            var list = userRep.Aggregate(x => x.Age == 0, x => x.Name, x => new UserGroup() { Name = x.Key }, limit:9);
+            var list = userRep.Aggregate(x => x.Age == 0, x => x.Name, x => new UserGroup() { Name = x.Key }, limit: 9);
         }
     }
 
