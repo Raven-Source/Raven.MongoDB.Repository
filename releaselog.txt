@@ -1,4 +1,4 @@
-2.2.8
+2.2.9
 添加Aggregate 功能方法
 添加Exists、Count、Distinct 功能方法	
 重现整理了异步写法，并优化部分接口性能
