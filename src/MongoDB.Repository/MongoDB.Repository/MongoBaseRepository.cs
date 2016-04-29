@@ -353,14 +353,15 @@ namespace MongoDB.Repository
             }
 
             fluent = fluent.Match(filter);
-            if (limit > 0)
-            {
-                fluent = fluent.Limit(limit);
-            }
 
             if (skip > 0)
             {
                 fluent = fluent.Skip(skip);
+            }
+
+            if (limit > 0)
+            {
+                fluent = fluent.Limit(limit);
             }
 
             return fluent;

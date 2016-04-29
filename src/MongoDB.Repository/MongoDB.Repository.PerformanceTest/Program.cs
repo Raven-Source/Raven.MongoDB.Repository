@@ -28,10 +28,23 @@ namespace MongoDB.Repository.PerformanceTest
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            int seed = 5000;
-            //GetAsync().Wait();
-
+            int seed = 10000;
             Console.WriteLine("seed:{0}", seed);
+
+
+            //Stopwatch sw2 = new Stopwatch();
+            //sw2.Restart();
+
+            //for (var i = 0; i < seed; i++)
+            //{
+            //    var a = new UserRepAsync();
+            //}
+
+            //Console.WriteLine("{0}ms", sw2.ElapsedMilliseconds);
+            //sw2.Stop();
+
+            //return;
+
             Stopwatch sw = new Stopwatch();
             Task[] tasks = new Task[seed];
 
