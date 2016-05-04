@@ -422,6 +422,34 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
+            return this.Aggregate<TResult, TID>(filter, id, group, sortExp, sortType, limit, skip, readPreference);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="id">$group -> _id</param>
+        /// <param name="group">$group</param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        public List<TResult> Aggregate<TResult, TID>(FilterDefinition<TEntity> filter
+            , Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null)
+        {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
             var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), readPreference);
             var fluentRes = fluent.Group(id, group);
             if (skip > 0)
@@ -465,6 +493,33 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
+            return this.Aggregate<TResult, TID>(filter, group, sortExp, sortType, limit, skip, readPreference);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="group"></param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        public List<TResult> Aggregate<TResult, TID>(FilterDefinition<TEntity> filter
+            , ProjectionDefinition<TEntity, TResult> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null)
+        {
+            if (filter == null)
+            {
+                filter = Builders<TEntity>.Filter.Empty;
+            }
+
             var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), readPreference);
             var fluentRes = fluent.Group(group);
             if (skip > 0)
@@ -478,6 +533,5 @@ namespace MongoDB.Repository
 
             return fluentRes.ToList();
         }
-
     }
 }

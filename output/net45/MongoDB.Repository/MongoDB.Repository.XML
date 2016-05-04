@@ -315,6 +315,22 @@
             <param name="readPreference"></param>
             <returns></returns>
         </member>
+        <member name="M:MongoDB.Repository.IReaderRepositoryAsync`2.AggregateAsync``2(MongoDB.Driver.FilterDefinition{`0},System.Linq.Expressions.Expression{System.Func{`0,``1}},System.Linq.Expressions.Expression{System.Func{System.Linq.IGrouping{``1,`0},``0}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <typeparam name="TID"></typeparam>
+            <param name="filter"></param>
+            <param name="id">$group -> _id</param>
+            <param name="group">$group</param>
+            <param name="sortExp"></param>
+            <param name="sortType"></param>
+            <param name="limit"></param>
+            <param name="skip"></param>
+            <param name="readPreference"></param>
+            <returns></returns>
+        </member>
         <member name="M:MongoDB.Repository.IReaderRepositoryAsync`2.AggregateAsync``2(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},MongoDB.Driver.ProjectionDefinition{`0,``0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
             <summary>
             
@@ -322,6 +338,21 @@
             <typeparam name="TResult"></typeparam>
             <typeparam name="TID"></typeparam>
             <param name="filterExp"></param>
+            <param name="group"></param>
+            <param name="sortExp"></param>
+            <param name="sortType"></param>
+            <param name="limit"></param>
+            <param name="skip"></param>
+            <param name="readPreference"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MongoDB.Repository.IReaderRepositoryAsync`2.AggregateAsync``2(MongoDB.Driver.FilterDefinition{`0},MongoDB.Driver.ProjectionDefinition{`0,``0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <typeparam name="TID"></typeparam>
+            <param name="filter"></param>
             <param name="group"></param>
             <param name="sortExp"></param>
             <param name="sortType"></param>
@@ -500,6 +531,22 @@
             <param name="readPreference"></param>
             <returns></returns>
         </member>
+        <member name="M:MongoDB.Repository.MongoReaderRepositoryAsync`2.AggregateAsync``2(MongoDB.Driver.FilterDefinition{`0},System.Linq.Expressions.Expression{System.Func{`0,``1}},System.Linq.Expressions.Expression{System.Func{System.Linq.IGrouping{``1,`0},``0}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <typeparam name="TID"></typeparam>
+            <param name="filter"></param>
+            <param name="id">$group -> _id</param>
+            <param name="group">$group</param>
+            <param name="sortExp"></param>
+            <param name="sortType"></param>
+            <param name="limit"></param>
+            <param name="skip"></param>
+            <param name="readPreference"></param>
+            <returns></returns>
+        </member>
         <member name="M:MongoDB.Repository.MongoReaderRepositoryAsync`2.AggregateAsync``2(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},MongoDB.Driver.ProjectionDefinition{`0,``0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
             <summary>
             
@@ -507,6 +554,21 @@
             <typeparam name="TResult"></typeparam>
             <typeparam name="TID"></typeparam>
             <param name="filterExp"></param>
+            <param name="group"></param>
+            <param name="sortExp"></param>
+            <param name="sortType"></param>
+            <param name="limit"></param>
+            <param name="skip"></param>
+            <param name="readPreference"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MongoDB.Repository.MongoReaderRepositoryAsync`2.AggregateAsync``2(MongoDB.Driver.FilterDefinition{`0},MongoDB.Driver.ProjectionDefinition{`0,``0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <typeparam name="TID"></typeparam>
+            <param name="filter"></param>
             <param name="group"></param>
             <param name="sortExp"></param>
             <param name="sortType"></param>
@@ -1176,6 +1238,22 @@
             <param name="readPreference"></param>
             <returns></returns>
         </member>
+        <member name="M:MongoDB.Repository.IReaderRepository`2.Aggregate``2(MongoDB.Driver.FilterDefinition{`0},System.Linq.Expressions.Expression{System.Func{`0,``1}},System.Linq.Expressions.Expression{System.Func{System.Linq.IGrouping{``1,`0},``0}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <typeparam name="TID"></typeparam>
+            <param name="filter"></param>
+            <param name="id">$group -> _id</param>
+            <param name="group">$group</param>
+            <param name="sortExp"></param>
+            <param name="sortType"></param>
+            <param name="limit"></param>
+            <param name="skip"></param>
+            <param name="readPreference"></param>
+            <returns></returns>
+        </member>
         <member name="M:MongoDB.Repository.IReaderRepository`2.Aggregate``2(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},MongoDB.Driver.ProjectionDefinition{`0,``0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
             <summary>
             
@@ -1183,6 +1261,21 @@
             <typeparam name="TResult"></typeparam>
             <typeparam name="TID"></typeparam>
             <param name="filterExp"></param>
+            <param name="group"></param>
+            <param name="sortExp"></param>
+            <param name="sortType"></param>
+            <param name="limit"></param>
+            <param name="skip"></param>
+            <param name="readPreference"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MongoDB.Repository.IReaderRepository`2.Aggregate``2(MongoDB.Driver.FilterDefinition{`0},MongoDB.Driver.ProjectionDefinition{`0,``0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <typeparam name="TID"></typeparam>
+            <param name="filter"></param>
             <param name="group"></param>
             <param name="sortExp"></param>
             <param name="sortType"></param>
@@ -1713,6 +1806,22 @@
             <param name="readPreference"></param>
             <returns></returns>
         </member>
+        <member name="M:MongoDB.Repository.MongoReaderRepository`2.Aggregate``2(MongoDB.Driver.FilterDefinition{`0},System.Linq.Expressions.Expression{System.Func{`0,``1}},System.Linq.Expressions.Expression{System.Func{System.Linq.IGrouping{``1,`0},``0}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <typeparam name="TID"></typeparam>
+            <param name="filter"></param>
+            <param name="id">$group -> _id</param>
+            <param name="group">$group</param>
+            <param name="sortExp"></param>
+            <param name="sortType"></param>
+            <param name="limit"></param>
+            <param name="skip"></param>
+            <param name="readPreference"></param>
+            <returns></returns>
+        </member>
         <member name="M:MongoDB.Repository.MongoReaderRepository`2.Aggregate``2(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},MongoDB.Driver.ProjectionDefinition{`0,``0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
             <summary>
             
@@ -1720,6 +1829,21 @@
             <typeparam name="TResult"></typeparam>
             <typeparam name="TID"></typeparam>
             <param name="filterExp"></param>
+            <param name="group"></param>
+            <param name="sortExp"></param>
+            <param name="sortType"></param>
+            <param name="limit"></param>
+            <param name="skip"></param>
+            <param name="readPreference"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MongoDB.Repository.MongoReaderRepository`2.Aggregate``2(MongoDB.Driver.FilterDefinition{`0},MongoDB.Driver.ProjectionDefinition{`0,``0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},MongoDB.Repository.SortType,System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <typeparam name="TID"></typeparam>
+            <param name="filter"></param>
             <param name="group"></param>
             <param name="sortExp"></param>
             <param name="sortType"></param>

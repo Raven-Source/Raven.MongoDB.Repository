@@ -210,6 +210,26 @@ namespace MongoDB.Repository
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <typeparam name="TID"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="id">$group -> _id</param>
+        /// <param name="group">$group</param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        List<TResult> Aggregate<TResult, TID>(FilterDefinition<TEntity> filter
+            , Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
         /// <param name="filterExp"></param>
         /// <param name="group"></param>
         /// <param name="sortExp"></param>
@@ -219,6 +239,25 @@ namespace MongoDB.Repository
         /// <param name="readPreference"></param>
         /// <returns></returns>
         List<TResult> Aggregate<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
+            , ProjectionDefinition<TEntity, TResult> group
+            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+            , int limit = 0, int skip = 0
+            , ReadPreference readPreference = null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TID"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="group"></param>
+        /// <param name="sortExp"></param>
+        /// <param name="sortType"></param>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <param name="readPreference"></param>
+        /// <returns></returns>
+        List<TResult> Aggregate<TResult, TID>(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TResult> group
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0
