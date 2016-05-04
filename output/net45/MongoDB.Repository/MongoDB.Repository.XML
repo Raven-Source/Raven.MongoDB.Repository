@@ -113,14 +113,12 @@
             <param name="entity"></param>
             <param name="id"></param>
         </member>
-        <member name="M:MongoDB.Repository.MongoBaseRepository`2.CreateAggregate(MongoDB.Driver.FilterDefinition{`0},MongoDB.Driver.SortDefinition{`0},System.Int32,System.Int32,MongoDB.Driver.ReadPreference)">
+        <member name="M:MongoDB.Repository.MongoBaseRepository`2.CreateAggregate(MongoDB.Driver.FilterDefinition{`0},MongoDB.Driver.SortDefinition{`0},MongoDB.Driver.ReadPreference)">
             <summary>
             
             </summary>
             <param name="filter"></param>
             <param name="sort"></param>
-            <param name="limit"></param>
-            <param name="skip"></param>
             <param name="readPreference"></param>
             <returns></returns>
         </member>
@@ -904,7 +902,17 @@
             <param name="writeConcern">访问设置</param>
             <returns></returns>
         </member>
-        <!-- 对于成员“M:MongoDB.Repository.MongoRepositoryAsync`2.FindOneAndUpdateAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{MongoDB.Driver.UpdateDefinitionBuilder{`0},MongoDB.Driver.UpdateDefinition{`0}},System.Boolean,MongoDB.Driver.SortDefinition{`0},MongoDB.Driver.WriteConcern)”忽略有格式错误的 XML 注释 -->
+        <member name="M:MongoDB.Repository.MongoRepositoryAsync`2.FindOneAndUpdateAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{MongoDB.Driver.UpdateDefinitionBuilder{`0},MongoDB.Driver.UpdateDefinition{`0}},System.Boolean,MongoDB.Driver.SortDefinition{`0},MongoDB.Driver.WriteConcern)">
+            <summary>
+            找到并更新
+            </summary>
+            <param name="filterExp"></param>
+            <param name="updateExp"></param>
+            <param name="isUpsert"></param>
+            <param name="sort"></param>
+            <param name="writeConcern">访问设置</param>
+            <returns></returns>
+        </member>
         <member name="M:MongoDB.Repository.MongoRepositoryAsync`2.FindOneAndUpdateAsync(MongoDB.Driver.FilterDefinition{`0},`0,System.Boolean,MongoDB.Driver.SortDefinition{`0},MongoDB.Driver.WriteConcern)">
             <summary>
             找到并更新

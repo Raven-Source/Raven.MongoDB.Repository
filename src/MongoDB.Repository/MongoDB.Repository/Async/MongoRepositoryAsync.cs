@@ -328,7 +328,7 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="filterExp"></param>
         /// <param name="updateExp"></param>
-        /// <param name="isUpsert"></param
+        /// <param name="isUpsert"></param>
         /// <param name="sort"></param>
         /// <param name="writeConcern">访问设置</param>
         /// <returns></returns>

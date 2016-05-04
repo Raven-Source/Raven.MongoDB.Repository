@@ -336,35 +336,59 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="sort"></param>
-        /// <param name="limit"></param>
-        /// <param name="skip"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
         protected IAggregateFluent<TEntity> CreateAggregate(FilterDefinition<TEntity> filter
             , SortDefinition<TEntity> sort
-            , int limit = 0, int skip = 0
             , ReadPreference readPreference = null)
         {
-            var fluent = GetCollection(readPreference).Aggregate();            
+            var fluent = GetCollection(readPreference).Aggregate();
+            fluent = fluent.Match(filter);
 
             if (sort != null)
             {
                 fluent = fluent.Sort(sort);
             }
 
-            fluent = fluent.Match(filter);
-
-            if (skip > 0)
-            {
-                fluent = fluent.Skip(skip);
-            }
-
-            if (limit > 0)
-            {
-                fluent = fluent.Limit(limit);
-            }
-
             return fluent;
         }
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="filter"></param>
+        ///// <param name="group"></param>
+        ///// <param name="sort"></param>
+        ///// <param name="limit"></param>
+        ///// <param name="skip"></param>
+        ///// <param name="readPreference"></param>
+        ///// <returns></returns>
+        //protected IAggregateFluent<TResult> CreateAggregate<TResult>(FilterDefinition<TEntity> filter
+        //    , ProjectionDefinition<TEntity, TResult> group
+        //    , SortDefinition<TEntity> sort
+        //    , int limit = 0, int skip = 0
+        //    , ReadPreference readPreference = null)
+        //{
+        //    var fluent = GetCollection(readPreference).Aggregate();
+        //    fluent = fluent.Match(filter);
+
+        //    if (sort != null)
+        //    {
+        //        fluent = fluent.Sort(sort);
+        //    }
+
+        //    var fluentRes = fluent.Group(group);
+        //    if (skip > 0)
+        //    {
+        //        fluentRes = fluentRes.Skip(skip);
+        //    }
+
+        //    if (limit > 0)
+        //    {
+        //        fluentRes = fluentRes.Limit(limit);
+        //    }
+
+        //    return fluentRes;
+        //}
     }
 }

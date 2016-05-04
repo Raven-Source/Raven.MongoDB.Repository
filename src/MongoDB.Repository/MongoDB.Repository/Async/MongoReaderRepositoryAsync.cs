@@ -423,8 +423,18 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
-            var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), limit, skip, readPreference);
-            return fluent.Group(id, group).ToListAsync();
+            var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), readPreference);
+            var fluentRes = fluent.Group(id, group);
+            if (skip > 0)
+            {
+                fluentRes = fluentRes.Skip(skip);
+            }
+            if (limit > 0)
+            {
+                fluentRes = fluentRes.Limit(limit);
+            }
+
+            return fluentRes.ToListAsync();
         }
 
         /// <summary>
@@ -456,8 +466,18 @@ namespace MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
-            var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), limit, skip, readPreference);
-            return fluent.Group(group).ToListAsync();
+            var fluent = base.CreateAggregate(filter, base.CreateSortDefinition(sortExp, sortType), readPreference);
+            var fluentRes = fluent.Group(group);
+            if (skip > 0)
+            {
+                fluentRes = fluentRes.Skip(skip);
+            }
+            if (limit > 0)
+            {
+                fluentRes = fluentRes.Limit(limit);
+            }
+
+            return fluentRes.ToListAsync();
         }
 
     }

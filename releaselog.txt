@@ -1,3 +1,6 @@
+
+2.2.11
+修正AggregateAsync、Aggregate中s，在group计算之后再kip和limit
 2.2.10
 修正AggregateAsync、Aggregate中skip和limit的bug
 
