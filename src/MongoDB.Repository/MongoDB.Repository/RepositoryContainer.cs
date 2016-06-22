@@ -101,7 +101,7 @@ namespace MongoDB.Repository
                 var lazy = new Lazy<object>(() => new T());
                 Repositorys.AddOrUpdate(k, lazy, (x, y) => lazy);
 
-                return Resolve<T>();
+                return (T)lazy.Value;
                 //throw new KeyNotFoundException(string.Format("Service not found for type '{0}'", typeof(T)));
             }
         }
