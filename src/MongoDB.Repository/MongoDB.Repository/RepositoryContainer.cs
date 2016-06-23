@@ -91,19 +91,22 @@ namespace MongoDB.Repository
             var k = GetKey(t);
 
             Lazy<object> repository;
-            if (Repositorys.TryGetValue(k, out repository))
-            {
-                return (T)repository.Value;
-            }
-            else
-            {
-                //Repositorys[t] = new Lazy<object>(() => new T());
-                var lazy = new Lazy<object>(() => new T());
-                Repositorys.AddOrUpdate(k, lazy, (x, y) => lazy);
+            //if (Repositorys.TryGetValue(k, out repository))
+            //{
+            //    return (T)repository.Value;
+            //}
+            //else
+            //{
+            //    //Repositorys[t] = new Lazy<object>(() => new T());
+            //    var lazy = new Lazy<object>(() => new T());
+            //    Repositorys.AddOrUpdate(k, lazy, (x, y) => lazy);
 
-                return Resolve<T>();
-                //throw new KeyNotFoundException(string.Format("Service not found for type '{0}'", typeof(T)));
-            }
+            //    return Resolve<T>();
+            //    //throw new KeyNotFoundException(string.Format("Service not found for type '{0}'", typeof(T)));
+            //}
+
+            repository = Repositorys.GetOrAdd(k, x => { return new Lazy<object>(() => new T()); });
+            return (T)repository.Value;
         }
 
         /// <summary>
