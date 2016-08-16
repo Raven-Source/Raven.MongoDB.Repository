@@ -1,6 +1,4 @@
-﻿using MongoDB.Driver;
-using MongoDB.Repository.Test;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +6,10 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using MongoDB.Driver;
+using MongoDB.Repository.Test;
+using MongoDB.Repository;
 
 namespace MongoDB.Repository.PerformanceTest
 {
@@ -28,10 +30,9 @@ namespace MongoDB.Repository.PerformanceTest
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            int seed = 10000;
+            int seed = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["seed"]);
             Console.WriteLine("seed:{0}", seed);
-
-
+            
             //Stopwatch sw2 = new Stopwatch();
             //sw2.Restart();
 
@@ -51,7 +52,8 @@ namespace MongoDB.Repository.PerformanceTest
             sw.Restart();
             for (var i = 0; i < seed; i++)
             {
-                tasks[i] = InsertAsync();
+                //tasks[i] = InsertAsync();
+                tasks[i] = IncAsync(132);
             }
 
             Task.WaitAll(tasks);
@@ -133,6 +135,11 @@ namespace MongoDB.Repository.PerformanceTest
             return userRepAsync.GetAsync(id);
         }
 
+        public static Task IncAsync(long mallId)
+        {
+            return mallCardRep.FindOneAndUpdateAsync(x => x.MallID == mallId, MallCardRepAsync.Update.Inc(t => t.A, 2).Inc(t => t.B, 4));
+        }
+
         public static void Insert()
         {
             var user = new User();
@@ -150,7 +157,7 @@ namespace MongoDB.Repository.PerformanceTest
             User user = null;
 
             long lambda, builders, buildersFun;
-            int speed = 10000;
+            int speed = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["seed"]);
 
             user = await userRepAsync.GetAsync(x => x.Name == "aa");
 

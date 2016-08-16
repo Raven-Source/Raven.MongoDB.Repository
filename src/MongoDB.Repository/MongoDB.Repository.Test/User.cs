@@ -71,6 +71,11 @@ namespace MongoDB.Repository.Test
         ///// </summary>
         public long UID { get; set; }
 
+        public double A { get; set; }
+
+
+        public double B { get; set; }
+
         ///// <summary>
         ///// 会员卡类型ID
         ///// </summary>
