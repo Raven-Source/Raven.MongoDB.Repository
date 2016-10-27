@@ -15,7 +15,7 @@ namespace MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public partial class MongoReaderRepository<TEntity, TKey> : MongoBaseRepository<TEntity, TKey>, IReaderRepository<TEntity, TKey>
+    public class MongoReaderRepository<TEntity, TKey> : MongoBaseRepository<TEntity, TKey>, IReaderRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
         /// <summary>
@@ -23,11 +23,12 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="connString">数据库连接节点</param>
         /// <param name="dbName">数据库名称</param>
+        /// <param name="collectionName">集合名称</param>
         /// <param name="writeConcern"></param>
         /// <param name="readPreference"></param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
-        public MongoReaderRepository(string connString, string dbName, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
-            : base(connString, dbName, writeConcern, readPreference, sequence)
+        public MongoReaderRepository(string connString, string dbName, string collectionName = null, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
+            : base(connString, dbName, collectionName, writeConcern, readPreference, sequence)
         {
         }
 
@@ -39,7 +40,7 @@ namespace MongoDB.Repository
         {
             long id = 1;
             var collection = Database.GetCollection<BsonDocument>(base._sequence.SequenceName);
-            var typeName = typeof(TEntity).Name;
+            var typeName = CollectionName;
 
             var query = Builders<BsonDocument>.Filter.Eq(base._sequence.CollectionName, typeName);
             var update = Builders<BsonDocument>.Update.Inc(base._sequence.IncrementID, inc);

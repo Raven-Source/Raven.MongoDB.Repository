@@ -15,7 +15,7 @@ namespace MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class MongoBaseRepository<TEntity, TKey>
+    public abstract class MongoBaseRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
         /// <summary>
@@ -40,12 +40,20 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
+        /// 集合名称
+        /// </summary>
+        protected string CollectionName
+        {
+            get; private set;
+        }
+        
+        /// <summary>
         /// 根据数据类型得到集合
         /// </summary>
         /// <returns></returns>
         public IMongoCollection<TEntity> GetCollection(MongoCollectionSettings settings = null)
         {
-            return Database.GetCollection<TEntity>(typeof(TEntity).Name, settings);
+            return Database.GetCollection<TEntity>(CollectionName, settings);
         }
 
         /// <summary>
@@ -60,7 +68,7 @@ namespace MongoDB.Repository
                 settings = new MongoCollectionSettings();
                 settings.WriteConcern = writeConcern;
             }
-            return Database.GetCollection<TEntity>(typeof(TEntity).Name, settings);
+            return Database.GetCollection<TEntity>(CollectionName, settings);
         }
 
         /// <summary>
@@ -75,7 +83,7 @@ namespace MongoDB.Repository
                 settings = new MongoCollectionSettings();
                 settings.ReadPreference = readPreference;
             }
-            return Database.GetCollection<TEntity>(typeof(TEntity).Name, settings);
+            return Database.GetCollection<TEntity>(CollectionName, settings);
         }
 
         /// <summary>
@@ -127,13 +135,15 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="connString">数据库连接节点</param>
         /// <param name="dbName">数据库名称</param>
+        /// <param name="collectionName">集合名称</param>
         /// <param name="writeConcern"></param>
         /// <param name="readPreference"></param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
-        public MongoBaseRepository(string connString, string dbName, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
+        public MongoBaseRepository(string connString, string dbName, string collectionName = null, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
         {
             this._sequence = sequence ?? new MongoSequence();
             this._mongoSession = new MongoSession(connString, dbName, writeConcern: writeConcern, readPreference: readPreference);
+            this.CollectionName = collectionName ?? typeof(TEntity).Name;
         }
 
         #region 获取字段

@@ -46,12 +46,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MongoDB.Repository.MongoBaseRepository`2.#ctor(System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
+        <member name="M:MongoDB.Repository.MongoBaseRepository`2.#ctor(System.String,System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
             <summary>
             构造函数
             </summary>
             <param name="connString">数据库连接节点</param>
             <param name="dbName">数据库名称</param>
+            <param name="collectionName">集合名称</param>
             <param name="writeConcern"></param>
             <param name="readPreference"></param>
             <param name="sequence">Mongo自增长ID数据序列对象</param>
@@ -125,6 +126,11 @@
         <member name="P:MongoDB.Repository.MongoBaseRepository`2.Database">
             <summary>
             MongoDatabase
+            </summary>
+        </member>
+        <member name="P:MongoDB.Repository.MongoBaseRepository`2.CollectionName">
+            <summary>
+            集合名称
             </summary>
         </member>
         <member name="P:MongoDB.Repository.MongoBaseRepository`2.Filter">
@@ -361,12 +367,13 @@
             <param name="readPreference"></param>
             <returns></returns>
         </member>
-        <member name="M:MongoDB.Repository.MongoReaderRepositoryAsync`2.#ctor(System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
+        <member name="M:MongoDB.Repository.MongoReaderRepositoryAsync`2.#ctor(System.String,System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
             <summary>
             构造函数
             </summary>
             <param name="connString">数据库连接节点</param>
             <param name="dbName">数据库名称</param>
+            <param name="collectionName">集合名称</param>
             <param name="writeConcern"></param>
             <param name="readPreference"></param>
             <param name="sequence">Mongo自增长ID数据序列对象</param>
@@ -822,12 +829,13 @@
             <param name="filterExp">查询条件</param>
             <param name="writeConcern">访问设置</param>
         </member>
-        <member name="M:MongoDB.Repository.MongoRepositoryAsync`2.#ctor(System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
+        <member name="M:MongoDB.Repository.MongoRepositoryAsync`2.#ctor(System.String,System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
             <summary>
             构造函数
             </summary>
             <param name="connString">数据库连接节点</param>
             <param name="dbName">数据库名称</param>
+            <param name="collectionName">集合名称</param>
             <param name="writeConcern"></param>
             <param name="readPreference"></param>
             <param name="sequence">Mongo自增长ID数据序列对象</param>
@@ -1636,12 +1644,13 @@
             <typeparam name="TEntity"></typeparam>
             <typeparam name="TKey"></typeparam>
         </member>
-        <member name="M:MongoDB.Repository.MongoReaderRepository`2.#ctor(System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
+        <member name="M:MongoDB.Repository.MongoReaderRepository`2.#ctor(System.String,System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
             <summary>
             构造函数
             </summary>
             <param name="connString">数据库连接节点</param>
             <param name="dbName">数据库名称</param>
+            <param name="collectionName">集合名称</param>
             <param name="writeConcern"></param>
             <param name="readPreference"></param>
             <param name="sequence">Mongo自增长ID数据序列对象</param>
@@ -1859,12 +1868,13 @@
             <typeparam name="TEntity"></typeparam>
             <typeparam name="TKey"></typeparam>
         </member>
-        <member name="M:MongoDB.Repository.MongoRepository`2.#ctor(System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
+        <member name="M:MongoDB.Repository.MongoRepository`2.#ctor(System.String,System.String,System.String,MongoDB.Driver.WriteConcern,MongoDB.Driver.ReadPreference,MongoDB.Repository.MongoSequence)">
             <summary>
             构造函数
             </summary>
             <param name="connString">数据库连接节点</param>
             <param name="dbName">数据库名称</param>
+            <param name="collectionName">集合名称</param>
             <param name="writeConcern"></param>
             <param name="readPreference"></param>
             <param name="sequence">Mongo自增长ID数据序列对象</param>

@@ -74,7 +74,7 @@ namespace MongoDB.Repository.Test
         public double A { get; set; }
 
 
-        public double B { get; set; }
+        public int B { get; set; }
 
         ///// <summary>
         ///// 会员卡类型ID

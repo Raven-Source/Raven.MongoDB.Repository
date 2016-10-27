@@ -1,3 +1,5 @@
+2.2.12
+Repository添加collectionName可选参数
 
 2.2.11
 修正AggregateAsync、Aggregate中s，在group计算之后再kip和limit

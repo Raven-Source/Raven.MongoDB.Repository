@@ -32,7 +32,10 @@ namespace MongoDB.Repository.PerformanceTest
         {
             int seed = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["seed"]);
             Console.WriteLine("seed:{0}", seed);
-            
+
+            //InsertAsync().Wait();
+            //return;
+
             //Stopwatch sw2 = new Stopwatch();
             //sw2.Restart();
 
@@ -137,7 +140,7 @@ namespace MongoDB.Repository.PerformanceTest
 
         public static Task IncAsync(long mallId)
         {
-            return mallCardRep.FindOneAndUpdateAsync(x => x.MallID == mallId, MallCardRepAsync.Update.Inc(t => t.A, 2).Inc(t => t.B, 4));
+            return mallCardRep.FindOneAndUpdateAsync(x => x.MallID == mallId, MallCardRepAsync.Update.Inc(t => t.A, 2).Inc(t => t.B, 4).Set(t =>  t.CardTypeID, 1610));
         }
 
         public static void Insert()

@@ -8,7 +8,7 @@ namespace MongoDB.Repository.Test
 {
     public class Repositorys
     {
-        public static string dbName = "RepositoryTest1";
+        public static string dbName = "test";
         public static string connString = System.Configuration.ConfigurationManager.ConnectionStrings["RepositoryTest"].ConnectionString;
     }
 

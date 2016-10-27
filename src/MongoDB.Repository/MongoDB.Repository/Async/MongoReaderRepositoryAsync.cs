@@ -15,7 +15,7 @@ namespace MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public partial class MongoReaderRepositoryAsync<TEntity, TKey> : MongoBaseRepository<TEntity, TKey>, IReaderRepositoryAsync<TEntity, TKey>
+    public class MongoReaderRepositoryAsync<TEntity, TKey> : MongoBaseRepository<TEntity, TKey>, IReaderRepositoryAsync<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
         /// <summary>
@@ -23,11 +23,12 @@ namespace MongoDB.Repository
         /// </summary>
         /// <param name="connString">数据库连接节点</param>
         /// <param name="dbName">数据库名称</param>
+        /// <param name="collectionName">集合名称</param>
         /// <param name="writeConcern"></param>
         /// <param name="readPreference"></param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
-        public MongoReaderRepositoryAsync(string connString, string dbName, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
-            : base(connString, dbName, writeConcern, readPreference, sequence)
+        public MongoReaderRepositoryAsync(string connString, string dbName, string collectionName = null, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
+            : base(connString, dbName, collectionName, writeConcern, readPreference, sequence)
         {
         }
 
