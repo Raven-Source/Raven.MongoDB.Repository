@@ -191,6 +191,7 @@ namespace MongoDB.Repository.Test
             UserRepAsync userRep = new UserRepAsync();
             List<User> userList = null;
             userList = await userRep.GetListAsync(null);
+            userList = await userRep.GetListAsync(UserRepAsync.Filter.Empty);
 
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa");
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa", null, s => s.ID, SortType.Ascending);

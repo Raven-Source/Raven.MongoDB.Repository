@@ -62,13 +62,14 @@
   <ItemGroup>
     <Compile Include="Async\MongoReaderRepositoryAsync.cs" />
     <Compile Include="Async\MongoRepositoryAsync.cs" />
-    <Compile Include="IRepositoryAsync.cs" />
-    <Compile Include="IRepository.cs" />
-    <Compile Include="IReaderRepository.cs" />
-    <Compile Include="IReaderRepositoryAsync.cs" />
+    <Compile Include="Interfaces\IRepositoryAsync.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IReaderRepository.cs" />
+    <Compile Include="Interfaces\IReaderRepositoryAsync.cs" />
+    <Compile Include="MongoClientOptions.cs" />
     <Compile Include="MongoSequence.cs" />
     <Compile Include="MongoSession.cs" />
-    <Compile Include="RepositoryContainer.cs" />
+    <Compile Include="Container\RepositoryContainer.cs" />
     <Compile Include="SortType.cs" />
     <Compile Include="MongoBaseRepository.cs" />
     <Compile Include="Sync\MongoReaderRepository.cs" />

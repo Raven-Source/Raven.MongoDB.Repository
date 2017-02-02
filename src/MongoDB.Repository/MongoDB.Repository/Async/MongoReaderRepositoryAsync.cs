@@ -33,6 +33,15 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="options"></param>
+        public MongoReaderRepositoryAsync(MongoRepositoryOptions options)
+            : base(options)
+        {
+        }
+
+        /// <summary>
         /// 创建自增长ID
         /// </summary>
         /// <returns></returns>

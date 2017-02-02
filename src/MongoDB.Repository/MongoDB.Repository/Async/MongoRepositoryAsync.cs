@@ -34,6 +34,15 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="options"></param>
+        public MongoRepositoryAsync(MongoRepositoryOptions options)
+            : base(options)
+        {
+        }
+
+        /// <summary>
         /// 添加数据
         /// </summary>
         /// <param name="entity">待添加数据</param>

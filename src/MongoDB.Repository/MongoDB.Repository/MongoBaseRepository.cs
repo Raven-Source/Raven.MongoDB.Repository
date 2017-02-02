@@ -18,6 +18,8 @@ namespace MongoDB.Repository
     public abstract class MongoBaseRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
+        #region 字段属性
+
         /// <summary>
         /// Mongo自增长ID数据序列
         /// </summary>
@@ -42,48 +44,9 @@ namespace MongoDB.Repository
         /// <summary>
         /// 集合名称
         /// </summary>
-        protected string CollectionName
+        protected virtual string CollectionName
         {
             get; private set;
-        }
-        
-        /// <summary>
-        /// 根据数据类型得到集合
-        /// </summary>
-        /// <returns></returns>
-        public IMongoCollection<TEntity> GetCollection(MongoCollectionSettings settings = null)
-        {
-            return Database.GetCollection<TEntity>(CollectionName, settings);
-        }
-
-        /// <summary>
-        /// 根据数据类型得到集合
-        /// </summary>
-        /// <returns></returns>
-        public IMongoCollection<TEntity> GetCollection(WriteConcern writeConcern)
-        {
-            MongoCollectionSettings settings = null;
-            if (writeConcern != null)
-            {
-                settings = new MongoCollectionSettings();
-                settings.WriteConcern = writeConcern;
-            }
-            return Database.GetCollection<TEntity>(CollectionName, settings);
-        }
-
-        /// <summary>
-        /// 根据数据类型得到集合
-        /// </summary>
-        /// <returns></returns>
-        public IMongoCollection<TEntity> GetCollection(ReadPreference readPreference)
-        {
-            MongoCollectionSettings settings = null;
-            if (readPreference != null)
-            {
-                settings = new MongoCollectionSettings();
-                settings.ReadPreference = readPreference;
-            }
-            return Database.GetCollection<TEntity>(CollectionName, settings);
         }
 
         /// <summary>
@@ -130,6 +93,10 @@ namespace MongoDB.Repository
             }
         }
 
+        #endregion
+
+        #region 构造函数
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -146,8 +113,58 @@ namespace MongoDB.Repository
             this.CollectionName = collectionName ?? typeof(TEntity).Name;
         }
 
-        #region 获取字段
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="options"></param>
+        public MongoBaseRepository(MongoRepositoryOptions options)
+        {
+            this._sequence = options.Sequence ?? new MongoSequence();
+            this._mongoSession = new MongoSession(options.ConnString, options.DbName, writeConcern: options.WriteConcern, readPreference: options.ReadPreference);
+            this.CollectionName = options.CollectionName ?? typeof(TEntity).Name;
+        }
 
+        #endregion
+
+        /// <summary>
+        /// 根据数据类型得到集合
+        /// </summary>
+        /// <returns></returns>
+        public IMongoCollection<TEntity> GetCollection(MongoCollectionSettings settings = null)
+        {
+            return Database.GetCollection<TEntity>(CollectionName, settings);
+        }
+
+        /// <summary>
+        /// 根据数据类型得到集合
+        /// </summary>
+        /// <returns></returns>
+        public IMongoCollection<TEntity> GetCollection(WriteConcern writeConcern)
+        {
+            MongoCollectionSettings settings = null;
+            if (writeConcern != null)
+            {
+                settings = new MongoCollectionSettings();
+                settings.WriteConcern = writeConcern;
+            }
+            return Database.GetCollection<TEntity>(CollectionName, settings);
+        }
+
+        /// <summary>
+        /// 根据数据类型得到集合
+        /// </summary>
+        /// <returns></returns>
+        public IMongoCollection<TEntity> GetCollection(ReadPreference readPreference)
+        {
+            MongoCollectionSettings settings = null;
+            if (readPreference != null)
+            {
+                settings = new MongoCollectionSettings();
+                settings.ReadPreference = readPreference;
+            }
+            return Database.GetCollection<TEntity>(CollectionName, settings);
+        }
+        
         /// <summary>
         /// 获取字段
         /// </summary>
@@ -173,9 +190,7 @@ namespace MongoDB.Repository
             }
             return null;
         }
-
-        #endregion
-
+        
         /// <summary>
         /// 
         /// </summary>
