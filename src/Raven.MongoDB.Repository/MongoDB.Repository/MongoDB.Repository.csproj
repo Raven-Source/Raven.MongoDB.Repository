@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8414E9D2-DD35-4F75-9D66-1D510613B64D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MongoDB.Repository</RootNamespace>
+    <AssemblyName>MongoDB.Repository</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;MongoDB_Repository</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MongoDB.Bson, Version=2.2.4.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MongoDB.Bson.2.2.4\lib\net45\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=2.2.4.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MongoDB.Driver.2.2.4\lib\net45\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.2.4.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MongoDB.Driver.Core.2.2.4\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Legacy, Version=2.2.4.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\mongocsharpdriver.2.2.4\lib\net45\MongoDB.Driver.Legacy.dll</HintPath>
+    </Reference>
+    <Reference Include="Repository.IEntity, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Repository.IEntity.1.0.2\lib\net40\Repository.IEntity.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Raven.MongoDB.Repository\Container\RepositoryContainer.cs">
+      <Link>Container\RepositoryContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoBaseRepository.cs">
+      <Link>Impl\MongoBaseRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoReaderRepository.cs">
+      <Link>Impl\MongoReaderRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoReaderRepositoryAsync.cs">
+      <Link>Impl\MongoReaderRepositoryAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoRepository.cs">
+      <Link>Impl\MongoRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoRepositoryAsync.cs">
+      <Link>Impl\MongoRepositoryAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IMongoBaseRepository.cs">
+      <Link>Interfaces\IMongoBaseRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IReaderRepository.cs">
+      <Link>Interfaces\IReaderRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IReaderRepositoryAsync.cs">
+      <Link>Interfaces\IReaderRepositoryAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IRepository.cs">
+      <Link>Interfaces\IRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IRepositoryAsync.cs">
+      <Link>Interfaces\IRepositoryAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\MongoClientOptions.cs">
+      <Link>MongoClientOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\MongoSequence.cs">
+      <Link>MongoSequence.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\MongoSession.cs">
+      <Link>MongoSession.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\SortType.cs">
+      <Link>SortType.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Util.cs">
+      <Link>Util.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
