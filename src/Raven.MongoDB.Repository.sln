@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{906E3763-C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.Repository", "Raven.MongoDB.Repository\MongoDB.Repository\MongoDB.Repository.csproj", "{8414E9D2-DD35-4F75-9D66-1D510613B64D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{B059304A-3F78-4B36-AC4E-43D251DCF9C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C2F28651-AA3F-42A0-BA2A-7A847A66376B} = {906E3763-C399-4AD0-8A36-E99EDAAE6308}
 		{6C026945-1543-4EEF-ABD3-18711A5D0447} = {906E3763-C399-4AD0-8A36-E99EDAAE6308}
+		{8414E9D2-DD35-4F75-9D66-1D510613B64D} = {B059304A-3F78-4B36-AC4E-43D251DCF9C1}
 	EndGlobalSection
 EndGlobal
