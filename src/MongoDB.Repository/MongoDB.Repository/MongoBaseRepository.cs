@@ -378,6 +378,50 @@ namespace MongoDB.Repository
             return fluent;
         }
 
+        /// <summary>
+        /// Renders the filter to a MongoDB.Bson.BsonDocument.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public BsonDocument Render(FilterDefinition<TEntity> filter)
+        {
+            var collection = GetCollection();
+            return filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry);
+        }
+
+        /// <summary>
+        /// Renders the sort to a MongoDB.Bson.BsonDocument.
+        /// </summary>
+        /// <param name="sort"></param>
+        /// <returns></returns>
+        public BsonDocument Render(SortDefinition<TEntity> sort)
+        {
+            var collection = GetCollection();
+            return sort.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry);
+        }
+
+        /// <summary>
+        /// Renders the update to a MongoDB.Bson.BsonDocument.
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        public BsonDocument Render(UpdateDefinition<TEntity> update)
+        {
+            var collection = GetCollection();
+            return update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry);
+        }
+
+        /// <summary>
+        /// Renders the projection to a MongoDB.Bson.BsonDocument.
+        /// </summary>
+        /// <param name="projection"></param>
+        /// <returns></returns>
+        public BsonDocument Render(ProjectionDefinition<TEntity> projection)
+        {
+            var collection = GetCollection();
+            return projection.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry);
+        }
+        
         ///// <summary>
         ///// 
         ///// </summary>

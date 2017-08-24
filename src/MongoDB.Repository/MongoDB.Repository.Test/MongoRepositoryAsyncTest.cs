@@ -51,11 +51,13 @@ namespace MongoDB.Repository.Test
         {
             UserRepAsync userRep = new UserRepAsync();
 
+            var r = new Random();
             List<User> userList = new List<User>();
             for (var i = 0; i < 5; i++)
             {
                 User user = new User();
-                user.Name = new Random(1).ToString();
+                user.Age = i;
+                user.Name = r.Next().ToString();
                 userList.Add(user);
             }
 
@@ -134,6 +136,7 @@ namespace MongoDB.Repository.Test
             UserRepAsync userRep = new UserRepAsync();
 
             var update = UserRepAsync.Update.Set(nameof(User.CreateTime), DateTime.Now);
+            System.Diagnostics.Trace.WriteLine("update:" + userRep.Render(update));
 
             await userRep.UpdateManyAsync(x => x.Name == "cc", update, true);
         }
@@ -143,6 +146,8 @@ namespace MongoDB.Repository.Test
         {
             UserRepAsync userRep = new UserRepAsync();
             User user = null;
+            ProjectionDefinition<User, User> projection;
+            FilterDefinition<User> filter;
 
             user = await userRep.GetAsync(1);
             Assert.AreEqual(user.ID, 1);
@@ -159,13 +164,18 @@ namespace MongoDB.Repository.Test
             Assert.AreNotEqual(user, null);
             Builders<User>.Filter.Eq("Name", "aa");
 
-            var filter = UserRepAsync.Filter.Eq(x => x.Name, "aa") & UserRepAsync.Filter.Eq(x => x.ID, 123);
+            filter = UserRepAsync.Filter.Eq(x => x.Name, "aa") & UserRepAsync.Filter.Eq(x => x.ID, 123);
+            System.Diagnostics.Trace.WriteLine("filter:" + userRep.Render(filter));
+
             UserRepAsync.Sort.Descending("_id");
 
             user = await userRep.GetAsync(Builders<User>.Filter.Eq("Name", "aa"), null, Builders<User>.Sort.Descending("_id"));
             Assert.AreNotEqual(user, null);
 
-            user = await userRep.GetAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
+            filter = Builders<User>.Filter.Eq("Name", "aa");
+            projection = Builders<User>.Projection.Include(x => x.Name);
+            user = await userRep.GetAsync(filter: filter, projection: projection);
+
             Assert.AreNotEqual(user, null);
 
         }
@@ -176,8 +186,8 @@ namespace MongoDB.Repository.Test
             UserRepAsync userRep = new UserRepAsync();
 
             User user = null;
-            user = await userRep.GetAsync(filterExp: x => x.Name == "aa", sortExp: x => x.ID, sortType: SortType.Descending, hint: "Name_1");
-            Assert.AreEqual(user.Name, "aa");
+            //user = await userRep.GetAsync(filterExp: x => x.Name == "aa", sortExp: x => x.ID, sortType: SortType.Descending, hint: "Name_1");
+            //Assert.AreEqual(user.Name, "aa");
 
             user = await userRep.GetAsync(filterExp: x => x.Name == "aa", sortExp: x => x.ID, sortType: SortType.Descending);
             Assert.AreEqual(user.Name, "aa");

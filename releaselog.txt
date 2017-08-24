@@ -1,12 +1,16 @@
+ï»¿2.2.13
+Repositoryæ·»åŠ Renderæ–¹æ³•
+
+
 2.2.12
-RepositoryÌí¼ÓcollectionName¿ÉÑ¡²ÎÊı
+Repositoryæ·»åŠ collectionNameå¯é€‰å‚æ•°
 
 2.2.11
-ĞŞÕıAggregateAsync¡¢AggregateÖĞs£¬ÔÚgroup¼ÆËãÖ®ºóÔÙkipºÍlimit
+ä¿®æ­£AggregateAsyncã€Aggregateä¸­sï¼Œåœ¨groupè®¡ç®—ä¹‹åå†kipå’Œlimit
 2.2.10
-ĞŞÕıAggregateAsync¡¢AggregateÖĞskipºÍlimitµÄbug
+ä¿®æ­£AggregateAsyncã€Aggregateä¸­skipå’Œlimitçš„bug
 
 2.2.9
-Ìí¼ÓAggregate ¹¦ÄÜ·½·¨
-Ìí¼ÓExists¡¢Count¡¢Distinct ¹¦ÄÜ·½·¨	
-ÖØÏÖÕûÀíÁËÒì²½Ğ´·¨£¬²¢ÓÅ»¯²¿·Ö½Ó¿ÚĞÔÄÜ
+æ·»åŠ Aggregate åŠŸèƒ½æ–¹æ³•
+æ·»åŠ Existsã€Countã€Distinct åŠŸèƒ½æ–¹æ³•	
+é‡ç°æ•´ç†äº†å¼‚æ­¥å†™æ³•ï¼Œå¹¶ä¼˜åŒ–éƒ¨åˆ†æ¥å£æ€§èƒ½
