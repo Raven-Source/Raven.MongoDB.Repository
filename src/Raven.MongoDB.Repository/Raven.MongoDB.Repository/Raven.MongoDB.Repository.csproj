@@ -5,15 +5,36 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net46;netstandard1.5</TargetFrameworks>
+    <TargetFrameworks>net45;net46;net47;netstandard2.0</TargetFrameworks>
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>
     <StartupObject />
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <Version>3.0.0</Version>
+    <Authors>Yi.Liang</Authors>
+    <Company>indifer@126.com</Company>
+    <Product>Raven.MongoDB.Repository</Product>
+    <Description>Raven.MongoDB.Repository</Description>
+    <PackageIconUrl>http://res-1251080116.costj.myqcloud.com/raven4.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Indifer/Raven.MongoDB.Repository</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+    <DocumentationFile>bin\Debug\net45\Raven.MongoDB.Repository.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
+    <DocumentationFile>bin\Debug\net46\Raven.MongoDB.Repository.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net47|AnyCPU'">
+    <DocumentationFile>bin\Debug\net47\Raven.MongoDB.Repository.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Raven.MongoDB.Repository.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="mongocsharpdriver" Version="2.4.3" />
-    <PackageReference Include="Raven.Data.Entity" Version="1.0.3" />
+    <PackageReference Include="mongocsharpdriver" Version="2.4.4" />
+    <PackageReference Include="Raven.Data.Entity" Version="2.0.0" />
   </ItemGroup>
 
 </Project>

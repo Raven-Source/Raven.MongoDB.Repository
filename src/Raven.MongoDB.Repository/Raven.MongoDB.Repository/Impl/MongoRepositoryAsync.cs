@@ -121,20 +121,17 @@ namespace Raven.MongoDB.Repository
         /// <param name="updateEntity"></param>
         /// <param name="isUpsert"></param>
         /// <returns></returns>
-        public async Task<UpdateDefinition<TEntity>> CreateUpdateDefinitionAsync(TEntity updateEntity, bool isUpsert = false)
+        protected async Task<UpdateDefinition<TEntity>> CreateUpdateDefinitionAsync(TEntity updateEntity, bool isUpsert = false)
         {
             long id = 0;
             BsonDocument bsDoc = updateEntity.ToBsonDocument();
-            bsDoc.Remove(Util.PrimaryKeyName);
+            bsDoc.Remove(Util.PRIMARY_KEY_NAME);
 
-            if (isUpsert && updateEntity is IAutoIncr)
-            {
-                id = await CreateIncIDAsync();
-            }
             UpdateDefinition<TEntity> update = new UpdateDocument("$set", bsDoc);// string.Concat("{$set:", bsDoc.ToJson(), "}");
             if (isUpsert && updateEntity is IAutoIncr)
             {
-                update = update.SetOnInsert(Util.PrimaryKeyName, id);
+                id = await CreateIncIDAsync();
+                update = update.SetOnInsert(Util.PRIMARY_KEY_NAME, id);
             }
 
             return update;
@@ -228,14 +225,14 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         /// <param name="filterExp">查询表达式</param>
         /// <param name="update">更新内容</param>
-        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
         /// <param name="writeConcern">访问设置</param>
-        public Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
+        public Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update
+            //, bool isUpsert = false
             , WriteConcern writeConcern = null)
         {
-            UpdateOptions option = new UpdateOptions();
-            option.IsUpsert = isUpsert;
-            return base.GetCollection(writeConcern).UpdateManyAsync(filterExp, update, option);
+            //UpdateOptions option = new UpdateOptions();
+            //option.IsUpsert = isUpsert;
+            return base.GetCollection(writeConcern).UpdateManyAsync(filterExp, update);
         }
 
         /// <summary>
@@ -243,16 +240,16 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         /// <param name="filterExp">查询表达式</param>
         /// <param name="updateExp">更新内容表达式</param>
-        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
         /// <param name="writeConcern">访问设置</param>
-        public Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
+        public Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp
+            //  , bool isUpsert = false
             , WriteConcern writeConcern = null)
         {
             var update = updateExp(Update);
 
-            UpdateOptions option = new UpdateOptions();
-            option.IsUpsert = isUpsert;
-            return base.GetCollection(writeConcern).UpdateManyAsync(filterExp, update, option);
+            //UpdateOptions option = new UpdateOptions();
+            //option.IsUpsert = isUpsert;
+            return base.GetCollection(writeConcern).UpdateManyAsync(filterExp, update);
         }
 
         /// <summary>
@@ -260,14 +257,14 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         /// <param name="filter">查询条件</param>
         /// <param name="update">更新内容</param>
-        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
         /// <param name="writeConcern">访问设置</param>
-        public Task<UpdateResult> UpdateManyAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
+        public Task<UpdateResult> UpdateManyAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update
+            //, bool isUpsert = false   ///  <param name="isUpsert">如果文档不存在，是否插入数据</param>            
             , WriteConcern writeConcern = null)
         {
-            UpdateOptions option = new UpdateOptions();
-            option.IsUpsert = isUpsert;
-            return base.GetCollection(writeConcern).UpdateManyAsync(filter, update, option);
+            //UpdateOptions option = new UpdateOptions();
+            //option.IsUpsert = isUpsert;
+            return base.GetCollection(writeConcern).UpdateManyAsync(filter, update);
         }
 
         /// <summary>

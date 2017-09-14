@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using MongoDB.Driver;
+using System.Linq;
 
 namespace Raven.MongoDB.Repository.Test
 {
@@ -37,7 +38,7 @@ namespace Raven.MongoDB.Repository.Test
             for (var i = 0; i < 5; i++)
             {
                 User user = new User();
-                user.Name = new Random(1).ToString();
+                user.Name = new Random().Next().ToString();
                 userList.Add(user);
             }
 
@@ -61,7 +62,7 @@ namespace Raven.MongoDB.Repository.Test
             var update = UserRepAsync.Update.Set(nameof(User.Name), "xyz");
             update = update.SetOnInsert(x => x.ID, id).SetOnInsert(x => x.CreateTime, DateTime.Now);
             await userRep.UpdateOneAsync(x => x.Name == "abc", update, true);
-            
+
             var res = await userRep.UpdateOneAsync(x => x.Name == "xyz", update, true, WriteConcern.Acknowledged);
             Assert.AreEqual(res.IsAcknowledged, true);
         }
@@ -71,12 +72,12 @@ namespace Raven.MongoDB.Repository.Test
         {
             User user = new User();
             UserRepAsync userRep = new UserRepAsync();
-
+            //user = await userRep.GetAsync(x => x.Name == "xx");
             user.Age += 1;
             user.CreateTime = DateTime.Now;
-            user.Name = "zzz";
+            user.Name = "axxxx";
 
-            await userRep.UpdateOneAsync(x => x.Name == "xx", user, true);
+            await userRep.UpdateOneAsync(x => x.Name == "axxxx", user, true);
 
             //user = await userRep.Get(14);
             //user.Age += 1;
@@ -107,16 +108,20 @@ namespace Raven.MongoDB.Repository.Test
 
             var update = UserRepAsync.Update.Set(nameof(User.CreateTime), DateTime.Now);
 
-            await userRep.UpdateManyAsync(x => x.Name == "cc", update, true);
+            await userRep.UpdateManyAsync(x => x.Name == "cc", update);
         }
 
         [TestMethod]
         public async Task Get()
         {
             UserRepAsync userRep = new UserRepAsync();
-            User user = null;
-            user = await userRep.GetAsync(1);
-            Assert.AreEqual(user.ID, 1);
+            List<User> list = await userRep.GetListAsync(limit: 1);
+
+            User user = list.First();
+            long id = user.ID;
+
+            user = await userRep.GetAsync(user.ID);
+            Assert.AreEqual(user.ID, id);
 
             user = await userRep.GetAsync(x => x.Name == "aa");
             Assert.AreNotEqual(user, null);
@@ -129,13 +134,13 @@ namespace Raven.MongoDB.Repository.Test
             user = await userRep.GetAsync(x => x.Name == "aa" && x.CreateTime > DateTime.Parse("2015/10/20"));
             Assert.AreNotEqual(user, null);
             Builders<User>.Filter.Eq("Name", "aa");
-            
+
             var filter = UserRepAsync.Filter.Eq(x => x.Name, "aa") & UserRepAsync.Filter.Eq(x => x.ID, 123);
             UserRepAsync.Sort.Descending("_id");
 
             user = await userRep.GetAsync(Builders<User>.Filter.Eq("Name", "aa"), null, Builders<User>.Sort.Descending("_id"));
             Assert.AreNotEqual(user, null);
-            
+
             user = await userRep.GetAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));
             Assert.AreNotEqual(user, null);
 
@@ -151,7 +156,7 @@ namespace Raven.MongoDB.Repository.Test
 
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa");
             userList = await userRep.GetListAsync(x => x.ID > 3 && x.Name == "aa", null, s => s.ID, SortType.Ascending);
-            
+
             userList = await userRep.GetListAsync(filterExp: x => x.Name == "aa", includeFieldExp: x => new { x.CreateTime });
             userList = await userRep.GetListAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), sort: Builders<User>.Sort.Descending("_id"));
             userList = await userRep.GetListAsync(filter: Builders<User>.Filter.Eq("Name", "aa"), projection: Builders<User>.Projection.Include(x => x.Name));

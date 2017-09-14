@@ -7,20 +7,20 @@ namespace Raven.MongoDB.Repository
 #endif
 {
     /// <summary>
-    /// MongoSessionAsync
+    /// MongoSession
     /// </summary>
     public class MongoSession
     {
-        #region 私有方法
-
         /// <summary>
         /// MongoDB WriteConcern
         /// </summary>
         private WriteConcern _writeConcern;
+
         /// <summary>
         /// MongoClient
         /// </summary>
         private MongoClient _mongoClient;
+
         /// <summary>
         /// MongoDatabase
         /// </summary>
@@ -35,14 +35,38 @@ namespace Raven.MongoDB.Repository
         /// <param name="isSlaveOK"></param>
         /// <param name="readPreference"></param>
         public MongoSession(string connString, string dbName, WriteConcern writeConcern = null, bool isSlaveOK = false, ReadPreference readPreference = null)
+            : this(new MongoClient(connString), dbName, writeConcern, isSlaveOK, readPreference)
+        { }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="mongoClientSettings">The settings for a MongoDB client</param>
+        /// <param name="dbName">数据库名称</param>
+        /// <param name="writeConcern">WriteConcern选项</param>
+        /// <param name="isSlaveOK"></param>
+        /// <param name="readPreference"></param>
+        public MongoSession(MongoClientSettings mongoClientSettings, string dbName, WriteConcern writeConcern = null, bool isSlaveOK = false, ReadPreference readPreference = null)
+            : this(new MongoClient(mongoClientSettings), dbName, writeConcern, isSlaveOK, readPreference)
+        { }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="mongoClient">MongoClient</param>
+        /// <param name="dbName">数据库名称</param>
+        /// <param name="writeConcern">WriteConcern选项</param>
+        /// <param name="isSlaveOK"></param>
+        /// <param name="readPreference"></param>
+        public MongoSession(MongoClient mongoClient, string dbName, WriteConcern writeConcern = null, bool isSlaveOK = false, ReadPreference readPreference = null)
         {
             this._writeConcern = writeConcern ?? WriteConcern.Unacknowledged;
 
             var databaseSettings = new MongoDatabaseSettings();
             databaseSettings.WriteConcern = this._writeConcern;
             databaseSettings.ReadPreference = readPreference ?? ReadPreference.SecondaryPreferred;
-            
-            _mongoClient = new MongoClient(connString);
+
+            _mongoClient = mongoClient;
             //if (_mongoClient.Settings.SocketTimeout == TimeSpan.Zero)
             //{
             //    _mongoClient.Settings.SocketTimeout = TimeSpan.FromSeconds(10);
@@ -55,8 +79,7 @@ namespace Raven.MongoDB.Repository
 
             Database = _mongoClient.GetDatabase(dbName, databaseSettings);
         }
-
-        #endregion
+        
 
     }
 }

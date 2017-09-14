@@ -119,6 +119,22 @@ namespace Raven.MongoDB.Repository
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="mongoClientSettings">The settings for a MongoDB client.</param>
+        /// <param name="dbName">数据库名称</param>
+        /// <param name="collectionName">集合名称</param>
+        /// <param name="writeConcern"></param>
+        /// <param name="readPreference"></param>
+        /// <param name="sequence">Mongo自增长ID数据序列对象</param>
+        public MongoBaseRepository(MongoClientSettings mongoClientSettings, string dbName, string collectionName = null, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
+        {
+            this._sequence = sequence ?? new MongoSequence();
+            this._mongoSession = new MongoSession(mongoClientSettings, dbName, writeConcern: writeConcern, readPreference: readPreference);
+            this.CollectionName = collectionName ?? typeof(TEntity).Name;
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         /// <param name="options"></param>
         public MongoBaseRepository(MongoRepositoryOptions options)
         {
@@ -379,6 +395,50 @@ namespace Raven.MongoDB.Repository
             }
 
             return fluent;
+        }
+
+        /// <summary>
+        /// Renders the filter to a MongoDB.Bson.BsonDocument.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public BsonDocument Render(FilterDefinition<TEntity> filter)
+        {
+            var collection = GetCollection();
+            return filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry);
+        }
+
+        /// <summary>
+        /// Renders the sort to a MongoDB.Bson.BsonDocument.
+        /// </summary>
+        /// <param name="sort"></param>
+        /// <returns></returns>
+        public BsonDocument Render(SortDefinition<TEntity> sort)
+        {
+            var collection = GetCollection();
+            return sort.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry);
+        }
+
+        /// <summary>
+        /// Renders the update to a MongoDB.Bson.BsonDocument.
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        public BsonDocument Render(UpdateDefinition<TEntity> update)
+        {
+            var collection = GetCollection();
+            return update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry);
+        }
+
+        /// <summary>
+        /// Renders the projection to a MongoDB.Bson.BsonDocument.
+        /// </summary>
+        /// <param name="projection"></param>
+        /// <returns></returns>
+        public BsonDocument Render(ProjectionDefinition<TEntity> projection)
+        {
+            var collection = GetCollection();
+            return projection.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry);
         }
 
         ///// <summary>

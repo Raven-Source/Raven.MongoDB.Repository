@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Raven.Data.Entity</name>
+    </assembly>
+    <members>
+        <member name="T:Raven.Data.Entity.IAutoIncr">
+            <summary>
+            自增Entity
+            </summary>
+        </member>
+        <member name="T:Raven.Data.Entity.IAutoIncr`1">
+            <summary>
+            自增Entity
+            </summary>
+        </member>
+        <member name="T:Raven.Data.Entity.IEntity`1">
+            <summary>
+            Entity
+            </summary>
+            <typeparam name="TKey"></typeparam>
+        </member>
+        <member name="P:Raven.Data.Entity.IEntity`1.ID">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="T:Raven.Data.Entity.IVirtualDelete">
+            <summary>
+            虚拟删除约束接口
+            </summary>
+        </member>
+        <member name="P:Raven.Data.Entity.IVirtualDelete.IsDel">
+            <summary>
+            是否虚拟删除
+            </summary>
+        </member>
+    </members>
+</doc>

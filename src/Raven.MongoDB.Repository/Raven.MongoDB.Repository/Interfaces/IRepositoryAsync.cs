@@ -34,15 +34,7 @@ namespace Raven.MongoDB.Repository
         /// <returns></returns>
         Task InsertBatchAsync(IEnumerable<TEntity> entitys
             , WriteConcern writeConcern = null);
-
-        /// <summary>
-        /// 根据实体创建UpdateDefinition
-        /// </summary>
-        /// <param name="updateEntity"></param>
-        /// <param name="isUpsert"></param>
-        /// <returns></returns>
-        Task<UpdateDefinition<TEntity>> CreateUpdateDefinitionAsync(TEntity updateEntity, bool isUpsert = false);
-
+        
         /// <summary>
         /// 修改单条数据
         /// 如果isUpsert 为 true ，且updateEntity继承IAutoIncr，则ID内部会自增
@@ -100,9 +92,9 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         /// <param name="filterExp">查询表达式</param>
         /// <param name="update">更新内容</param>
-        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
         /// <param name="writeConcern">访问设置</param>
-        Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update, bool isUpsert = false
+        Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, UpdateDefinition<TEntity> update
+            //, bool isUpsert = false
             , WriteConcern writeConcern = null);
 
         /// <summary>
@@ -110,9 +102,9 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         /// <param name="filter">查询条件</param>
         /// <param name="update">更新内容</param>
-        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
         /// <param name="writeConcern">访问设置</param>
-        Task<UpdateResult> UpdateManyAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, bool isUpsert = false
+        Task<UpdateResult> UpdateManyAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update
+            //, bool isUpsert = false
             , WriteConcern writeConcern = null);
 
         /// <summary>
@@ -120,9 +112,9 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         /// <param name="filterExp">查询表达式</param>
         /// <param name="updateExp">更新内容表达式</param>
-        /// <param name="isUpsert">如果文档不存在，是否插入数据</param>
         /// <param name="writeConcern">访问设置</param>
-        Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp, bool isUpsert = false
+        Task<UpdateResult> UpdateManyAsync(Expression<Func<TEntity, bool>> filterExp, Func<UpdateDefinitionBuilder<TEntity>, UpdateDefinition<TEntity>> updateExp
+            //, bool isUpsert = false
             , WriteConcern writeConcern = null);
 
         /// <summary>

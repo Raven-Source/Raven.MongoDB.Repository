@@ -17,10 +17,13 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         static RepositoryContainer()
         {
-            Repositorys = new ConcurrentDictionary<string, Lazy<object>>();
+            Instances = new ConcurrentDictionary<string, Lazy<object>>();
         }
 
-        public static ConcurrentDictionary<string, Lazy<object>> Repositorys { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public static ConcurrentDictionary<string, Lazy<object>> Instances { get; private set; }
 
         /// <summary>
         /// 
@@ -33,7 +36,7 @@ namespace Raven.MongoDB.Repository
             var t = typeof(T);
             var lazy = new Lazy<object>(() => service);
 
-            Repositorys.AddOrUpdate(GetKey(t), lazy, (x, y) => lazy);
+            Instances.AddOrUpdate(GetKey(t), lazy, (x, y) => lazy);
         }
 
         /// <summary>
@@ -41,12 +44,12 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         /// <typeparam name="T"></typeparam>
         public static void Register<T>()
-            where T : IMongoBaseRepository, new()
+            where T : IMongoBaseRepository, new() 
         {
             var t = typeof(T);
             var lazy = new Lazy<object>(() => new T());
 
-            Repositorys.AddOrUpdate(GetKey(t), lazy, (x, y) => lazy);
+            Instances.AddOrUpdate(GetKey(t), lazy, (x, y) => lazy);
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace Raven.MongoDB.Repository
             var t = typeof(T);
             var lazy = new Lazy<object>(function);
 
-            Repositorys.AddOrUpdate(GetKey(t), lazy, (x, y) => lazy);
+            Instances.AddOrUpdate(GetKey(t), lazy, (x, y) => lazy);
         }
 
         /// <summary>
@@ -73,9 +76,8 @@ namespace Raven.MongoDB.Repository
         {
             var t = typeof(T);
             var k = GetKey(t);
-
-            Lazy<object> repository;
-            if (Repositorys.TryGetValue(k, out repository))
+            
+            if (Instances.TryGetValue(k, out Lazy<object> repository))
             {
                 return (T)repository.Value;
             }

@@ -5,7 +5,7 @@ namespace Raven.MongoDB.Repository
 #endif
 {
     /// <summary>
-    /// Sequence
+    /// MongoSequence
     /// </summary>
     public class MongoSequence
     {
@@ -13,10 +13,12 @@ namespace Raven.MongoDB.Repository
         /// 存储数据的序列
         /// </summary>
         public string SequenceName { get; set; }
+
         /// <summary>
         /// 对应的Collection名称,默认为_id
         /// </summary>
         public string CollectionName { get; set; }
+
         /// <summary>
         /// 对应Collection的自增长ID
         /// </summary>
@@ -40,8 +42,8 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         public MongoSequence()
         {
-            SequenceName = "_Sequence";
             CollectionName = "_id";
+            SequenceName = "_Sequence";
             IncrementID = "IncID";
         }
     }

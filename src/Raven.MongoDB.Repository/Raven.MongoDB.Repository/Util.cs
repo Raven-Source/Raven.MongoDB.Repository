@@ -4,8 +4,14 @@ namespace MongoDB.Repository
 namespace Raven.MongoDB.Repository
 #endif
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal static class Util
     {
-        public const string PrimaryKeyName = "_id";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string PRIMARY_KEY_NAME = "_id";
     }
 }
