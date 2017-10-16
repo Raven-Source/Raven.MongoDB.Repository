@@ -17,6 +17,21 @@ namespace Raven.MongoDB.Repository
         private WriteConcern _writeConcern;
 
         /// <summary>
+        /// 
+        /// </summary>
+        public WriteConcern WriteConcern { get { return _writeConcern; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private ReadPreference _readPreference;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ReadPreference ReadPreference { get { return _readPreference; } }
+
+        /// <summary>
         /// MongoClient
         /// </summary>
         private MongoClient _mongoClient;
@@ -61,10 +76,11 @@ namespace Raven.MongoDB.Repository
         public MongoSession(MongoClient mongoClient, string dbName, WriteConcern writeConcern = null, bool isSlaveOK = false, ReadPreference readPreference = null)
         {
             this._writeConcern = writeConcern ?? WriteConcern.Unacknowledged;
+            this._readPreference = readPreference ?? ReadPreference.SecondaryPreferred;
 
             var databaseSettings = new MongoDatabaseSettings();
             databaseSettings.WriteConcern = this._writeConcern;
-            databaseSettings.ReadPreference = readPreference ?? ReadPreference.SecondaryPreferred;
+            databaseSettings.ReadPreference = this._readPreference;
 
             _mongoClient = mongoClient;
             //if (_mongoClient.Settings.SocketTimeout == TimeSpan.Zero)
@@ -79,7 +95,7 @@ namespace Raven.MongoDB.Repository
 
             Database = _mongoClient.GetDatabase(dbName, databaseSettings);
         }
-        
+
 
     }
 }
