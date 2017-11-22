@@ -115,7 +115,7 @@ namespace Raven.MongoDB.Repository
             this._mongoSession = new MongoSession(connString, dbName, writeConcern: writeConcern, readPreference: readPreference);
             this.CollectionName = collectionName ?? typeof(TEntity).Name;
         }
-
+        
         /// <summary>
         /// 构造函数
         /// </summary>

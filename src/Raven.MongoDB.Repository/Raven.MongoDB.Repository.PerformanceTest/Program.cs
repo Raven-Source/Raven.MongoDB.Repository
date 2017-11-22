@@ -25,6 +25,7 @@ namespace Raven.MongoDB.Repository.PerformanceTest
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            Console.ReadLine();
             int speed = 1000;
             //GetAsync().Wait();
 
@@ -51,6 +52,8 @@ namespace Raven.MongoDB.Repository.PerformanceTest
             Task.WaitAll(tasks);
             sw.Stop();
             Console.WriteLine("for:Get:" + sw.ElapsedMilliseconds);
+
+            
 
             //sw.Restart();
             //for (var i = 0; i < speed; i++)
@@ -84,7 +87,7 @@ namespace Raven.MongoDB.Repository.PerformanceTest
             Console.ReadLine();
         }
 
-
+        
         public static Task InsertAsync()
         {
             var user = new User();
