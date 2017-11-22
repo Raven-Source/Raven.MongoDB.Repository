@@ -18,7 +18,7 @@ namespace Raven.MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public abstract class MongoBaseRepository<TEntity, TKey>
+    public abstract class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity>
         where TEntity : class, IEntity<TKey>, new()
     {
         #region 字段属性
@@ -115,7 +115,7 @@ namespace Raven.MongoDB.Repository
             this._mongoSession = new MongoSession(connString, dbName, writeConcern: writeConcern, readPreference: readPreference);
             this.CollectionName = collectionName ?? typeof(TEntity).Name;
         }
-        
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -183,7 +183,7 @@ namespace Raven.MongoDB.Repository
             }
             return Database.GetCollection<TEntity>(CollectionName, settings);
         }
-        
+
         /// <summary>
         /// 获取字段
         /// </summary>
@@ -209,7 +209,7 @@ namespace Raven.MongoDB.Repository
             }
             return null;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>

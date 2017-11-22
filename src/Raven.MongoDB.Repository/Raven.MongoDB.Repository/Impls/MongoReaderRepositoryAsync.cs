@@ -20,7 +20,7 @@ namespace Raven.MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class MongoReaderRepositoryAsync<TEntity, TKey> : MongoBaseRepository<TEntity, TKey>, IReaderRepositoryAsync<TEntity, TKey>
+    public class MongoReaderRepositoryAsync<TEntity, TKey> : MongoBaseRepository<TEntity, TKey>, IMongoReaderRepositoryAsync<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
         /// <summary>

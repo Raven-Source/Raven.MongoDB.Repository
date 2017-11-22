@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 #if MongoDB_Repository
 namespace MongoDB.Repository
@@ -17,20 +16,20 @@ namespace Raven.MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public interface IReaderRepositoryAsync<TEntity, TKey>
+    public interface IMongoReaderRepository<TEntity, TKey> : IMongoBaseRepository<TEntity>
     {
         /// <summary>
         /// 创建自增长ID
         /// <remarks>默认自增ID存放 [Sequence] 集合</remarks>
         /// </summary>
         /// <returns></returns>
-        Task<long> CreateIncIDAsync(long inc = 1, int iteration = 0);
+        long CreateIncID(long inc = 1, int iteration = 0);
 
         /// <summary>
         /// 创建自增ID
         /// </summary>
         /// <param name="entity"></param>
-        Task CreateIncIDAsync(TEntity entity);
+        void CreateIncID(TEntity entity);
 
         /// <summary>
         /// 根据id获取实体
@@ -42,7 +41,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        Task<TEntity> GetAsync(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
+        TEntity Get(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
             , ReadPreference readPreference = null);
 
@@ -56,7 +55,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> includeFieldExp = null
+        TEntity Get(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
             , ReadPreference readPreference = null);
 
@@ -69,10 +68,10 @@ namespace Raven.MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        Task<TEntity> GetAsync(FilterDefinition<TEntity> filter
-             , ProjectionDefinition<TEntity, TEntity> projection = null
-             , SortDefinition<TEntity> sort = null, BsonValue hint = null
-             , ReadPreference readPreference = null);
+        TEntity Get(FilterDefinition<TEntity> filter
+            , ProjectionDefinition<TEntity, TEntity> projection = null
+            , SortDefinition<TEntity> sort = null, BsonValue hint = null
+            , ReadPreference readPreference = null);
 
         /// <summary>
         /// 根据条件获取获取列表
@@ -86,7 +85,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filterExp = null
+        List<TEntity> GetList(Expression<Func<TEntity, bool>> filterExp = null
             , Expression<Func<TEntity, object>> includeFieldExp = null
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0, BsonValue hint = null
@@ -103,12 +102,11 @@ namespace Raven.MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        Task<List<TEntity>> GetListAsync(FilterDefinition<TEntity> filter
+        List<TEntity> GetList(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TEntity> projection = null
             , SortDefinition<TEntity> sort = null
             , int limit = 0, int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null);
-
 
         /// <summary>
         /// Distinct
@@ -118,7 +116,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="filterExp"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        Task<List<TField>> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, Expression<Func<TEntity, bool>> filterExp
+        List<TField> Distinct<TField>(Expression<Func<TEntity, TField>> fieldExp, Expression<Func<TEntity, bool>> filterExp
             , ReadPreference readPreference = null);
 
         /// <summary>
@@ -129,7 +127,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="filter"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        Task<List<TField>> DistinctAsync<TField>(Expression<Func<TEntity, TField>> fieldExp, FilterDefinition<TEntity> filter
+        List<TField> Distinct<TField>(Expression<Func<TEntity, TField>> fieldExp, FilterDefinition<TEntity> filter
             , ReadPreference readPreference = null);
 
         /// <summary>
@@ -140,8 +138,9 @@ namespace Raven.MongoDB.Repository
         /// <param name="filter"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        Task<List<TField>> DistinctAsync<TField>(FieldDefinition<TEntity, TField> field, FilterDefinition<TEntity> filter
+        List<TField> Distinct<TField>(FieldDefinition<TEntity, TField> field, FilterDefinition<TEntity> filter
             , ReadPreference readPreference = null);
+
         /// <summary>
         /// 数量
         /// </summary>
@@ -151,7 +150,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        Task<long> CountAsync(FilterDefinition<TEntity> filter
+        long Count(FilterDefinition<TEntity> filter
             , int limit = 0, int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null);
 
@@ -164,29 +163,29 @@ namespace Raven.MongoDB.Repository
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        Task<long> CountAsync(Expression<Func<TEntity, bool>> filterExp
-             , int limit = 0, int skip = 0, BsonValue hint = null
-             , ReadPreference readPreference = null);
+        long Count(Expression<Func<TEntity, bool>> filterExp
+            , int limit = 0, int skip = 0, BsonValue hint = null
+            , ReadPreference readPreference = null);
 
         /// <summary>
-        /// 数量
+        /// 是否存在
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        Task<bool> ExistsAsync(FilterDefinition<TEntity> filter, BsonValue hint = null
+        bool Exists(FilterDefinition<TEntity> filter, BsonValue hint = null
             , ReadPreference readPreference = null);
 
         /// <summary>
-        /// 数量
+        /// 是否存在
         /// </summary>
         /// <param name="filterExp"></param>
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
-        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp, BsonValue hint = null
-             , ReadPreference readPreference = null);
+        bool Exists(Expression<Func<TEntity, bool>> filterExp, BsonValue hint = null
+            , ReadPreference readPreference = null);
 
         /// <summary>
         /// 
@@ -202,7 +201,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="skip"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        Task<List<TResult>> AggregateAsync<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
+        List<TResult> Aggregate<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
             , Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0
@@ -222,7 +221,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="skip"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        Task<List<TResult>> AggregateAsync<TResult, TID>(FilterDefinition<TEntity> filter
+        List<TResult> Aggregate<TResult, TID>(FilterDefinition<TEntity> filter
             , Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0
@@ -241,7 +240,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="skip"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        Task<List<TResult>> AggregateAsync<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
+        List<TResult> Aggregate<TResult, TID>(Expression<Func<TEntity, bool>> filterExp
             , ProjectionDefinition<TEntity, TResult> group
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0
@@ -260,10 +259,11 @@ namespace Raven.MongoDB.Repository
         /// <param name="skip"></param>
         /// <param name="readPreference"></param>
         /// <returns></returns>
-        Task<List<TResult>> AggregateAsync<TResult, TID>(FilterDefinition<TEntity> filter
+        List<TResult> Aggregate<TResult, TID>(FilterDefinition<TEntity> filter
             , ProjectionDefinition<TEntity, TResult> group
             , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
             , int limit = 0, int skip = 0
             , ReadPreference readPreference = null);
+
     }
 }

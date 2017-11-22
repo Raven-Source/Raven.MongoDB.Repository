@@ -18,9 +18,11 @@ namespace Raven.MongoDB.Repository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class MongoRepository<TEntity, TKey>: MongoReaderRepository<TEntity, TKey>, IRepository<TEntity, TKey>
+    public class MongoRepository<TEntity, TKey>: MongoReaderRepository<TEntity, TKey>, IMongoRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>, new()
     {
+        #region 构造函数
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -43,6 +45,10 @@ namespace Raven.MongoDB.Repository
             : base(options)
         {
         }
+
+        #endregion
+
+        #region Insert
 
         /// <summary>
         /// 添加数据
@@ -85,6 +91,8 @@ namespace Raven.MongoDB.Repository
             //await base.InsertBatchAsync(entitys);
             base.GetCollection(writeConcern).InsertMany(entitys);
         }
+
+        #endregion
 
         ///// <summary>
         ///// 
@@ -440,6 +448,8 @@ namespace Raven.MongoDB.Repository
             return base.GetCollection(writeConcern).FindOneAndReplace(filter, entity, option);
         }
 
+        #region Delete
+
         /// <summary>
         /// 找到并替换
         /// </summary>
@@ -527,6 +537,8 @@ namespace Raven.MongoDB.Repository
         {
             return base.GetCollection(writeConcern).DeleteMany(filterExp);
         }
+
+        #endregion
 
     }
 }
