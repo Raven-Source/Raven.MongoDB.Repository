@@ -155,6 +155,8 @@ namespace Raven.MongoDB.Repository
             return update;
         }
 
+        #region Update
+
         /// <summary>
         /// 修改单条数据
         /// 如果isUpsert 为 true ，且updateEntity继承IAutoIncr，则ID内部会自增
@@ -287,6 +289,10 @@ namespace Raven.MongoDB.Repository
             return base.GetCollection(writeConcern).UpdateMany(filter, update);
         }
 
+        #endregion
+
+        #region FindAndModify
+
         /// <summary>
         /// 找到并更新
         /// </summary>
@@ -398,60 +404,46 @@ namespace Raven.MongoDB.Repository
             return base.GetCollection(writeConcern).FindOneAndUpdate(filter, update, option);
         }
 
-        /// <summary>
-        /// 找到并替换
-        /// </summary>
-        /// <param name="filterExp"></param>
-        /// <param name="entity"></param>
-        /// <param name="isUpsert"></param>
-        /// <param name="sortExp"></param>
-        /// <param name="sortType"></param>
-        /// <param name="writeConcern">访问设置</param>
-        /// <returns></returns>
-        public TEntity FindOneAndReplace(Expression<Func<TEntity, bool>> filterExp, TEntity entity, bool isUpsert = false
-            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , WriteConcern writeConcern = null)
-        {
-            FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
-            option.IsUpsert = isUpsert;
-            option.Sort = base.CreateSortDefinition(sortExp, sortType);
-            option.ReturnDocument = ReturnDocument.After;
+        // /// <summary>
+        // /// 找到并替换
+        // /// </summary>
+        // /// <param name="filterExp"></param>
+        // /// <param name="entity"></param>
+        // /// <param name="sortExp"></param>
+        // /// <param name="sortType"></param>
+        // /// <param name="writeConcern">访问设置</param>
+        // /// <returns></returns>
+        // public TEntity FindOneAndReplace(Expression<Func<TEntity, bool>> filterExp, TEntity entity
+        //     , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+        //     , WriteConcern writeConcern = null)
+        // {
+        //     FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
+        //     option.Sort = base.CreateSortDefinition(sortExp, sortType);
+        //     option.ReturnDocument = ReturnDocument.After;
 
-            if (isUpsert && entity is IAutoIncr)
-            {
-                CreateIncID(entity);
-            }
-            return base.GetCollection(writeConcern).FindOneAndReplace(filterExp, entity, option);
-        }
+        //     return base.GetCollection(writeConcern).FindOneAndReplace(filterExp, entity, option);
+        // }
 
-        /// <summary>
-        /// 找到并替换
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="entity"></param>
-        /// <param name="isUpsert"></param>
-        /// <param name="sort"></param>
-        /// <param name="writeConcern">访问设置</param>
-        /// <returns></returns>
-        public TEntity FindOneAndReplace(FilterDefinition<TEntity> filter, TEntity entity, bool isUpsert = false, SortDefinition<TEntity> sort = null
-            , WriteConcern writeConcern = null)
-        {
-            FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
-            option.IsUpsert = isUpsert;
-            option.Sort = sort;
-            option.ReturnDocument = ReturnDocument.After;
+        // /// <summary>
+        // /// 找到并替换
+        // /// </summary>
+        // /// <param name="filter"></param>
+        // /// <param name="entity"></param>
+        // /// <param name="sort"></param>
+        // /// <param name="writeConcern">访问设置</param>
+        // /// <returns></returns>
+        // public TEntity FindOneAndReplace(FilterDefinition<TEntity> filter, TEntity entity, SortDefinition<TEntity> sort = null
+        //     , WriteConcern writeConcern = null)
+        // {
+        //     FindOneAndReplaceOptions<TEntity> option = new FindOneAndReplaceOptions<TEntity>();
+        //     option.Sort = sort;
+        //     option.ReturnDocument = ReturnDocument.After;
 
-            if (isUpsert && entity is IAutoIncr)
-            {
-                CreateIncID(entity);
-            }
-            return base.GetCollection(writeConcern).FindOneAndReplace(filter, entity, option);
-        }
-
-        #region Delete
+        //     return base.GetCollection(writeConcern).FindOneAndReplace(filter, entity, option);
+        // }
 
         /// <summary>
-        /// 找到并替换
+        /// 找到并删除
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="sort"></param>
@@ -466,7 +458,7 @@ namespace Raven.MongoDB.Repository
         }
 
         /// <summary>
-        /// 找到并替换
+        /// 找到并删除
         /// </summary>
         /// <param name="filterExp"></param>
         /// <param name="sortExp"></param>
@@ -481,6 +473,10 @@ namespace Raven.MongoDB.Repository
             option.Sort = base.CreateSortDefinition(sortExp, sortType);
             return base.GetCollection(writeConcern).FindOneAndDelete(filterExp, option);
         }
+
+        #endregion
+
+        #region Delete
 
         /// <summary>
         /// 删除单条数据

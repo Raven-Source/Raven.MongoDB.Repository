@@ -182,34 +182,32 @@ namespace Raven.MongoDB.Repository
             , SortDefinition<TEntity> sort = null
             , WriteConcern writeConcern = null);
 
-        /// <summary>
-        /// 找到并替换
-        /// </summary>
-        /// <param name="filterExp"></param>
-        /// <param name="entity"></param>
-        /// <param name="isUpsert"></param>
-        /// <param name="sortExp"></param>
-        /// <param name="sortType"></param>
-        /// <param name="writeConcern">访问设置</param>
-        /// <returns></returns>
-        TEntity FindOneAndReplace(Expression<Func<TEntity, bool>> filterExp, TEntity entity, bool isUpsert = false
-            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
-            , WriteConcern writeConcern = null);
+        // /// <summary>
+        // /// 找到并替换
+        // /// </summary>
+        // /// <param name="filterExp"></param>
+        // /// <param name="entity"></param>
+        // /// <param name="sortExp"></param>
+        // /// <param name="sortType"></param>
+        // /// <param name="writeConcern">访问设置</param>
+        // /// <returns></returns>
+        // TEntity FindOneAndReplace(Expression<Func<TEntity, bool>> filterExp, TEntity entity
+        //     , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending
+        //     , WriteConcern writeConcern = null);
+
+        // /// <summary>
+        // /// 找到并替换
+        // /// </summary>
+        // /// <param name="filter"></param>
+        // /// <param name="entity"></param>
+        // /// <param name="sort"></param>
+        // /// <param name="writeConcern">访问设置</param>
+        // /// <returns></returns>
+        // TEntity FindOneAndReplace(FilterDefinition<TEntity> filter, TEntity entity, SortDefinition<TEntity> sort = null
+        //     , WriteConcern writeConcern = null);
 
         /// <summary>
-        /// 找到并替换
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="entity"></param>
-        /// <param name="isUpsert"></param>
-        /// <param name="sort"></param>
-        /// <param name="writeConcern">访问设置</param>
-        /// <returns></returns>
-        TEntity FindOneAndReplace(FilterDefinition<TEntity> filter, TEntity entity, bool isUpsert = false, SortDefinition<TEntity> sort = null
-            , WriteConcern writeConcern = null);
-
-        /// <summary>
-        /// 找到并替换
+        /// 找到并删除
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="sort"></param>
@@ -219,7 +217,7 @@ namespace Raven.MongoDB.Repository
             , WriteConcern writeConcern = null);
 
         /// <summary>
-        /// 找到并替换
+        /// 找到并删除
         /// </summary>
         /// <param name="filterExp"></param>
         /// <param name="sortExp"></param>
