@@ -59,7 +59,7 @@ namespace Raven.MongoDB.Repository
         public void Insert(TEntity entity
             , WriteConcern writeConcern = null)
         {
-            if (entity is IAutoIncr)
+            if (isAutoIncrType)
             {
                 CreateIncID(entity);
             }
@@ -76,7 +76,7 @@ namespace Raven.MongoDB.Repository
             , WriteConcern writeConcern = null)
         {
             //需要自增的实体
-            if (entitys.First() is IAutoIncr)
+            if (isAutoIncrType)
             {
                 int count = entitys.Count();
                 //自增ID值
@@ -93,34 +93,7 @@ namespace Raven.MongoDB.Repository
         }
 
         #endregion
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="entitys"></param>
-        ///// <param name="writeConcern"></param>
-        ///// <returns></returns>
-        //public BulkWriteResult<TEntity> BulkInsert(IEnumerable<InsertOneModel<TEntity>> entitys
-        //    , WriteConcern writeConcern = null)
-        //{
-        //    //var insertEntitys = entitys.Where(x => x.ModelType == WriteModelType.InsertOne);
-        //    //需要自增的实体
-        //    if (entitys.First().Document is IAutoIncr)
-        //    {
-        //        int count = entitys.Count();
-        //        //自增ID值
-        //        long id = CreateIncID(count);
-        //        id = id - count;
-
-        //        foreach (var entity in entitys)
-        //        {
-        //            AssignmentEntityID(entity.Document, ++id);
-        //        }
-        //    }
-
-        //    return base.GetCollection(writeConcern).BulkWrite(entitys);
-        //}
-
+        
         /// <summary>
         /// 根据实体创建UpdateDefinition
         /// </summary>
@@ -134,7 +107,7 @@ namespace Raven.MongoDB.Repository
             bsDoc.Remove(Util.PRIMARY_KEY_NAME);
 
             UpdateDefinition<TEntity> update = new UpdateDocument("$set", bsDoc);// string.Concat("{$set:", bsDoc.ToJson(), "}");
-            //if (isUpsert && updateEntity is IAutoIncr)
+            //if (isUpsert && isAutoIncrType)
             //{
             //    //如果key不为空或0，则检查是否存在
             //    var exists = updateEntity.ID.Equals(default(TKey)) ? false
@@ -146,7 +119,7 @@ namespace Raven.MongoDB.Repository
             //        update = update.SetOnInsert(Util.PRIMARY_KEY_NAME, id);
             //    }
             //}
-            if (isUpsert && updateEntity is IAutoIncr)
+            if (isUpsert && isAutoIncrType)
             {
                 id = CreateIncID();
                 update = update.SetOnInsert(Util.PRIMARY_KEY_NAME, id);

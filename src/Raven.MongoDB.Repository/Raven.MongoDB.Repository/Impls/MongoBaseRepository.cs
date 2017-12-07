@@ -23,6 +23,10 @@ namespace Raven.MongoDB.Repository
     {
         #region 字段属性
 
+        protected Type entityType;
+        protected Type keyType;
+        protected bool isAutoIncrType;
+
         /// <summary>
         /// Mongo自增长ID数据序列
         /// </summary>
@@ -100,6 +104,13 @@ namespace Raven.MongoDB.Repository
 
         #region 构造函数
 
+        private MongoBaseRepository()
+        {
+            entityType = typeof(TEntity);
+            keyType = typeof(TEntity);
+            isAutoIncrType = Util.AUTO_INCR_TYPE.IsAssignableFrom(entityType);
+        }
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -110,10 +121,20 @@ namespace Raven.MongoDB.Repository
         /// <param name="readPreference"></param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
         public MongoBaseRepository(string connString, string dbName, string collectionName = null, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
+            : this()
         {
             this._sequence = sequence ?? new MongoSequence();
             this._mongoSession = new MongoSession(connString, dbName, writeConcern: writeConcern, readPreference: readPreference);
             this.CollectionName = collectionName ?? typeof(TEntity).Name;
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="options"></param>
+        public MongoBaseRepository(MongoRepositoryOptions options)
+            : this(options.ConnString, options.DbName, writeConcern: options.WriteConcern, readPreference: options.ReadPreference)
+        {
         }
 
         /// <summary>
@@ -126,21 +147,11 @@ namespace Raven.MongoDB.Repository
         /// <param name="readPreference"></param>
         /// <param name="sequence">Mongo自增长ID数据序列对象</param>
         public MongoBaseRepository(MongoClientSettings mongoClientSettings, string dbName, string collectionName = null, WriteConcern writeConcern = null, ReadPreference readPreference = null, MongoSequence sequence = null)
+            : this()
         {
             this._sequence = sequence ?? new MongoSequence();
             this._mongoSession = new MongoSession(mongoClientSettings, dbName, writeConcern: writeConcern, readPreference: readPreference);
             this.CollectionName = collectionName ?? typeof(TEntity).Name;
-        }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="options"></param>
-        public MongoBaseRepository(MongoRepositoryOptions options)
-        {
-            this._sequence = options.Sequence ?? new MongoSequence();
-            this._mongoSession = new MongoSession(options.ConnString, options.DbName, writeConcern: options.WriteConcern, readPreference: options.ReadPreference);
-            this.CollectionName = options.CollectionName ?? typeof(TEntity).Name;
         }
 
         #endregion
@@ -360,16 +371,16 @@ namespace Raven.MongoDB.Repository
         /// <param name="id"></param>
         protected void AssignmentEntityID(TEntity entity, long id)
         {
-            IEntity<TKey> tEntity = entity as IEntity<TKey>;
-            if (tEntity.ID is int)
+            //IEntity<TKey> tEntity = entity as IEntity<TKey>;
+            if (keyType.Equals(typeof(int)))
             {
                 (entity as IEntity<int>).ID = (int)id;
             }
-            else if (tEntity.ID is long)
+            else if (keyType.Equals(typeof(long)))
             {
                 (entity as IEntity<long>).ID = (long)id;
             }
-            else if (tEntity.ID is short)
+            else if (keyType.Equals(typeof(short)))
             {
                 (entity as IEntity<short>).ID = (short)id;
             }

@@ -54,7 +54,7 @@ namespace Raven.MongoDB.Repository
         public async Task InsertAsync(TEntity entity
             , WriteConcern writeConcern = null)
         {
-            if (entity is IAutoIncr)
+            if (isAutoIncrType)
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }
@@ -71,7 +71,7 @@ namespace Raven.MongoDB.Repository
             , WriteConcern writeConcern = null)
         {
             //需要自增的实体
-            if (entitys.First() is IAutoIncr)
+            if (isAutoIncrType)
             {
                 int count = entitys.Count();
                 //自增ID值
@@ -87,34 +87,7 @@ namespace Raven.MongoDB.Repository
             //await base.InsertBatchAsync(entitys);
             await base.GetCollection(writeConcern).InsertManyAsync(entitys).ConfigureAwait(false);
         }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="entitys"></param>
-        ///// <param name="writeConcern"></param>
-        ///// <returns></returns>
-        //public async Task<BulkWriteResult<TEntity>> BulkInsertAsync(IEnumerable<InsertOneModel<TEntity>> entitys
-        //    , WriteConcern writeConcern = null)
-        //{
-        //    //var insertEntitys = entitys.Where(x => x.ModelType == WriteModelType.InsertOne);
-        //    //需要自增的实体
-        //    if (entitys.First().Document is IAutoIncr)
-        //    {
-        //        int count = entitys.Count();
-        //        //自增ID值
-        //        long id = await CreateIncIDAsync(count).ConfigureAwait(false);
-        //        id = id - count;
-
-        //        foreach (var entity in entitys)
-        //        {
-        //            AssignmentEntityID(entity.Document, ++id);
-        //        }
-        //    }
-
-        //    return await base.GetCollection(writeConcern).BulkWriteAsync(entitys).ConfigureAwait(false);
-        //}
-
+        
         /// <summary>
         /// 根据实体创建UpdateDefinition
         /// </summary>
@@ -128,7 +101,7 @@ namespace Raven.MongoDB.Repository
             bsDoc.Remove(Util.PRIMARY_KEY_NAME);
 
             UpdateDefinition<TEntity> update = new UpdateDocument("$set", bsDoc);// string.Concat("{$set:", bsDoc.ToJson(), "}");
-            if (isUpsert && updateEntity is IAutoIncr)
+            if (isUpsert && isAutoIncrType)
             {
                 id = await CreateIncIDAsync();
                 update = update.SetOnInsert(Util.PRIMARY_KEY_NAME, id);
@@ -397,7 +370,7 @@ namespace Raven.MongoDB.Repository
             option.Sort = base.CreateSortDefinition(sortExp, sortType);
             option.ReturnDocument = ReturnDocument.After;
 
-            if (isUpsert && entity is IAutoIncr)
+            if (isUpsert && isAutoIncrType)
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }
@@ -421,7 +394,7 @@ namespace Raven.MongoDB.Repository
             option.Sort = sort;
             option.ReturnDocument = ReturnDocument.After;
 
-            if (isUpsert && entity is IAutoIncr)
+            if (isUpsert && isAutoIncrType)
             {
                 await CreateIncIDAsync(entity).ConfigureAwait(false);
             }

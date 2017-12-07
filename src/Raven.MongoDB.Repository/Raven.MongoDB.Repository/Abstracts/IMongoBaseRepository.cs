@@ -6,13 +6,16 @@ namespace MongoDB.Repository
 namespace Raven.MongoDB.Repository
 #endif
 {
-    public interface IMongoBaseRepository<TEntity>
+    public interface IMongoBaseRepository
+    { }
+
+    public interface IMongoBaseRepository<TEntity> : IMongoBaseRepository
     {
         /// <summary>
         /// MongoDatabase
         /// </summary>
         IMongoDatabase Database { get; }
-        
+
         /// <summary>
         /// 根据数据类型得到集合
         /// </summary>
