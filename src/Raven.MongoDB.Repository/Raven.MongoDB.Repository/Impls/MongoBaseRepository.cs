@@ -107,7 +107,7 @@ namespace Raven.MongoDB.Repository
         private MongoBaseRepository()
         {
             entityType = typeof(TEntity);
-            keyType = typeof(TEntity);
+            keyType = typeof(TKey);
             isAutoIncrType = Util.AUTO_INCR_TYPE.IsAssignableFrom(entityType);
         }
 
