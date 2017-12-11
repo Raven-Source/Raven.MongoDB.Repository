@@ -131,18 +131,18 @@ namespace Raven.MongoDB.Repository
                 foreach (var c in classList)
                 {
                     IMongoBaseRepository repos = null;
-                    var instance = Activator.CreateInstance(c, true);
                     try
                     {
                         var method = c.GetMethod(Util.CREATE_INSTANCE_METHOD, bindingFlags);
                         if (method != null)
                         {
-                            repos = (IMongoBaseRepository)method.Invoke(instance, null);
+                            repos = (IMongoBaseRepository)method.Invoke(null, null);
                         }
                     }
                     catch { }
                     if (repos == null)
                     {
+                        var instance = Activator.CreateInstance(c, true);
                         repos = (IMongoBaseRepository)instance;
                     }
                     if (repos == null)
