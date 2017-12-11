@@ -25,6 +25,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Container\RepositoryContainer.cs.bak" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="mongocsharpdriver" Version="2.4.4" />
     <PackageReference Include="Raven.Data.Entity" Version="2.0.0" />
   </ItemGroup>

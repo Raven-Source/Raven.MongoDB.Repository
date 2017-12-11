@@ -67,11 +67,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\User2.cs" />
     <Compile Include="MongoRepositoryAsyncTest.cs" />
     <Compile Include="MongoRepositoryTest.cs" />
+    <Compile Include="RepositoryContainerTest.cs" />
     <Compile Include="Repositorys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="Repositroy\User2Repository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

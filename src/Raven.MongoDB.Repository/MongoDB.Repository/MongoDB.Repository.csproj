@@ -42,6 +42,9 @@
     <Reference Include="MongoDB.Driver.Legacy, Version=2.4.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\mongocsharpdriver.2.4.4\lib\net45\MongoDB.Driver.Legacy.dll</HintPath>
     </Reference>
+    <Reference Include="Raven.Data.Entity, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Raven.Data.Entity.2.0.0\lib\net45\Raven.Data.Entity.dll</HintPath>
+    </Reference>
     <Reference Include="Repository.IEntity, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Repository.IEntity.2.0.0\lib\net40\Repository.IEntity.dll</HintPath>
     </Reference>
@@ -58,38 +61,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Raven.MongoDB.Repository\Abstracts\IMongoBaseRepository.cs">
+      <Link>Interfaces\IMongoBaseRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Abstracts\IMongoReaderRepository.cs">
+      <Link>Interfaces\IMongoReaderRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Abstracts\IMongoReaderRepositoryAsync.cs">
+      <Link>Interfaces\IMongoReaderRepositoryAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Abstracts\IMongoRepository.cs">
+      <Link>Interfaces\IMongoRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Raven.MongoDB.Repository\Abstracts\IMongoRepositoryAsync.cs">
+      <Link>Interfaces\IMongoRepositoryAsync.cs</Link>
+    </Compile>
     <Compile Include="..\Raven.MongoDB.Repository\Container\RepositoryContainer.cs">
       <Link>Container\RepositoryContainer.cs</Link>
     </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoBaseRepository.cs">
+    <Compile Include="..\Raven.MongoDB.Repository\Impls\MongoBaseRepository.cs">
       <Link>Impl\MongoBaseRepository.cs</Link>
     </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoReaderRepository.cs">
+    <Compile Include="..\Raven.MongoDB.Repository\Impls\MongoReaderRepository.cs">
       <Link>Impl\MongoReaderRepository.cs</Link>
     </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoReaderRepositoryAsync.cs">
+    <Compile Include="..\Raven.MongoDB.Repository\Impls\MongoReaderRepositoryAsync.cs">
       <Link>Impl\MongoReaderRepositoryAsync.cs</Link>
     </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoRepository.cs">
+    <Compile Include="..\Raven.MongoDB.Repository\Impls\MongoRepository.cs">
       <Link>Impl\MongoRepository.cs</Link>
     </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Impl\MongoRepositoryAsync.cs">
+    <Compile Include="..\Raven.MongoDB.Repository\Impls\MongoRepositoryAsync.cs">
       <Link>Impl\MongoRepositoryAsync.cs</Link>
-    </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IMongoBaseRepository.cs">
-      <Link>Interfaces\IMongoBaseRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IReaderRepository.cs">
-      <Link>Interfaces\IReaderRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IReaderRepositoryAsync.cs">
-      <Link>Interfaces\IReaderRepositoryAsync.cs</Link>
-    </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IRepository.cs">
-      <Link>Interfaces\IRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\Raven.MongoDB.Repository\Interfaces\IRepositoryAsync.cs">
-      <Link>Interfaces\IRepositoryAsync.cs</Link>
     </Compile>
     <Compile Include="..\Raven.MongoDB.Repository\MongoClientOptions.cs">
       <Link>MongoClientOptions.cs</Link>
