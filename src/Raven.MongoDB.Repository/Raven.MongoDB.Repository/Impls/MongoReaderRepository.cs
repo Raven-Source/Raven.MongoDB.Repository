@@ -45,49 +45,6 @@ namespace Raven.MongoDB.Repository
         }
 
         /// <summary>
-        /// 创建自增长ID
-        /// </summary>
-        /// <returns></returns>
-        public long CreateIncID(long inc = 1, int iteration = 0)
-        {
-            long id = 1;
-            var collection = Database.GetCollection<BsonDocument>(base._sequence.SequenceName);
-            var typeName = CollectionName;
-
-            var query = Builders<BsonDocument>.Filter.Eq(base._sequence.CollectionName, typeName);
-            var update = Builders<BsonDocument>.Update.Inc(base._sequence.IncrementID, inc);
-            var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>();
-            options.IsUpsert = true;
-            options.ReturnDocument = ReturnDocument.After;
-
-            var result = collection.FindOneAndUpdate(query, update, options);
-            if (result != null)
-            {
-                id = result[base._sequence.IncrementID].AsInt64;
-                return id;
-            }
-            else if (iteration <= 1)
-            {
-                return CreateIncID(inc, ++iteration);
-            }
-            else
-            {
-                throw new Exception("Failed to get on the IncID");
-            }
-        }
-
-        /// <summary>
-        /// 创建自增ID
-        /// </summary>
-        /// <param name="entity"></param>
-        public void CreateIncID(TEntity entity)
-        {
-            long _id = 0;
-            _id = this.CreateIncID();
-            AssignmentEntityID(entity, _id);
-        }
-
-        /// <summary>
         /// 根据id获取实体
         /// </summary>
         /// <param name="id"></param>

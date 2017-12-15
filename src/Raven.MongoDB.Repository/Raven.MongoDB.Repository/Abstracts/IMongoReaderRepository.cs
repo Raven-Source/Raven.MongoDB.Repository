@@ -19,19 +19,6 @@ namespace Raven.MongoDB.Repository
     public interface IMongoReaderRepository<TEntity, TKey> : IMongoBaseRepository<TEntity>
     {
         /// <summary>
-        /// 创建自增长ID
-        /// <remarks>默认自增ID存放 [Sequence] 集合</remarks>
-        /// </summary>
-        /// <returns></returns>
-        long CreateIncID(long inc = 1, int iteration = 0);
-
-        /// <summary>
-        /// 创建自增ID
-        /// </summary>
-        /// <param name="entity"></param>
-        void CreateIncID(TEntity entity);
-
-        /// <summary>
         /// 根据id获取实体
         /// </summary>
         /// <param name="id"></param>

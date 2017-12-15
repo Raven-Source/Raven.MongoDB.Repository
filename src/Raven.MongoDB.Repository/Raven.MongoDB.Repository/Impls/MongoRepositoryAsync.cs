@@ -46,6 +46,51 @@ namespace Raven.MongoDB.Repository
         }
 
         /// <summary>
+        /// 创建自增长ID
+        /// </summary>
+        /// <returns></returns>
+        public async Task<long> CreateIncIDAsync(long inc = 1, int iteration = 0)
+        {
+            long id = 1;
+            var collection = Database.GetCollection<BsonDocument>(base._sequence.SequenceName);
+            var typeName = typeof(TEntity).Name;
+
+            var query = Builders<BsonDocument>.Filter.Eq(base._sequence.CollectionName, typeName);
+            var update = Builders<BsonDocument>.Update.Inc(base._sequence.IncrementID, inc);
+            var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>();
+            options.IsUpsert = true;
+            options.ReturnDocument = ReturnDocument.After;
+
+            var result = await collection.FindOneAndUpdateAsync(query, update, options).ConfigureAwait(false);
+            if (result != null)
+            {
+                id = result[base._sequence.IncrementID].AsInt64;
+                return id;
+            }
+            else if (iteration <= 1)
+            {
+                return await CreateIncIDAsync(inc, ++iteration);
+            }
+            else
+            {
+                throw new Exception("Failed to get on the IncID");
+            }
+        }
+
+        /// <summary>
+        /// 创建自增ID
+        /// </summary>
+        /// <param name="entity"></param>
+        public Task CreateIncIDAsync(TEntity entity)
+        {
+            return this.CreateIncIDAsync().ContinueWith(x =>
+            {
+                long _id = x.Result;
+                AssignmentEntityID(entity, _id);
+            });
+        }
+
+        /// <summary>
         /// 添加数据
         /// </summary>
         /// <param name="entity">待添加数据</param>
