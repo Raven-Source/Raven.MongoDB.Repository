@@ -274,20 +274,19 @@ namespace Raven.MongoDB.Repository
         /// 数量
         /// </summary>
         /// <param name="filter"></param>
-        /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public Task<long> CountAsync(FilterDefinition<TEntity> filter
-            , int limit = 0, int skip = 0, BsonValue hint = null
+            , int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
             if (filter == null)
             {
                 filter = Builders<TEntity>.Filter.Empty;
             }
-            var option = base.CreateCountOptions(limit, skip, hint);
+            var option = base.CreateCountOptions(skip, hint);
 
             return base.GetCollection(readPreference).CountAsync(filter, option);
         }
@@ -302,7 +301,7 @@ namespace Raven.MongoDB.Repository
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public Task<long> CountAsync(Expression<Func<TEntity, bool>> filterExp
-            , int limit = 0, int skip = 0, BsonValue hint = null
+            , int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = null;
@@ -315,7 +314,7 @@ namespace Raven.MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
-            return this.CountAsync(filter, limit, skip, hint, readPreference);
+            return this.CountAsync(filter, skip, hint, readPreference);
         }
 
         /// <summary>

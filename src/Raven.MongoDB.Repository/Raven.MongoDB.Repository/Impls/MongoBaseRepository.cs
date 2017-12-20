@@ -344,13 +344,9 @@ namespace Raven.MongoDB.Repository
         /// <param name="skip"></param>
         /// <param name="hint"></param>
         /// <returns></returns>
-        public CountOptions CreateCountOptions(int limit = 0, int skip = 0, BsonValue hint = null)
+        public CountOptions CreateCountOptions(int skip = 0, BsonValue hint = null)
         {
             CountOptions option = new CountOptions();
-            if (limit > 0)
-            {
-                option.Limit = limit;
-            }
             if (skip > 0)
             {
                 option.Skip = skip;

@@ -274,20 +274,19 @@ namespace Raven.MongoDB.Repository
         /// 数量
         /// </summary>
         /// <param name="filter"></param>
-        /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public long Count(FilterDefinition<TEntity> filter
-            , int limit = 0, int skip = 0, BsonValue hint = null
+            , int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
             if (filter == null)
             {
                 filter = Builders<TEntity>.Filter.Empty;
             }
-            var option = base.CreateCountOptions(limit, skip, hint);
+            var option = base.CreateCountOptions(skip, hint);
 
             return base.GetCollection(readPreference).Count(filter, option);
         }
@@ -296,13 +295,12 @@ namespace Raven.MongoDB.Repository
         /// 数量
         /// </summary>
         /// <param name="filterExp"></param>
-        /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public long Count(Expression<Func<TEntity, bool>> filterExp
-            , int limit = 0, int skip = 0, BsonValue hint = null
+            , int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = null;
@@ -315,7 +313,7 @@ namespace Raven.MongoDB.Repository
                 filter = Builders<TEntity>.Filter.Empty;
             }
 
-            return this.Count(filter, limit, skip, hint, readPreference);
+            return this.Count(filter, skip, hint, readPreference);
         }
 
         /// <summary>

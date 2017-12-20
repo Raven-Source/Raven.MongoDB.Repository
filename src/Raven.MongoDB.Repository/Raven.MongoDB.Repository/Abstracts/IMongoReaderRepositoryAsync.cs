@@ -133,26 +133,24 @@ namespace Raven.MongoDB.Repository
         /// 数量
         /// </summary>
         /// <param name="filter"></param>
-        /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<long> CountAsync(FilterDefinition<TEntity> filter
-            , int limit = 0, int skip = 0, BsonValue hint = null
+            , int skip = 0, BsonValue hint = null
             , ReadPreference readPreference = null);
 
         /// <summary>
         /// 数量
         /// </summary>
         /// <param name="filterExp"></param>
-        /// <param name="limit"></param>
         /// <param name="skip"></param>
         /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         Task<long> CountAsync(Expression<Func<TEntity, bool>> filterExp
-             , int limit = 0, int skip = 0, BsonValue hint = null
+             , int skip = 0, BsonValue hint = null
              , ReadPreference readPreference = null);
 
         /// <summary>
