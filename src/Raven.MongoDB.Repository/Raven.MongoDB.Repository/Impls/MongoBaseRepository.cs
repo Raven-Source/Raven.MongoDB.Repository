@@ -374,7 +374,7 @@ namespace Raven.MongoDB.Repository
             }
             else if (keyType.Equals(typeof(long)))
             {
-                (entity as IEntity<long>).ID = (long)id;
+                (entity as IEntity<long>).ID = id;
             }
             else if (keyType.Equals(typeof(short)))
             {

@@ -25,6 +25,38 @@ namespace Raven.MongoDB.Repository.PerformanceTest
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            UserRepAsync userRepAsync = new UserRepAsync();
+            Console.WriteLine("start....");
+            while (true)
+            {
+                User user = new User();
+                try
+                {
+                    userRepAsync.InsertAsync(user, writeConcern: WriteConcern.Acknowledged).Wait();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                try
+                {
+                    var list1 = userRepAsync.GetListAsync(null, limit:20).Result;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                try
+                {
+                    var list2 = userRepAsync.GetListAsync(null, limit: 20, readPreference: ReadPreference.Primary).Result;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return;
+
             Console.ReadLine();
             int speed = 1000;
             //GetAsync().Wait();
@@ -53,7 +85,7 @@ namespace Raven.MongoDB.Repository.PerformanceTest
             sw.Stop();
             Console.WriteLine("for:Get:" + sw.ElapsedMilliseconds);
 
-            
+
 
             //sw.Restart();
             //for (var i = 0; i < speed; i++)
@@ -87,7 +119,7 @@ namespace Raven.MongoDB.Repository.PerformanceTest
             Console.ReadLine();
         }
 
-        
+
         public static Task InsertAsync()
         {
             var user = new User();
