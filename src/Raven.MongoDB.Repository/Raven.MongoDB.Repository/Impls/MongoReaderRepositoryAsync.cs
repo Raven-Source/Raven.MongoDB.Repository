@@ -51,13 +51,9 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <param name="includeFieldExp">查询字段表达式</param>
-        /// <param name="sortExp">排序表达式</param>
-        /// <param name="sortType">排序方式</param>
-        /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         public async Task<TEntity> GetAsync(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
-            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
             , ReadPreference readPreference = null)
         {
             var filter = Builders<TEntity>.Filter.Eq(x => x.ID, id);
@@ -68,7 +64,7 @@ namespace Raven.MongoDB.Repository
             {
                 projection = base.IncludeFields(includeFieldExp);
             }
-            var option = base.CreateFindOptions(projection, sortExp, sortType, limit: 1, hint: hint);
+            var option = base.CreateFindOptions(projection: projection, sort: null, limit: 1);
             var result = await base.GetCollection(readPreference).FindAsync(filter, option).ConfigureAwait(false);
 
             return await result.FirstOrDefaultAsync().ConfigureAwait(false);

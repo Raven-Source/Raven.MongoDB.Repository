@@ -23,13 +23,9 @@ namespace Raven.MongoDB.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <param name="includeFieldExp">查询字段表达式</param>
-        /// <param name="sortExp">排序表达式</param>
-        /// <param name="sortType">排序方式</param>
-        /// <param name="hint">hint索引</param>
         /// <param name="readPreference">访问设置</param>
         /// <returns></returns>
         TEntity Get(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null
-            , Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, BsonValue hint = null
             , ReadPreference readPreference = null);
 
         /// <summary>
