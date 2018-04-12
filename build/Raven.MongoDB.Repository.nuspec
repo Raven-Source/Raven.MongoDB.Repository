@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Raven.MongoDB.Repository</id>
+        <version>3.0.0</version>
+        <authors>Yi Liang</authors>
+        <owners>indifer@126.com</owners>
+        <iconUrl>http://res-1251080116.costj.myqcloud.com/raven4.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Raven.MongoDB.Repository</description>
+    </metadata>
+    <files>
+        <file src="..\output\Raven.MongoDB.Repository\net45\Raven.MongoDB.Repository.dll" target="lib\net45\Raven.MongoDB.Repository.dll" />
+        <file src="..\output\Raven.MongoDB.Repository\net45\Raven.MongoDB.Repository.xml" target="lib\net45\Raven.MongoDB.Repository.xml" />
+        <file src="..\output\Raven.MongoDB.Repository\net46\Raven.MongoDB.Repository.dll" target="lib\net46\Raven.MongoDB.Repository.dll" />
+        <file src="..\output\Raven.MongoDB.Repository\net46\Raven.MongoDB.Repository.xml" target="lib\net46\Raven.MongoDB.Repository.xml" />
+        <file src="..\output\Raven.MongoDB.Repository\netstandard2.0\Raven.MongoDB.Repository.dll" target="lib\netstandard2.0\Raven.MongoDB.Repository.dll" />
+        <file src="..\output\Raven.MongoDB.Repository\netstandard2.0\Raven.MongoDB.Repository.xml" target="lib\netstandard2.0\Raven.MongoDB.Repository.xml" />
+    </files>
+</package>

@@ -27,6 +27,25 @@ namespace Raven.MongoDB.Repository.PerformanceTest
         {
             UserRepAsync userRepAsync = new UserRepAsync();
             Console.WriteLine("start....");
+
+            var options = new FindOptions<User>
+            {
+                // Our cursor is a tailable cursor and informs the server to await
+                CursorType = CursorType.TailableAwait
+            };
+            while (true)
+            {
+                using (IAsyncCursor<User> cursor = userRepAsync.GetCollection(ReadPreference.Primary).FindSync(UserRepAsync.Filter.Empty, options))
+                {
+                    foreach (var user in cursor.ToEnumerable())
+                    {
+                        Console.WriteLine(user.Name);
+                        ;
+                    }
+                }
+            }
+
+            return;
             while (true)
             {
                 User user = new User();
@@ -40,7 +59,7 @@ namespace Raven.MongoDB.Repository.PerformanceTest
                 }
                 try
                 {
-                    var list1 = userRepAsync.GetListAsync(null, limit:20).Result;
+                    var list1 = userRepAsync.GetListAsync(null, limit: 20).Result;
                 }
                 catch (Exception ex)
                 {
